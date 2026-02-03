@@ -1,0 +1,30 @@
+<div class="min-h-screen bg-orange-50">
+  <!-- Main content: add bottom padding so it won't be hidden behind the fixed footer -->
+  <router-outlet></router-outlet>
+
+  <!-- Fixed, centered footer -->
+  <footer class="fixed bottom-0 left-0 right-0">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 text-sm text-gray-500 text-center">
+      <span>© {{ year }}, made with </span>
+
+      <span class="inline-flex align-middle mx-1 heart-pulse" aria-label="love" role="img">
+        <svg
+          class="w-4 h-4"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          aria-hidden="true"
+          style="color: #ef4444"
+        >
+          <path
+            d="M12 21s-7.2-4.6-9.6-9C.6 8.7 2.2 5.6 5.4 4.8c1.9-.5 3.9.2 5.1 1.7
+               1.2-1.5 3.2-2.2 5.1-1.7 3.2.8 4.8 3.9 3 7.2C19.2 16.4 12 21 12 21z"
+          />
+        </svg>
+      </span>
+
+      <span>by <span class="font-semibold text-gray-700">Alex Storm</span> &amp; </span>
+      <span class="font-semibold text-gray-700">TestHuset</span>
+      <span> for better test.</span>
+    </div>
+  </footer>
+</div>
