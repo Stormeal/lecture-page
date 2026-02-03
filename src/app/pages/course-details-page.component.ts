@@ -17,7 +17,7 @@ import { ElementRef, ViewChild } from '@angular/core';
   standalone: true,
   imports: [RouterLink],
   template: `
-    <div class="min-h-screen bg-gray-100">
+    <div class="min-h-screen bg-orange-50">
       <!-- Sticky top bar -->
       <header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center">
