@@ -386,7 +386,6 @@ test('Day 1, Exercise 1: open site and take screenshot', async ({ page }) => {
           language: 'ts',
           filename: 'exercise_1.ts',
           code: `import { chromium } from 'playwright';
-import * as fs from 'node:fs';
 
 async function main() {
   const browser = await chromium.launch({ headless: true });

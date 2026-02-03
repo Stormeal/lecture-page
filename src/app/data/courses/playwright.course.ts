@@ -171,7 +171,18 @@ export const PLAYWRIGHT_COURSE: Course = {
       title: 'Exercises',
       summary: 'Practice tasks + solutions (when you need them)',
       type: 'group',
-      overviewBlocks: [],
+      overviewBlocks: [
+        { type: 'h2', text: 'Exercises' },
+        {
+          type: 'p',
+          text: `This is where the fun starts! Pick an exercise on the right, read the Theory, do the Exercise, and use the Solution if you get stuck.`,
+        },
+        {
+          type: 'callout',
+          variant: 'info',
+          text: `Tip: Solutions are not locked — they’re just hidden by default so you can try first.`,
+        },
+      ],
       children: PLAYWRIGHT_EXERCISES,
     },
 

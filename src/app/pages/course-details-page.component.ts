@@ -10,6 +10,7 @@ import {
   CourseContentItem,
   CourseExternalItem,
 } from '../data/course.model';
+import { ElementRef, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-course-details-page',
@@ -52,7 +53,7 @@ import {
           @if (course(); as c) {
             <div class="h-full grid grid-cols-1 lg:grid-cols-[1fr_460px] gap-6">
               <!-- Main pane -->
-              <section class="h-full overflow-y-auto rounded-lg bg-white shadow p-6">
+              <section #mainPane class="h-full overflow-y-auto rounded-lg bg-white shadow p-6">
                 @if (selectedItem(); as item) {
                   <div class="flex items-start justify-between gap-4">
                     <div class="min-w-0">
@@ -597,6 +598,8 @@ import {
   `,
 })
 export class CourseDetailsPageComponent {
+  @ViewChild('mainPane') mainPane?: ElementRef<HTMLElement>;
+
   private route = inject(ActivatedRoute);
   private coursesService = inject(CoursesService);
 
@@ -616,7 +619,7 @@ export class CourseDetailsPageComponent {
   private revealed = signal<Set<string>>(new Set());
 
   constructor() {
-    // Auto-select first item on course change + expand groups leading to Exercise 1 if present
+    // Auto-select first item on course change + reset state
     effect(() => {
       const c = this.course();
       const first = c?.items?.[0]?.id ?? null;
@@ -628,7 +631,19 @@ export class CourseDetailsPageComponent {
       // optional: reset expanded on course change
       this.expanded.set(new Set());
 
+      // reset revealed hints when switching course
       this.revealedHints.set(new Set());
+    });
+
+    // Reset main-pane scroll when switching section/item
+    effect(() => {
+      const id = this.selectedId();
+      if (!id) return;
+
+      // run after DOM update
+      queueMicrotask(() => {
+        this.mainPane?.nativeElement.scrollTo({ top: 0, behavior: 'auto' });
+      });
     });
   }
 
