@@ -1,4 +1,4 @@
-export type CourseItemType = 'content' | 'external';
+export type CourseItemType = 'content' | 'external' | 'group';
 
 export type CourseContentBlock =
   | { type: 'h1'; text: string }
@@ -9,18 +9,25 @@ export type CourseContentBlock =
   | { type: 'links'; links: { label: string; url: string; description?: string }[] }
   | { type: 'downloads'; downloads: { label: string; url: string; meta?: string }[] }
   | { type: 'code'; code: string; language?: string; filename?: string }
+  | { type: 'hint'; id: string; title: string; blocks: CourseContentBlock[] }
   | { type: 'divider' };
 
 export interface CourseItemBase {
-  id: string; // unique per course
+  id: string;
   title: string;
-  summary?: string; // shown in the nav list (optional)
-  badge?: string; // e.g. "Links", "Downloads" (optional)
+  summary?: string;
+  badge?: string;
 }
 
 export interface CourseContentItem extends CourseItemBase {
   type: 'content';
   blocks: CourseContentBlock[];
+
+  /**
+   * If true, content is hidden until user clicks "Reveal".
+   * Great for solutions (not locked, just tucked away).
+   */
+  revealable?: boolean;
 }
 
 export interface CourseExternalItem extends CourseItemBase {
@@ -28,7 +35,17 @@ export interface CourseExternalItem extends CourseItemBase {
   externalUrl: string;
 }
 
-export type CourseItem = CourseContentItem | CourseExternalItem;
+/**
+ * Group (folder) that can contain nested items.
+ * Selecting a group shows overviewBlocks in the main content area.
+ */
+export interface CourseGroupItem extends CourseItemBase {
+  type: 'group';
+  overviewBlocks?: CourseContentBlock[];
+  children: CourseItem[];
+}
+
+export type CourseItem = CourseContentItem | CourseExternalItem | CourseGroupItem;
 
 export interface Course {
   slug: string;
@@ -36,10 +53,9 @@ export interface Course {
   description: string;
   imageUrl: string;
   tags: string[];
-
   disabled?: boolean;
   disabledReason?: string;
 
-  // Manual order is the array order (very important for you)
+  // Manual order stays: items array order = UI order
   items: CourseItem[];
 }
