@@ -1,15 +1,15 @@
 import { CourseGroupItem } from '../../../course.model';
 
-export const EXERCISE_01: CourseGroupItem = {
-  id: 'ex1',
-  title: 'Exercise 1: Browser contexts and pages',
-  summary: 'Learn the foundation of how Playwright thinks',
+export const EXERCISE_02: CourseGroupItem = {
+  id: 'ex2',
+  title: 'Exercise 2: Locators and Assertions',
+  summary: 'How to find Locators and to assert on given Locator.',
   type: 'group',
   overviewBlocks: [
-    { type: 'h2', text: 'Exercise 1: Browser contexts & pages' },
+    { type: 'h2', text: 'Exercise 2: Locators and Assertions' },
     {
       type: 'p',
-      text: `In this exercise we’ll get comfortable with the basics: what a browser context is, how pages work, and how to structure your first test setup.`,
+      text: `In this exercise we will take what we learned previously and apply this to deepen our knowledge within Playwright. There's two major topics we can't go without. The first one is Locators and the second is Assertions.`,
     },
     {
       type: 'callout',
@@ -19,41 +19,69 @@ export const EXERCISE_01: CourseGroupItem = {
   ],
   children: [
     {
-      id: 'ex1-theory',
+      id: 'ex2-theory',
       title: 'Theory',
-      summary: 'Understanding browser contexts and pages in Playwright',
+      summary: 'Understanding the basics about Locators and Assertions.',
       type: 'content',
       blocks: [
-        { type: 'h2', text: 'Browser Contexts and Pages' },
+        { type: 'h2', text: 'Locators & Assertions' },
 
         {
           type: 'p',
-          text: `Before we start writing real tests, it’s important to understand how Playwright models the browser. Everything you do in Playwright happens inside a Browser, a Browser Context, and a Page.`,
+          text: `Before we jump into the theory for the exercise it's important to understand that Playwright tests are supposed to be simple. Basically they perform actions and assert the state against expectations. `,
         },
-
+        {
+          type: 'p',
+          text: `Last exercise we used the navigation action, now we will start with some basics interactions. But first we need to talk, about Locators.`,
+        },
         { type: 'divider' },
 
-        { type: 'h3', text: 'Browser Context' },
+        { type: 'h3', text: 'Locators' },
 
         {
           type: 'p',
-          text: `A Browser Context is Playwright’s way of creating isolated browser sessions. You can think of a browser context as a brand-new, temporary browser profile.`,
+          text: `Performing actions starts with locating certain elements. We can use Playwrights Locators API for this specific action. Locators represent a way to find element(s) on the page at the given moment. \n Playwright automatically waits for this element to be "actionable" before it performs the given action, therefore we don't actually need to wait for it to become available.`,
+        },
+        {
+          type: 'code',
+          language: 'ts',
+          code: `// Create a locator.
+const getStarted = page.getByRole('link', { name: 'Get started' });
+
+// Click it.
+await getStarted.click();`,
         },
 
         {
           type: 'p',
-          text: `Each browser context has its own state and is completely isolated from other contexts.`,
+          text: `In some cases, you can also write the locator with the action in a single line`,
         },
-
+        {
+          type: 'code',
+          language: 'ts',
+          code: `await page.getByRole('link', { name: 'Get started' }).click();`,
+        },
         {
           type: 'p',
-          text: `A browser context includes its own:`,
+          text: `Locators are strict. Meaning, that if you perform an action on a locator that targets a specific DOM element and it finds more than one element that matches your locator, it will throw an error. This doesn't mean that the locator is wrong, just not specific enough. For example, the following call below will throw an error if there is more than one button in the DOM.`,
         },
-
         {
-          type: 'p',
-          text: 'A browser context includes its own:',
+          type: 'code',
+          language: 'ts',
+          code: `await page.getByRole('button').click();`,
         },
+        {
+          type: 'links',
+          links: [
+            {
+              label: 'Playwright Locators',
+              url: 'https://playwright.dev/docs/locators',
+              description: 'Official Playwright locator documentation',
+            },
+          ],
+        },
+        { type: 'divider' },
+
         {
           type: 'p',
           text: `• Cookies\n• Local and session storage\n• Cache\n• Permissions (camera, geolocation, etc.)`,
@@ -224,7 +252,7 @@ await page.goto('https://example.com');`,
         { type: 'h3', text: 'Goal' },
         {
           type: 'p',
-          text: '• Open https://testhuset.dk • Wait until the page is loaded • Take a screenshot and save it under screenshots/day1_ex1.png',
+          text: '• Open https://testhuset.dk • Wait until the page is loaded • Verify the title contains "Testhuset" (or similar) • Take a screenshot and save it under screenshots/day1_ex1.png',
         },
 
         { type: 'divider' },
@@ -238,7 +266,7 @@ await page.goto('https://example.com');`,
         { type: 'h3', text: 'Steps' },
         {
           type: 'p',
-          text: '1. Create a new test file named exercise_1.spec.ts in the same folder as this exercise. 2. Import test and expect from @playwright/test. 3. In the test, navigate to https://testhuset.dk and wait for domcontentloaded. 4. Save a full-page screenshot to screenshots/day1_ex1.png.',
+          text: '1. Create a new test file named exercise_1.spec.ts in the same folder as this exercise. 2. Import test and expect from @playwright/test. 3. In the test, navigate to https://testhuset.dk and wait for domcontentloaded. 4. Assert the title contains "testhuset". 5. Save a full-page screenshot to screenshots/day1_ex1.png.',
         },
 
         {
@@ -252,7 +280,7 @@ await page.goto('https://example.com');`,
         { type: 'h3', text: 'Definition of done' },
         {
           type: 'p',
-          text: '• The test passes without errors • A screenshot exists at screenshots/day1_ex1.png',
+          text: '• The test passes without errors • The title assertion succeeds • A screenshot exists at screenshots/day1_ex1.png',
         },
 
         { type: 'divider' },
@@ -311,26 +339,6 @@ await page.goto('https://example.com');`,
         },
         { type: 'divider' },
         { type: 'h3', text: 'Helpful Playwright documentation' },
-        {
-          type: 'links',
-          links: [
-            {
-              label: 'Playwright Test runner',
-              url: 'https://playwright.dev/docs/test-intro',
-              description: 'How Playwright Test works and how to run tests',
-            },
-            {
-              label: 'page.goto',
-              url: 'https://playwright.dev/docs/api/class-page#page-goto',
-              description: 'Navigation and waiting options',
-            },
-            {
-              label: 'Screenshots',
-              url: 'https://playwright.dev/docs/screenshots',
-              description: 'Taking screenshots with Playwright',
-            },
-          ],
-        },
       ],
     },
 
@@ -358,10 +366,10 @@ await page.goto('https://example.com');`,
           code: `import { test, expect } from '@playwright/test';
 
 test('Day 1, Exercise 1: open site and take screenshot', async ({ page }) => {
-  // Navigates to the page and waits for the dom to load before proceeding
   await page.goto('https://testhuset.dk', { waitUntil: 'domcontentloaded' });
 
-  // Takes a fullpage screenshot of the page and saves it in the desired path
+  await expect(page).toHaveTitle(/testhuset/);
+
   await page.screenshot({ path: 'screenshots/day1_ex1.png', fullPage: true });
 });`,
         },
