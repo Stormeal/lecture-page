@@ -19,7 +19,7 @@ import {
     <div class="min-h-screen bg-gray-100">
       <!-- Sticky top bar -->
       <header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-200">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center">
           <a
             routerLink="/courses"
             class="shrink-0 inline-flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-gray-900
