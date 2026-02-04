@@ -35,14 +35,29 @@ jobs:
         run: |
           npx ng build --configuration production --base-href "/lecture-page/"
 
+      - name: Resolve dist output folder
+        id: dist
+        shell: bash
+        run: |
+          set -e
+          # Angular v17+ often outputs dist/<name>/browser
+          if compgen -G "dist/*/browser/index.html" > /dev/null; then
+            OUT_DIR="$(ls -d dist/*/browser | head -n 1)"
+          else
+            # Older style: dist/<name>/index.html
+            OUT_DIR="$(ls -d dist/* | head -n 1)"
+          fi
+          echo "out_dir=$OUT_DIR" >> "$GITHUB_OUTPUT"
+          echo "Resolved OUT_DIR=$OUT_DIR"
+
       - name: SPA fallback for GitHub Pages (404.html)
         run: |
-          cp dist/app/index.html dist/app/404.html
+          cp "${{ steps.dist.outputs.out_dir }}/index.html" "${{ steps.dist.outputs.out_dir }}/404.html"
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/app
+          path: ${{ steps.dist.outputs.out_dir }}
 
   deploy:
     environment:
