@@ -6,7 +6,7 @@ export const COURSES: Course[] = [
     title: 'Automatisering med Playwright',
     description:
       'Her kan du finde alle opgaver, nyttige links samt løsninger som du potentielt søger under kurset. Du kan også finde ekstra opgaver, og vejledning til hvordan du kan forsætte din Playwright journey.',
-    imageUrl: '/assets/playwright-course-img.jpg',
+    imageUrl: 'assets/playwright-course-img.jpg',
     tags: ['playwright', 'automatisering', 'beginner'],
     items: [
       {
