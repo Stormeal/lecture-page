@@ -226,6 +226,13 @@ import { ElementRef, ViewChild } from '@angular/core';
                               ><code>{{ block.code }}</code></pre>
                             </div>
                           }
+                          @case ('labelValue') {
+                            <div class="text-sm text-gray-700 leading-snug">
+                              <span class="font-semibold text-gray-900">{{ block.label }}</span
+                              >: {{ block.text }}
+                            </div>
+                          }
+
                           @case ('hint') {
                             <div class="rounded-md border border-gray-200 overflow-hidden">
                               <div
@@ -294,6 +301,7 @@ import { ElementRef, ViewChild } from '@angular/core';
                                       @case ('divider') {
                                         <hr class="border-gray-200" />
                                       }
+
                                       @case ('callout') {
                                         <div
                                           class="rounded-md p-4 border"
@@ -337,6 +345,7 @@ import { ElementRef, ViewChild } from '@angular/core';
                                           </ul>
                                         </div>
                                       }
+
                                       @case ('downloads') {
                                         <div>
                                           <h3 class="text-lg font-bold text-gray-900">Downloads</h3>
@@ -370,6 +379,7 @@ import { ElementRef, ViewChild } from '@angular/core';
                                           </ul>
                                         </div>
                                       }
+
                                       @case ('code') {
                                         <div
                                           class="rounded-md border border-gray-200 overflow-hidden"

@@ -10,7 +10,8 @@ export type CourseContentBlock =
   | { type: 'downloads'; downloads: { label: string; url: string; meta?: string }[] }
   | { type: 'code'; code: string; language?: string; filename?: string }
   | { type: 'hint'; id: string; title: string; blocks: CourseContentBlock[] }
-  | { type: 'divider' };
+  | { type: 'divider' }
+  | { type: 'labelValue'; label: string; text: string };
 
 export interface CourseItemBase {
   id: string;
