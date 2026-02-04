@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Course } from '../data/course.model';
+import { assetUrl } from '../shared/asset-url';
 
 @Component({
   selector: 'app-course-card',
@@ -54,7 +55,7 @@ import { Course } from '../data/course.model';
         [routerLink]="['/courses', course.slug]"
         [attr.aria-label]="'Gå til ' + course.title"
       >
-        <img class="w-full" [src]="course.imageUrl" [alt]="course.title" />
+        <img [src]="assetUrl(course.imageUrl)" [alt]="course.title" />
 
         <div class="px-6 py-4">
           <div class="font-bold text-xl mb-2">{{ course.title }}</div>
@@ -78,4 +79,5 @@ import { Course } from '../data/course.model';
 })
 export class CourseCardComponent {
   @Input({ required: true }) course!: Course;
+  assetUrl = assetUrl;
 }
