@@ -222,13 +222,22 @@ export const PLAYWRIGHT_COURSE: Course = {
       badge: 'Files',
       type: 'content',
       blocks: [
-        { type: 'h2', text: 'Downloads' },
         {
           type: 'downloads',
           downloads: [
             {
               label: 'Cheat Sheet (PDF)',
-              url: '/assets/files/playwright-cheatsheet.pdf',
+              url: 'assets/playwright-cheat-sheet.pdf',
+              meta: 'PDF',
+            },
+            {
+              label: 'Day 1 - presentation',
+              url: 'assets/day1-presentation.pdf',
+              meta: 'PDF',
+            },
+            {
+              label: 'Day 2 - presentation',
+              url: 'assets/day2-presentation.pdf',
               meta: 'PDF',
             },
           ],
@@ -236,7 +245,7 @@ export const PLAYWRIGHT_COURSE: Course = {
         {
           type: 'callout',
           variant: 'warning',
-          text: 'If the file doesn’t exist yet, either remove the entry or add the file under /src/assets.',
+          text: 'If you are unable to download the content, please send a mail to "ast@testhuset.dk"',
         },
       ],
     },
