@@ -6,7 +6,6 @@ export const EXERCISE_02: CourseGroupItem = {
   summary: 'How to find Locators and to assert on given Locator.',
   type: 'group',
   overviewBlocks: [
-    { type: 'h2', text: 'Exercise 2: Locators and Assertions' },
     {
       type: 'p',
       text: `In this exercise we will take what we learned previously and apply this to deepen our knowledge within Playwright. There's two major topics we can't go without. The first one is Locators and the second is Assertions.`,

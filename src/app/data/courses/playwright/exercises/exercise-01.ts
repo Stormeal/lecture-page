@@ -6,7 +6,6 @@ export const EXERCISE_01: CourseGroupItem = {
   summary: 'Learn the foundation of how Playwright thinks',
   type: 'group',
   overviewBlocks: [
-    { type: 'h2', text: 'Exercise 1: Browser contexts & pages' },
     {
       type: 'p',
       text: `In this exercise we’ll get comfortable with the basics: what a browser context is, how pages work, and how to structure your first test setup.`,
