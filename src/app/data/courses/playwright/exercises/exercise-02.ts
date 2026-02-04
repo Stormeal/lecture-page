@@ -82,279 +82,264 @@ await getStarted.click();`,
         },
         { type: 'divider' },
 
-        {
-          type: 'p',
-          text: `• Cookies\n• Local and session storage\n• Cache\n• Permissions (camera, geolocation, etc.)`,
-        },
-        {
-          type: 'callout',
-          variant: 'info',
-          text: `This isolation is what makes Playwright tests reliable and reproducible. Every test can start from a clean state.`,
-        },
+        { type: 'h3', text: 'Assertions' },
 
         {
           type: 'p',
-          text: `Because contexts are lightweight, Playwright can run many of them in parallel. This allows you to simulate multiple users at the same time without them interfering with each other.`,
+          text: `Assertions are how we verify the UI is in the state we expect. In Playwright Test, assertions are done with the \`expect()\` API.`,
         },
-
+        {
+          type: 'p',
+          text: `The big win: Playwright has "web-first" (auto-retrying) assertions for locators. That means \`expect(locator).toBeVisible()\` (and friends) will wait and retry until the condition is met (or it times out). This is a major reason Playwright tests can be stable without sprinkling manual waits everywhere.`,
+        },
         {
           type: 'code',
           language: 'ts',
-          filename: 'example.ts',
-          code: `const browser = await playwright.chromium.launch();
-const context = await browser.newContext();`,
-        },
+          code: `import { test, expect } from '@playwright/test';
 
-        { type: 'divider' },
+test('shows success message after saving', async ({ page }) => {
+  await page.getByRole('button', { name: 'Save' }).click();
 
-        { type: 'h3', text: 'Page' },
-
-        {
-          type: 'p',
-          text: `A Page is where all the actual interaction happens. A page represents a single browser tab inside a browser context.`,
+  // Web-first assertion: retries until the message appears.
+  await expect(page.getByRole('alert')).toBeVisible();
+  await expect(page.getByRole('alert')).toHaveText(/saved/i);
+});`,
         },
 
         {
           type: 'p',
-          text: `Each browser context can contain multiple pages, just like a real browser can have multiple tabs open at the same time.`,
+          text: `Prefer asserting via locator matchers (like \`toBeVisible\`, \`toHaveText\`, \`toHaveValue\`, \`toBeChecked\`) instead of reading values yourself with \`innerText()\`, \`isVisible()\`, etc. Locator assertions are designed to avoid race conditions and flakiness.`,
         },
-
-        {
-          type: 'p',
-          text: `When you want to navigate to a website, click elements, fill forms, or extract data — you always do it through a page.`,
-        },
-
-        {
-          type: 'p',
-          text: `Common things you can do with a Page include:`,
-        },
-
-        {
-          type: 'p',
-          text: `• Navigate to URLs\n• Fill input fields\n• Click buttons and links\n• Take screenshots\n• Extract text or attributes\n• Wait for elements to appear`,
-        },
-
         {
           type: 'code',
           language: 'ts',
-          filename: 'example.ts',
-          code: `const page = await context.newPage();`,
-        },
+          code: `// ✅ Prefer locator assertions (auto-retry)
+await expect(page.getByLabel('Email')).toHaveValue('boomers@internet.com');
+await expect(page.getByRole('checkbox', { name: 'Subscribe' })).toBeChecked();
 
-        { type: 'divider' },
-
-        { type: 'h3', text: 'Putting it together' },
-
-        {
-          type: 'p',
-          text: `The typical flow in Playwright looks like this:`,
+// ❌ More racy: manual reads are a snapshot in time
+// const visible = await page.getByRole('alert').isVisible();
+// expect(visible).toBe(true);`,
         },
 
         {
           type: 'p',
-          text: `1. Launch a browser\n2. Create a browser context\n3. Open a page inside the context\n4. Interact with the page`,
+          text: `Assertions have their own timeout (separate from the test timeout). By default, Playwright will keep retrying an expectation until it passes or the expect timeout is hit.`,
         },
-        { type: 'divider' },
-
-        { type: 'h2', text: 'Summary: Browser, Context, and Page' },
-
-        {
-          type: 'p',
-          text: `Let’s quickly recap how the different pieces fit together. Understanding this relationship is key to writing clean and reliable Playwright tests.`,
-        },
-
-        { type: 'h3', text: 'Browser' },
-
-        {
-          type: 'p',
-          text: `The Browser represents the actual browser engine (Chromium, Firefox, or WebKit). It is responsible for running Playwright automation.`,
-        },
-
-        {
-          type: 'p',
-          text: `Analogy: Think of the browser as an apartment building.`,
-        },
-
-        { type: 'h3', text: 'Browser Context' },
-
-        {
-          type: 'p',
-          text: `A Browser Context is an isolated browser session. Each context starts fresh and does not share cookies, storage, cache, or permissions with other contexts.`,
-        },
-
-        {
-          type: 'p',
-          text: `This isolation ensures that tests remain independent and reproducible.`,
-        },
-
-        {
-          type: 'p',
-          text: `Analogy: A browser context is like an apartment inside the building.`,
-        },
-
-        { type: 'h3', text: 'Page' },
-
-        {
-          type: 'p',
-          text: `A Page represents a single browser tab within a browser context. This is where all user interactions happen.`,
-        },
-
-        {
-          type: 'p',
-          text: `You use a page to navigate, click elements, fill forms, take screenshots, and extract data.`,
-        },
-
-        {
-          type: 'p',
-          text: `Analogy: A page is like a room inside the apartment.`,
-        },
-
-        {
-          type: 'callout',
-          variant: 'info',
-          text: `In short: the Browser runs everything, the Context keeps things isolated, and the Page is where you interact with the application.`,
-        },
-
         {
           type: 'code',
           language: 'ts',
-          filename: 'example.ts',
-          code: `const browser = await playwright.chromium.launch();
-const context = await browser.newContext();
-const page = await context.newPage();
-
-await page.goto('https://example.com');`,
+          code: `// Per-assertion timeout override
+await expect(page.getByRole('status')).toHaveText('Ready', { timeout: 10_000 });`,
         },
 
         {
-          type: 'callout',
-          variant: 'info',
-          text: `This structure is the foundation of everything you’ll do in Playwright. Once this model makes sense, the rest of the API becomes much easier to understand.`,
+          type: 'p',
+          text: `When you need to wait for a non-UI condition (or some computed value) to eventually become true, use \`expect.poll()\`. It repeatedly runs your function until the matcher passes.`,
+        },
+        {
+          type: 'code',
+          language: 'ts',
+          code: `// Poll an arbitrary condition until it matches.
+await expect.poll(async () => {
+  const countText = await page.getByTestId('cart-count').textContent();
+  return Number(countText);
+}).toBe(3);`,
+        },
+
+        {
+          type: 'p',
+          text: `And yes, you can even assert visuals: Playwright can compare screenshots with \`toHaveScreenshot()\`. (The future is now.)`,
+        },
+        {
+          type: 'code',
+          language: 'ts',
+          code: `// Visual regression assertion
+await expect(page).toHaveScreenshot();`,
+        },
+
+        {
+          type: 'links',
+          links: [
+            {
+              label: 'Playwright Test Assertions',
+              url: 'https://playwright.dev/docs/test-assertions',
+              description: 'Official guide to expect() and web-first assertions',
+            },
+            {
+              label: 'Locator Assertions API',
+              url: 'https://playwright.dev/docs/api/class-locatorassertions',
+              description: 'Full list of locator-specific matchers (toBeVisible, toHaveText, etc.)',
+            },
+            {
+              label: 'Expect timeout',
+              url: 'https://playwright.dev/docs/test-timeouts#expect-timeout',
+              description: 'How assertion timeouts work (separate from test timeouts)',
+            },
+            {
+              label: 'Actionability & auto-waiting',
+              url: 'https://playwright.dev/docs/actionability',
+              description: 'How Playwright waits for actions and why it reduces flakiness',
+            },
+          ],
         },
       ],
     },
 
     {
-      id: 'ex1-exercise',
+      id: 'ex2-exercise',
       title: 'Exercise',
-      summary: 'Write your first Playwright Test and save a screenshot',
+      summary: `It's exercise time! `,
       type: 'content',
       blocks: [
-        { type: 'h2', text: 'Exercise 1: Browser contexts and pages' },
+        { type: 'h2', text: 'Mission Dossier - Locate and assert!' },
+        { type: 'labelValue', label: 'Classification', text: `Internal Training Operation` },
+        { type: 'labelValue', label: 'Clearance Level', text: `Agent in Training` },
+        { type: 'labelValue', label: 'Mission Status', text: `Active` },
+        { type: 'labelValue', label: 'Extraction Time', text: `30 minutes` },
 
+        { type: 'divider' },
+        { type: 'h3', text: 'Mission Briefing' },
         {
           type: 'p',
-          text: 'Let’s write your first Playwright Test. You will open a website, confirm it loaded, and save a screenshot. Simple, useful, and a great foundation.',
+          text: `Agent,`,
+        },
+        {
+          type: 'p',
+          text: `Intelligence reports indicate that a high-value training asset is hidden within enemy territory. Your task is to infiltrate the site, locate the target course, and verify its authenticity.`,
+        },
+        {
+          type: 'p',
+          text: `This operation will test your ability to navigate unknown environments, identify objectives with precision, and report back with undeniable evidence.`,
+        },
+        {
+          type: 'p',
+          text: `Failure is not an option.`,
         },
 
         { type: 'divider' },
-
-        { type: 'h3', text: 'Goal' },
+        { type: 'h3', text: 'Mission Objectives' },
         {
           type: 'p',
-          text: '• Open https://testhuset.dk • Wait until the page is loaded • Verify the title contains "Testhuset" (or similar) • Take a screenshot and save it under screenshots/day1_ex1.png',
+          text: `Your mission is to:`,
         },
-
+        {
+          type: 'p',
+          text: `• Infiltrate the target site without detection • Locate the classified course "Automatisering med Playwright" • Verify that the course title (Automatisering med Playwright) is correct • Verify that the course price is (10499kr) • Extract visual proof of your findings`,
+        },
+        { type: 'divider' },
+        { type: 'h3', text: 'Operational Instructions' },
+        {
+          type: 'p',
+          text: `Proceed with caution and follow these steps exactly:`,
+        },
+        {
+          type: 'p',
+          text: `1. Establish a connection to the target site (https://testhuset.dk/) 2. From the main navigation bar, locate and engange the control labeled "Kursus" 3. Allow the page to fully load before proceeding further 4. Identify and create a locator for the course name: "Automatisering med Playwright" 5. Engage the target by clicking the locator 6. Confirm the integrity of the asset. (Assert that the course title matches "Automatisering med Playwright" and assert that the listed price is "10499") 7. Capture photographic evidence of the confirmed asset and store it securely (File name: "exercise_2_mission_evidence" | Location: "screenshot" folder) `,
+        },
+        { type: 'divider' },
+        { type: 'h3', text: 'Mission Completion Criteria (Definition of Done' },
+        {
+          type: 'p',
+          text: `The mission is considered successfull when:`,
+        },
+        {
+          type: 'p',
+          text: `• Navigation occurs via the main navbar • The Playwright course page is accessed • Title verification passes • Price verification passes • Screenshot evidence is succssfully stored in the screenshot folder`,
+        },
+        {
+          type: 'p',
+          text: `This concludes the breifing,`,
+        },
+        {
+          type: 'p',
+          text: `Good luck, Agent. We'll be watching.`,
+        },
         { type: 'divider' },
 
-        { type: 'h3', text: 'Recommended approach (Playwright Test)' },
-        {
-          type: 'p',
-          text: 'We will use the Playwright Test runner and the built-in page fixture. That keeps the test clean and removes lifecycle noise so you can focus on the important parts.',
-        },
-
-        { type: 'h3', text: 'Steps' },
-        {
-          type: 'p',
-          text: '1. Create a new test file named exercise_1.spec.ts in the same folder as this exercise. 2. Import test and expect from @playwright/test. 3. In the test, navigate to https://testhuset.dk and wait for domcontentloaded. 4. Assert the title contains "testhuset". 5. Save a full-page screenshot to screenshots/day1_ex1.png.',
-        },
-
-        {
-          type: 'callout',
-          variant: 'info',
-          text: 'Tip: A beginner-friendly way to prove a page loaded is domcontentloaded combined with a simple assertion such as the page title.',
-        },
-
-        { type: 'divider' },
-
-        { type: 'h3', text: 'Definition of done' },
-        {
-          type: 'p',
-          text: '• The test passes without errors • The title assertion succeeds • A screenshot exists at screenshots/day1_ex1.png',
-        },
-
-        { type: 'divider' },
-
-        { type: 'h3', text: 'Optional: run it headed' },
-        {
-          type: 'p',
-          text: 'If you want to see the browser window while the test runs, run Playwright Test in headed mode.',
-        },
-
-        { type: 'divider' },
+        // -----END-----
 
         {
           type: 'hint',
-          id: 'ex1-hint-file-location',
-          title: 'Hint 1: Where should I put the test file?',
+          id: 'ex2-locator-menu-item',
+          title: 'Hint 1: How do it find the locator?',
           blocks: [
             {
               type: 'p',
-              text: 'Place exercise_1.spec.ts next to the existing exercise folder for Day 1, Exercise 1, so it is easy to find and easy to run.',
+              text: 'First you need to find a selector for the locator. You open the page with the element you want to locate and inspect the page. Then find the element in the inspector and find a suitable selector.',
+            },
+            {
+              type: 'code',
+              language: 'html',
+              filename: 'element example',
+              code: `<div class="mb-3">
+  <h4>getByRole</h4>
+  <button class="btn btn-primary me-2" aria-label="Add Item">Add Item</button>
+  <a href="/contact" role="link" class="btn btn-link">Contact</a>
+</div>`,
+            },
+            {
+              type: 'p',
+              text: 'In the above example you can see that we are looking at a button. We can use various forms of selectors based on that element. We can use the CSS class "btn btn-primary me-2", we can also use the aria-label "Add Item" or we can use the name.  ',
+            },
+            {
+              type: 'p',
+              text: 'For this use case lets use the getByRole function using the name of the button, it should then look something like this:  ',
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              filename: 'locator example',
+              code: `page.getByRole("name", { name: "Add Item" });`,
             },
           ],
         },
+
         {
           type: 'hint',
-          id: 'ex1-hint-page-fixture',
-          title: 'Hint 2: How do I get a page object?',
+          id: 'ex2-hint-assert-text',
+          title: 'Hint 2: How do I assert on a text value?',
           blocks: [
             {
               type: 'p',
-              text: 'Use Playwright Test. The test runner provides a built-in page fixture. Your test function can receive { page } and you can use it immediately.',
+              text: `No matter if it's text or numeric values you need to assert, we use the same expect API that Playwright provides. We can then use the functions ".toHaveText("string")" for text specific assertions. We need to make sure that the text matches the element precisely otherwise it will throw an error. `,
             },
-          ],
-        },
-        {
-          type: 'hint',
-          id: 'ex1-hint-goto-and-wait',
-          title: 'Hint 3: What does “wait until loaded” mean here?',
-          blocks: [
+            {
+              type: 'code',
+              language: 'html',
+              filename: 'element example',
+              code: `<div class="col">
+  <label for="input-number">Input: Number</label>
+  <input class="input-box" id="input-number" name="input-number">
+</div>`,
+            },
             {
               type: 'p',
-              text: 'A good starting point is to wait for domcontentloaded in page.goto. After that, add an assertion such as checking the title.',
+              text: `So, if we use the above example of an element we want to assert some text from. For this example let's use the label text. We need to make sure that we expect the text to be "Input: Number" exactly. Otherwise, you guessed it. It'll throw an error.`,
             },
-          ],
-        },
-        {
-          type: 'hint',
-          id: 'ex1-hint-screenshot-folder',
-          title: 'Hint 4: My screenshot fails to save',
-          blocks: [
             {
-              type: 'p',
-              text: 'Make sure the screenshots folder exists before saving. If the folder is missing, Node cannot write the file.',
+              type: 'code',
+              language: 'ts',
+              filename: 'assertion example',
+              code: `// Locator:
+const inputLabel = await page.getByLabel('Input: Number');
+
+// Assertion:
+await expect(this.inputLabel).toHaveText("Input: Number");`,
             },
           ],
         },
-        { type: 'divider' },
-        { type: 'h3', text: 'Helpful Playwright documentation' },
       ],
     },
 
     {
-      id: 'ex1-solution',
+      id: 'ex2-solution',
       title: 'Solution',
       summary: 'Reveal if you are stuck',
       type: 'content',
       revealable: true,
       blocks: [
-        { type: 'h2', text: 'Solution: Exercise 1' },
-
-        {
-          type: 'p',
-          text: 'Nice work. Here is a clean solution using Playwright Test first, plus an optional manual solution that matches the Browser, Context, and Page model.',
-        },
+        { type: 'h2', text: 'Solution: Exercise 2' },
 
         { type: 'divider' },
 
@@ -362,16 +347,45 @@ await page.goto('https://example.com');`,
         {
           type: 'code',
           language: 'ts',
-          filename: 'exercise_1.spec.ts',
-          code: `import { test, expect } from '@playwright/test';
+          filename: 'exercise_2.spec.ts',
+          code: `import { test, expect } from "@playwright/test";
 
-test('Day 1, Exercise 1: open site and take screenshot', async ({ page }) => {
-  await page.goto('https://testhuset.dk', { waitUntil: 'domcontentloaded' });
+test("Exercise 2 - Locate and Assert!", async ({ page }) => {
 
-  await expect(page).toHaveTitle(/testhuset/);
+  // Locators:
+  const cookieBotDialogHeader = page.locator("#CybotCookiebotDialogHeader");
+  const courseMenuBtn = page.getByRole("link", { name: "Kursus" });
+  const playwrightCourseItem = page.locator('a:has-text("Automatisering med Playwright")');
+  const courseTitle = page.locator("h1.hero-title");
+  const pricingContainer = page.locator("div.pricing-part");
+  const price = pricingContainer.locator("span[data-variation-price]");
 
-  await page.screenshot({ path: 'screenshots/day1_ex1.png', fullPage: true });
-});`,
+  await test.step("Navigate to page", async () => {
+    // Navigates to the page and waits for the DOM to finish loading
+    await page.goto("https://testhuset.dk", { waitUntil: "domcontentloaded" });
+
+    // Handles the cookie dialog if it appears
+    if (cookieBotDialogHeader) {
+      const cookieDialogAcceptBtn = page.getByRole("button", { name: "Tillad valgte" });
+      await cookieDialogAcceptBtn.click();
+    }
+  });
+
+  await test.step("Press the KURSUS menu button", async () => {
+    await courseMenuBtn.click();
+  });
+
+  await test.step("Press the Playwright Course element and screenshot the page", async () => {
+    await playwrightCourseItem.click();
+    await page.screenshot({ path: "screenshots/day1_exercise2.png", fullPage: true });
+  });
+
+  await test.step("Assert course title and price", async () => {
+    await expect(courseTitle).toHaveText("Automatisering med Playwright");
+    await expect(price).toHaveText("10.499 kr.");
+  });
+});
+`,
         },
 
         { type: 'divider' },
@@ -379,46 +393,7 @@ test('Day 1, Exercise 1: open site and take screenshot', async ({ page }) => {
         { type: 'h3', text: 'Why this is a good baseline' },
         {
           type: 'p',
-          text: '• Uses Playwright Test and the built-in page fixture • Uses a reliable load signal (domcontentloaded) • Adds a meaningful assertion (title check) • Ensures the screenshots folder exists before writing the file',
-        },
-
-        { type: 'divider' },
-
-        { type: 'h3', text: 'Optional manual solution (Browser, Context, Page)' },
-        {
-          type: 'p',
-          text: `This is the approach if you don't want to use the Playwright fixtures and want to try to build it manually. Notice that we have to manually close the context and browser, where the Playwright's fixture provides us with the built-in functionality, so that we don't have to do it manually.`,
-        },
-        {
-          type: 'code',
-          language: 'ts',
-          filename: 'exercise_1.ts',
-          code: `import { chromium } from 'playwright';
-
-async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext();
-  const page = await context.newPage();
-
-  try {
-    await page.goto('https://testhuset.dk', { waitUntil: 'domcontentloaded' });
-    await page.screenshot({ path: 'screenshots/day1_ex1.png', fullPage: true });
-  } finally {
-    await context.close();
-    await browser.close();
-  }
-}
-
-main().catch((err) => {
-  console.error(err);
-  process.exitCode = 1;
-});`,
-        },
-
-        {
-          type: 'callout',
-          variant: 'info',
-          text: 'Tip: If you want to watch the manual version run, set headless to false.',
+          text: '• Uses Playwright Test and the built-in page fixture (simple, standard, and maintainable) • Prefers semantic locators with getByRole for key actions (more resilient than CSS and aligns with accessibility) • Scopes locators via a parent container (pricingContainer.locator(...)) to reduce accidental matches • Uses test.step() to make the report and failures easier to read (great for debugging)',
         },
       ],
     },

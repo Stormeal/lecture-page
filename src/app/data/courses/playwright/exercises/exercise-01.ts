@@ -285,6 +285,32 @@ await page.goto('https://example.com');`,
               type: 'p',
               text: 'Use Playwright Test. The test runner provides a built-in page fixture. Your test function can receive { page } and you can use it immediately.',
             },
+            {
+              type: 'code',
+              language: 'ts',
+              code: `// Simple Page Object example (Playwright Test)
+import { Page, expect } from '@playwright/test';
+
+export class StatusPage {
+  constructor(private readonly page: Page) {}
+
+  // Locators (keep them in one place)
+  readonly status = this.page.getByRole('status');
+
+  // Assertions (web-first, auto-retrying)
+  async expectReady(timeout = 10_000) {
+    await expect(this.status).toHaveText('Ready', { timeout });
+  }
+}
+
+// --- usage in a test ---
+import { test } from '@playwright/test';
+
+test('status becomes ready', async ({ page }) => {
+  const statusPage = new StatusPage(page); // <-- "get" the page object
+  await statusPage.expectReady();
+});`,
+            },
           ],
         },
         {
@@ -296,6 +322,15 @@ await page.goto('https://example.com');`,
               type: 'p',
               text: 'A good starting point is to wait for domcontentloaded in page.goto. After that, add an assertion such as checking the title.',
             },
+            {
+              type: 'code',
+              language: 'ts',
+              code: `// Hint: tell goto what "loaded" should mean
+await page.goto('YOUR_URL_HERE', { waitUntil: 'domcontentloaded' });
+
+// Hint: then assert something stable, e.g. title
+await expect(page).toHaveTitle(/YOUR_EXPECTED_TITLE/);`,
+            },
           ],
         },
         {
@@ -306,6 +341,21 @@ await page.goto('https://example.com');`,
             {
               type: 'p',
               text: 'Make sure the screenshots folder exists before saving. If the folder is missing, Node cannot write the file.',
+            },
+          ],
+        },
+        {
+          type: 'hint',
+          id: 'ex1-hint-runner-not-working',
+          title: 'Hint 5: Playwright runner not working for my test',
+          blocks: [
+            {
+              type: 'p',
+              text: 'If you are having issues with your playwright runner not having the run icon, it could be because of three things. ',
+            },
+            {
+              type: 'p',
+              text: '• If you just installed the Playwright extention, you might have to restart Visual Studio Code and try again. • Make sure that the test file is located with the "tests" folder. Playwright is configured to looks for tests within that folder. • Make sure that your test file is "*.spec.ts" it only looks for tests within spec files.  ',
             },
           ],
         },
@@ -342,11 +392,6 @@ await page.goto('https://example.com');`,
       revealable: true,
       blocks: [
         { type: 'h2', text: 'Solution: Exercise 1' },
-
-        {
-          type: 'p',
-          text: 'Nice work. Here is a clean solution using Playwright Test first, plus an optional manual solution that matches the Browser, Context, and Page model.',
-        },
 
         { type: 'divider' },
 
