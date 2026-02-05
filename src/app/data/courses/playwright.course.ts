@@ -207,15 +207,6 @@ export const PLAYWRIGHT_COURSE: Course = {
     },
 
     {
-      id: 'repo',
-      title: 'Course repository',
-      summary: 'Open repository in a new tab',
-      badge: 'External',
-      type: 'external',
-      externalUrl: 'https://github.com/TestHusetQI/playwright-course-exercises',
-    },
-
-    {
       id: 'downloads',
       title: 'Downloads',
       summary: 'Handouts and downloadable material',

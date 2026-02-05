@@ -14,6 +14,7 @@ export const EXERCISE_01: CourseGroupItem = {
       type: 'callout',
       variant: 'info',
       text: `Start with Theory, then try the Exercise. If you get stuck, reveal the Solution.`,
+      testId: 'info-box-1',
     },
   ],
   children: [
@@ -211,7 +212,7 @@ await page.goto('https://example.com');`,
       summary: 'Write your first Playwright Test and save a screenshot',
       type: 'content',
       blocks: [
-        { type: 'h2', text: 'Exercise 1: Browser contexts and pages' },
+        { type: 'h2', text: 'Exercise 1: Browser contexts and pages', testId: 'ex1-exercise' },
 
         {
           type: 'p',

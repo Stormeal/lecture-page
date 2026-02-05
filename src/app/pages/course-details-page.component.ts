@@ -1,5 +1,5 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { CoursesService } from '../data/course.service';
@@ -11,11 +11,12 @@ import {
   CourseExternalItem,
 } from '../data/course.model';
 import { ElementRef, ViewChild } from '@angular/core';
+import { NestedListComponent } from '../shared/nested-list.component';
 
 @Component({
   selector: 'app-course-details-page',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterModule, NestedListComponent],
   template: `
     <div class="min-h-screen bg-orange-50">
       <!-- Sticky top bar -->
@@ -99,36 +100,57 @@ import { ElementRef, ViewChild } from '@angular/core';
                       @for (block of selectedBlocks(); track $index) {
                         @switch (block.type) {
                           @case ('h1') {
-                            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">
+                            <h1
+                              class="text-2xl sm:text-3xl font-bold text-gray-900"
+                              [attr.data-testid]="block.testId ?? null"
+                            >
                               {{ block.text }}
                             </h1>
                           }
                           @case ('h2') {
-                            <h2 class="text-xl sm:text-2xl font-bold text-gray-900">
+                            <h2
+                              class="text-xl sm:text-2xl font-bold text-gray-900"
+                              [attr.data-testid]="block.testId ?? null"
+                            >
                               {{ block.text }}
                             </h2>
                           }
                           @case ('h3') {
-                            <h3 class="text-lg font-bold text-gray-900">{{ block.text }}</h3>
+                            <h3
+                              class="text-lg font-bold text-gray-900"
+                              [attr.data-testid]="block.testId ?? null"
+                            >
+                              {{ block.text }}
+                            </h3>
                           }
                           @case ('p') {
                             @if (asBulletList(block.text); as bullets) {
-                              <ul class="list-disc pl-8 space-y-1 text-gray-700 leading-relaxed">
+                              <ul
+                                class="list-disc pl-8 space-y-1 text-gray-700 leading-relaxed"
+                                [attr.data-testid]="block.testId ?? null"
+                              >
                                 @for (b of bullets; track b) {
                                   <li>{{ b }}</li>
                                 }
                               </ul>
                             } @else if (asNumberedList(block.text); as steps) {
-                              <ol class="list-decimal pl-8 space-y-1 text-gray-700 leading-relaxed">
+                              <ol
+                                class="list-decimal pl-8 space-y-1 text-gray-700 leading-relaxed"
+                                [attr.data-testid]="block.testId ?? null"
+                              >
                                 @for (s of steps; track s) {
                                   <li>{{ s }}</li>
                                 }
                               </ol>
                             } @else {
-                              <p class="text-gray-700 leading-relaxed">{{ block.text }}</p>
+                              <p
+                                class="text-gray-700 leading-relaxed"
+                                [attr.data-testid]="block.testId ?? null"
+                              >
+                                {{ block.text }}
+                              </p>
                             }
                           }
-
                           @case ('divider') {
                             <hr class="border-gray-200" />
                           }
@@ -141,8 +163,9 @@ import { ElementRef, ViewChild } from '@angular/core';
                               [class.border-yellow-200]="block.variant === 'warning'"
                               [class.bg-yellow-50]="block.variant === 'warning'"
                               [class.text-yellow-900]="block.variant === 'warning'"
+                              [attr.data-testid]="block.testId ?? null"
                             >
-                              <p class="font-semibold">
+                              <p class="font-semibold" [attr.data-testid]="block.testId ?? null">
                                 {{ block.variant === 'info' ? 'Tip' : 'Note' }}
                               </p>
                               <p class="mt-1">{{ block.text }}</p>
@@ -151,7 +174,7 @@ import { ElementRef, ViewChild } from '@angular/core';
                           @case ('links') {
                             <div>
                               <h3 class="text-lg font-bold text-gray-900">Links</h3>
-                              <ul class="mt-3 space-y-3">
+                              <ul class="mt-3 space-y-3" [attr.data-testid]="block.testId ?? null">
                                 @for (l of block.links; track l.url) {
                                   <li class="rounded-md border border-gray-200 p-4">
                                     <a
@@ -174,7 +197,7 @@ import { ElementRef, ViewChild } from '@angular/core';
                           @case ('downloads') {
                             <div>
                               <h3 class="text-lg font-bold text-gray-900">Downloads</h3>
-                              <ul class="mt-3 space-y-3">
+                              <ul class="mt-3 space-y-3" [attr.data-testid]="block.testId ?? null">
                                 @for (d of block.downloads; track d.url) {
                                   <li
                                     class="rounded-md border border-gray-200 p-4 flex items-center justify-between gap-4"
@@ -204,7 +227,10 @@ import { ElementRef, ViewChild } from '@angular/core';
                             </div>
                           }
                           @case ('code') {
-                            <div class="rounded-md border border-gray-200 overflow-hidden">
+                            <div
+                              class="rounded-md border border-gray-200 overflow-hidden"
+                              [attr.data-testid]="block.testId ?? null"
+                            >
                               @if (block.filename || block.language) {
                                 <div
                                   class="px-4 py-2 bg-gray-50 border-b border-gray-200 flex items-center justify-between"
@@ -227,14 +253,155 @@ import { ElementRef, ViewChild } from '@angular/core';
                             </div>
                           }
                           @case ('labelValue') {
-                            <div class="text-sm text-gray-700 leading-snug">
-                              <span class="font-semibold text-gray-900">{{ block.label }}</span
-                              >: {{ block.text }}
+                            <div
+                              class="text-gray-700 leading-snug"
+                              [attr.data-testid]="block.testId ?? null"
+                            >
+                              @if (block.list; as list) {
+                                <!-- LIST MODE: stacked label + nested list -->
+                                <div class="font-semibold text-gray-900">{{ block.label }}</div>
+
+                                @if (list.items.length) {
+                                  <div class="mt-2">
+                                    <app-nested-list
+                                      [items]="list.items"
+                                      [ordered]="list.ordered ?? false"
+                                    />
+                                  </div>
+                                }
+                              } @else {
+                                <!-- TEXT MODE: inline "Label: Value" -->
+                                <div class="flex items-baseline gap-2">
+                                  <span class="font-semibold text-gray-900 whitespace-nowrap">{{
+                                    block.label
+                                  }}</span>
+                                  <span class="text-gray-400">:</span>
+                                  <span class="text-gray-700">{{ block.text }}</span>
+                                </div>
+                              }
                             </div>
                           }
-
+                          @case ('button') {
+                            <div [attr.data-testid]="block.testId ?? null">
+                              @if (block.routerLink) {
+                                @if (block.newTab) {
+                                  <a
+                                    class="inline-flex items-center gap-2 rounded-md px-4 py-2 font-semibold
+                 focus:outline-none focus-visible:ring-4"
+                                    [class.bg-orange-400]="
+                                      (block.variant ?? 'primary') === 'primary'
+                                    "
+                                    [class.text-white]="(block.variant ?? 'primary') === 'primary'"
+                                    [class.hover:bg-orange-500]="
+                                      (block.variant ?? 'primary') === 'primary'
+                                    "
+                                    [class.focus-visible:ring-blue-400/40]="
+                                      (block.variant ?? 'primary') === 'primary'
+                                    "
+                                    [class.bg-white]="(block.variant ?? 'primary') === 'secondary'"
+                                    [class.text-gray-900]="
+                                      (block.variant ?? 'primary') === 'secondary'
+                                    "
+                                    [class.border]="(block.variant ?? 'primary') === 'secondary'"
+                                    [class.border-gray-300]="
+                                      (block.variant ?? 'primary') === 'secondary'
+                                    "
+                                    [class.hover:bg-gray-50]="
+                                      (block.variant ?? 'primary') === 'secondary'
+                                    "
+                                    [class.focus-visible:ring-gray-400/40]="
+                                      (block.variant ?? 'primary') === 'secondary'
+                                    "
+                                    [href]="internalHref(block.routerLink, block.queryParams)"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    {{ block.label }}
+                                  </a>
+                                } @else {
+                                  <a
+                                    class="inline-flex items-center gap-2 rounded-md px-4 py-2 font-semibold
+                 focus:outline-none focus-visible:ring-4"
+                                    [class.bg-orange-400]="
+                                      (block.variant ?? 'primary') === 'primary'
+                                    "
+                                    [class.text-white]="(block.variant ?? 'primary') === 'primary'"
+                                    [class.hover:bg-orange-500]="
+                                      (block.variant ?? 'primary') === 'primary'
+                                    "
+                                    [class.focus-visible:ring-blue-400/40]="
+                                      (block.variant ?? 'primary') === 'primary'
+                                    "
+                                    [class.bg-white]="(block.variant ?? 'primary') === 'secondary'"
+                                    [class.text-gray-900]="
+                                      (block.variant ?? 'primary') === 'secondary'
+                                    "
+                                    [class.border]="(block.variant ?? 'primary') === 'secondary'"
+                                    [class.border-gray-300]="
+                                      (block.variant ?? 'primary') === 'secondary'
+                                    "
+                                    [class.hover:bg-gray-50]="
+                                      (block.variant ?? 'primary') === 'secondary'
+                                    "
+                                    [class.focus-visible:ring-gray-400/40]="
+                                      (block.variant ?? 'primary') === 'secondary'
+                                    "
+                                    [routerLink]="block.routerLink"
+                                    [queryParams]="block.queryParams ?? null"
+                                  >
+                                    {{ block.label }}
+                                    <span aria-hidden="true">→</span>
+                                  </a>
+                                }
+                              } @else if (block.href) {
+                                <a
+                                  class="inline-flex items-center gap-2 rounded-md px-4 py-2 font-semibold
+               focus:outline-none focus-visible:ring-4"
+                                  [class.bg-blue-600]="(block.variant ?? 'primary') === 'primary'"
+                                  [class.text-white]="(block.variant ?? 'primary') === 'primary'"
+                                  [class.hover:bg-blue-700]="
+                                    (block.variant ?? 'primary') === 'primary'
+                                  "
+                                  [class.focus-visible:ring-blue-400/40]="
+                                    (block.variant ?? 'primary') === 'primary'
+                                  "
+                                  [class.bg-white]="(block.variant ?? 'primary') === 'secondary'"
+                                  [class.text-gray-900]="
+                                    (block.variant ?? 'primary') === 'secondary'
+                                  "
+                                  [class.border]="(block.variant ?? 'primary') === 'secondary'"
+                                  [class.border-gray-300]="
+                                    (block.variant ?? 'primary') === 'secondary'
+                                  "
+                                  [class.hover:bg-gray-50]="
+                                    (block.variant ?? 'primary') === 'secondary'
+                                  "
+                                  [class.focus-visible:ring-gray-400/40]="
+                                    (block.variant ?? 'primary') === 'secondary'
+                                  "
+                                  [href]="block.href"
+                                  [target]="block.newTab ? '_blank' : null"
+                                  [rel]="block.newTab ? 'noopener noreferrer' : null"
+                                >
+                                  {{ block.label }}
+                                  <span aria-hidden="true">{{ block.newTab ? '↗' : '→' }}</span>
+                                </a>
+                              } @else {
+                                <button
+                                  type="button"
+                                  class="inline-flex items-center gap-2 rounded-md px-4 py-2 font-semibold bg-gray-200 text-gray-500 cursor-not-allowed"
+                                  disabled
+                                >
+                                  {{ block.label }}
+                                </button>
+                              }
+                            </div>
+                          }
                           @case ('hint') {
-                            <div class="rounded-md border border-gray-200 overflow-hidden">
+                            <div
+                              class="rounded-md border border-gray-200 overflow-hidden"
+                              [attr.data-testid]="block.testId ?? null"
+                            >
                               <div
                                 class="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center justify-between gap-3"
                               >
@@ -345,7 +512,6 @@ import { ElementRef, ViewChild } from '@angular/core';
                                           </ul>
                                         </div>
                                       }
-
                                       @case ('downloads') {
                                         <div>
                                           <h3 class="text-lg font-bold text-gray-900">Downloads</h3>
@@ -379,7 +545,6 @@ import { ElementRef, ViewChild } from '@angular/core';
                                           </ul>
                                         </div>
                                       }
-
                                       @case ('code') {
                                         <div
                                           class="rounded-md border border-gray-200 overflow-hidden"
@@ -404,6 +569,34 @@ import { ElementRef, ViewChild } from '@angular/core';
                                           ><code>{{ h.code }}</code></pre>
                                         </div>
                                       }
+                                      @case ('labelValue') {
+                                        <div class="text-sm text-gray-700 leading-snug">
+                                          @if (h.list; as list) {
+                                            <div class="font-semibold text-gray-900">
+                                              {{ h.label }}
+                                            </div>
+
+                                            @if (list.items.length) {
+                                              <div class="mt-2">
+                                                <app-nested-list
+                                                  [items]="list.items"
+                                                  [ordered]="list.ordered ?? false"
+                                                />
+                                              </div>
+                                            }
+                                          } @else {
+                                            <div class="flex items-baseline gap-2">
+                                              <span
+                                                class="font-semibold text-gray-900 whitespace-nowrap"
+                                                >{{ h.label }}</span
+                                              >
+                                              <span class="text-gray-400">:</span>
+                                              <span class="text-gray-700">{{ h.text }}</span>
+                                            </div>
+                                          }
+                                        </div>
+                                      }
+
                                       @default {}
                                     }
                                   }
@@ -611,50 +804,46 @@ export class CourseDetailsPageComponent {
   @ViewChild('mainPane') mainPane?: ElementRef<HTMLElement>;
 
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private coursesService = inject(CoursesService);
 
-  private slug = toSignal(this.route.paramMap.pipe(map((pm) => pm.get('slug') ?? '')), {
+  slug = toSignal(this.route.paramMap.pipe(map((pm) => pm.get('slug') ?? '')), {
     initialValue: '',
   });
 
   course = computed(() => this.coursesService.getBySlug(this.slug()));
-
-  // selected item state
   selectedId = signal<string | null>(null);
 
-  // expand/collapse state for groups
   private expanded = signal<Set<string>>(new Set());
-
-  // revealed state for revealable content (solutions)
   private revealed = signal<Set<string>>(new Set());
 
   constructor() {
-    // Auto-select first item on course change + reset state
     effect(() => {
       const c = this.course();
       const first = c?.items?.[0]?.id ?? null;
       this.selectedId.set(first);
-
-      // reset reveal state when switching course
       this.revealed.set(new Set());
-
-      // optional: reset expanded on course change
       this.expanded.set(new Set());
-
-      // reset revealed hints when switching course
       this.revealedHints.set(new Set());
     });
-
-    // Reset main-pane scroll when switching section/item
     effect(() => {
       const id = this.selectedId();
       if (!id) return;
 
-      // run after DOM update
       queueMicrotask(() => {
         this.mainPane?.nativeElement.scrollTo({ top: 0, behavior: 'auto' });
       });
     });
+  }
+
+  internalHref(
+    path: string,
+    queryParams?: Record<string, string | number | boolean | null | undefined>,
+  ): string {
+    const urlTree = this.router.createUrlTree([path], {
+      queryParams: queryParams ?? undefined,
+    });
+    return this.router.serializeUrl(urlTree);
   }
 
   private revealedHints = signal<Set<string>>(new Set());
@@ -694,7 +883,6 @@ export class CourseDetailsPageComponent {
   }
 
   asBulletList(text: string): string[] | null {
-    // Matches inline bullets like: "• A • B • C"
     if (!text.includes('•')) return null;
 
     const items = text
@@ -702,20 +890,16 @@ export class CourseDetailsPageComponent {
       .map((s) => s.trim())
       .filter(Boolean);
 
-    // Only treat as a list if it actually contains multiple items
     return items.length >= 2 ? items : null;
   }
 
   asNumberedList(text: string): string[] | null {
-    // Matches "1. Step 1 2. Step 2 3. Step 3"
-    // We only convert if we see at least two numbered items.
     const matches = [...text.matchAll(/(?:^|\s)(\d+)\.\s+([^]+?)(?=\s+\d+\.\s+|$)/g)];
     if (matches.length < 2) return null;
 
     return matches.map((m) => m[2].trim()).filter(Boolean);
   }
 
-  // Find selected item anywhere in the tree
   selectedItem = computed<CourseItem | null>(() => {
     const c = this.course();
     const id = this.selectedId();
