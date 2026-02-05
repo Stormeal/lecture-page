@@ -1,17 +1,52 @@
 export type CourseItemType = 'content' | 'external' | 'group';
 
+export interface CourseBlockBase {
+  testId?: string;
+}
+
+export type CourseListItem =
+  | string
+  | {
+      text: string;
+      children?: CourseListItem[];
+    };
+
 export type CourseContentBlock =
-  | { type: 'h1'; text: string }
-  | { type: 'h2'; text: string }
-  | { type: 'h3'; text: string }
-  | { type: 'p'; text: string }
-  | { type: 'callout'; variant: 'info' | 'warning'; text: string }
-  | { type: 'links'; links: { label: string; url: string; description?: string }[] }
-  | { type: 'downloads'; downloads: { label: string; url: string; meta?: string }[] }
-  | { type: 'code'; code: string; language?: string; filename?: string }
-  | { type: 'hint'; id: string; title: string; blocks: CourseContentBlock[] }
-  | { type: 'divider' }
-  | { type: 'labelValue'; label: string; text: string };
+  | (CourseBlockBase & { type: 'h1'; text: string })
+  | (CourseBlockBase & { type: 'h2'; text: string })
+  | (CourseBlockBase & { type: 'h3'; text: string })
+  | (CourseBlockBase & { type: 'p'; text: string })
+  | (CourseBlockBase & {
+      type: 'labelValue';
+      label: string;
+      /** old usage */
+      text?: string;
+      list?: {
+        ordered?: boolean; // false => ul, true => ol
+        items: CourseListItem[];
+      };
+    })
+  | (CourseBlockBase & { type: 'callout'; variant: 'info' | 'warning'; text: string })
+  | (CourseBlockBase & {
+      type: 'links';
+      links: { label: string; url: string; description?: string }[];
+    })
+  | (CourseBlockBase & {
+      type: 'downloads';
+      downloads: { label: string; url: string; meta?: string }[];
+    })
+  | (CourseBlockBase & { type: 'code'; code: string; language?: string; filename?: string })
+  | (CourseBlockBase & { type: 'hint'; id: string; title: string; blocks: CourseContentBlock[] })
+  | (CourseBlockBase & { type: 'divider' })
+  | (CourseBlockBase & {
+      type: 'button';
+      label: string;
+      routerLink?: string;
+      queryParams?: Record<string, string | number | boolean | null | undefined>;
+      href?: string;
+      variant?: 'primary' | 'secondary';
+      newTab?: boolean;
+    });
 
 export interface CourseItemBase {
   id: string;
