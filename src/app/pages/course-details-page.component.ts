@@ -1,4 +1,5 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
+import { LocationStrategy } from '@angular/common';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
@@ -805,6 +806,8 @@ export class CourseDetailsPageComponent {
 
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private locationStrategy = inject(LocationStrategy);
+
   private coursesService = inject(CoursesService);
 
   slug = toSignal(this.route.paramMap.pipe(map((pm) => pm.get('slug') ?? '')), {
@@ -843,7 +846,9 @@ export class CourseDetailsPageComponent {
     const urlTree = this.router.createUrlTree([path], {
       queryParams: queryParams ?? undefined,
     });
-    return this.router.serializeUrl(urlTree);
+
+    const internal = this.router.serializeUrl(urlTree);
+    return this.locationStrategy.prepareExternalUrl(internal);
   }
 
   private revealedHints = signal<Set<string>>(new Set());
