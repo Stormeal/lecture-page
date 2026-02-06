@@ -253,7 +253,7 @@ test('example with logging', async ({ page }) => {
         {
           type: 'button',
           label: 'Open Mission Control',
-          routerLink: '/test-site',
+          routerLink: '/test-site/table',
           queryParams: { from: 'playwright' },
           variant: 'primary',
           testId: 'open-test-site-block',
@@ -274,7 +274,7 @@ test('example with logging', async ({ page }) => {
         },
         {
           type: 'p',
-          text: `You are also required to inspect crew dossiers, verify roster filtering capabilities, and archive visual evidence of the final crew configuration.`,
+          text: `You are also required to inspect crew dossiers and archive visual evidence of the final crew configuration.`,
         },
 
         { type: 'divider' },
@@ -288,9 +288,8 @@ test('example with logging', async ({ page }) => {
             items: [
               'Access the Mission Control Crew Roster',
               'Register a new crew member using the Add user console',
-              'Promote Ava from Member to Manager',
+              'Promote Ava from Member to Manager (Optional)',
               'Inspect a crew dossier using hover-based intel',
-              'Use filtering to narrow down the visible crew roster',
               'Capture and store visual evidence of the final roster state',
             ],
           },
@@ -319,7 +318,7 @@ test('example with logging', async ({ page }) => {
                 ],
               },
               {
-                text: 'Locate Ava in the crew roster and update her clearance level',
+                text: 'Locate Ava in the crew roster and update her clearance level (Optional)',
                 children: [
                   'Change her role from Member to Manager',
                   'Verify the updated role is visible in the roster',
@@ -329,14 +328,7 @@ test('example with logging', async ({ page }) => {
                 text: 'Inspect crew dossier intel',
                 children: [
                   'Hover over the information icon for a crew member',
-                  'Confirm that additional information is displayed',
-                ],
-              },
-              {
-                text: 'Use roster filtering to narrow the list of crew members',
-                children: [
-                  'Apply at least one filter',
-                  'Verify that only matching crew members are visible',
+                  'Confirm that tooltip is visible',
                 ],
               },
               {
@@ -362,9 +354,8 @@ test('example with logging', async ({ page }) => {
             items: [
               'The Mission Control Crew Roster page is accessed',
               'A new crew member is added and visible in the roster',
-              'Ava’s role is updated to Manager',
+              'Ava’s role is updated to Manager (Optional)',
               'Crew dossier information appears on hover',
-              'Filtering updates the visible crew list',
               'A screenshot named exercise_4_mission_evidence is saved in the screenshots folder',
             ],
           },
@@ -388,7 +379,7 @@ test('example with logging', async ({ page }) => {
         {
           type: 'labelValue',
           label: 'TC-403',
-          text: 'Updating Ava’s role changes her clearance level from Member to Manager and affects only her row.',
+          text: 'Updating Ava’s role changes her clearance level from Member to Manager and affects only her row. (Optional)',
         },
         {
           type: 'labelValue',
@@ -398,11 +389,6 @@ test('example with logging', async ({ page }) => {
         {
           type: 'labelValue',
           label: 'TC-405',
-          text: 'Applying roster filters updates the visible crew list to match the selected criteria.',
-        },
-        {
-          type: 'labelValue',
-          label: 'TC-406',
           text: 'A mission evidence screenshot is captured and stored with the correct file name and location.',
         },
       ],

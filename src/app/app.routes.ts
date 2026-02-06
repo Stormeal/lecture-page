@@ -4,15 +4,22 @@ import { CourseDetailsPageComponent } from './pages/course-details-page.componen
 import { PlaywrightUnlockPageComponent } from './course-access/playwright-unlock-page.component';
 import { courseAccessGuard } from './course-access/course-access.guard';
 import { PlaywrightTestSitePageComponent } from './pages/playwright-test-site-page.component';
+import { PlaywrightTestSiteTablePageComponent } from './pages/playwright-test-site-table-page.component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'courses' },
   { path: 'courses', component: CoursesListPageComponent },
   { path: 'courses/playwright/unlock', component: PlaywrightUnlockPageComponent },
 
-  { path: 'test-site', component: PlaywrightTestSitePageComponent },
+  {
+    path: 'test-site',
+    children: [
+      { path: '', pathMatch: 'full', redirectTo: 'input-forms' },
+      { path: 'input-forms', component: PlaywrightTestSitePageComponent },
+      { path: 'table', component: PlaywrightTestSiteTablePageComponent },
+    ],
+  },
 
-  // Course details, protected for playwright only
   {
     path: 'courses/:slug',
     component: CourseDetailsPageComponent,
