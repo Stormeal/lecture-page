@@ -13,7 +13,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
       <header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <a
-            routerLink="/courses"
+            routerLink="/courses/playwright"
             class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 hover:text-slate-900
                    focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40 rounded-md px-2 py-1 -ml-2"
             data-testid="testsite-back-to-courses"
