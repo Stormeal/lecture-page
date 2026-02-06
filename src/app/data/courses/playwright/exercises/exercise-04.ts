@@ -395,22 +395,13 @@ test('example with logging', async ({ page }) => {
     },
 
     {
-      id: 'ex3-solution',
+      id: 'ex4-solution',
       title: 'Solution',
       summary: 'Reveal if you are stuck',
       type: 'content',
       revealable: true,
       blocks: [
-        { type: 'h2', text: 'Solution: Exercise 3' },
-        {
-          type: 'button',
-          label: 'Open Test Site',
-          routerLink: '/test-site',
-          queryParams: { from: 'playwright' },
-          variant: 'primary',
-          testId: 'open-test-site-block',
-          newTab: true,
-        },
+        { type: 'h2', text: 'Solution: Exercise 4' },
 
         { type: 'divider' },
 
@@ -418,52 +409,57 @@ test('example with logging', async ({ page }) => {
         {
           type: 'code',
           language: 'ts',
-          filename: 'exercise_3.spec.ts',
+          filename: 'exercise_4.spec.ts',
           code: `import { test, expect } from "@playwright/test";
 
 test.afterEach("Close browser", async ({ page }) => {
   page.close();
 });
 
-test("Exercise 3 - Filling out the forms", async ({ page }) => {
+test("Exercise 4 - Mission Control Crew Roster", async ({ page }) => {
   const baseUrl: string = "https://stormeal.github.io/lecture-page";
-  const nameInput = page.getByTestId("contact-name");
-  const emailInput = page.getByTestId("contact-email");
-  const messageInput = page.getByTestId("contact-message");
-  const submitBtn = page.getByTestId("contact-submit");
-  const namePreview = page.getByTestId("preview-name");
-  const emailPreview = page.getByTestId("preview-email");
-  const successfullToast = page.getByTestId("submit-success");
-  const resetBtn = page.getByTestId("testsite-reset");
+  const adminSection = page.getByTestId("user-admin");
+  const addNameInput = adminSection.getByTestId("add-user-name");
+  const addEmailInput = adminSection.getByTestId("add-user-email");
+  const addUserSubmitBtn = page.getByTestId("add-user-submit");
+  const directory = page.getByTestId("user-directory");
+  const list = directory.getByTestId("user-list");
+  const rows = list.getByTestId("user-row");
 
-  await test.step("Navigate to page", async () => {
-    await page.goto(\`\${baseUrl}/test-site\`);
+  const rowByName = (name: string) =>
+    rows.filter({ has: page.getByTestId("user-name").filter({ hasText: name }) });
+
+  const infoBtn = (row) => row.getByTestId("user-info");
+
+  await test.step("TC1: Navigation", async () => {
+    await page.goto(\`\${baseUrl}/test-site/table\`);
   });
 
-  await test.step("Fill the inputs and press the submit button", async () => {
-    await nameInput.fill("Alex Storm");
-    await emailInput.pressSequentially("ast@testhuset.dk");
-    await messageInput.pressSequentially(
-      "Mission log #3613, nothing to report but a lot of testing done today. Take care now 🔥",
-      { delay: 10 }
-    );
-    await submitBtn.click();
+  await test.step("TC2: Adding new crew member to roster", async () => {
+    await addNameInput.fill("Astro Naut");
+    await addEmailInput.fill("an@rocket.com");
+    await addUserSubmitBtn.click();
   });
 
-  await test.step("Validate the preview fields and confirmation toast", async () => {
-    await expect(namePreview).toHaveText("Alex Storm");
-    await expect(emailPreview).toHaveText("ast@testhuset.dk");
-    await expect(successfullToast).toBeVisible();
+  await test.step("TC3: Locate and update Ava clearance level", async () => {
+    const row = rowByName("Ada Lovelace");
+
+    // Change the role via the <select>
+    const role = row.getByTestId("user-role");
+    await role.selectOption({ label: "Manager" });
+
+    // Assert the <select> changed
+    await expect(role).toHaveValue("Manager");
   });
 
-  await test.step("Take a screenshot", async () => {
-    await page.screenshot({ path: "screenshots/day1_exercise3.png", fullPage: true });
+  await test.step("TC4: Inspect crew dossier intel", async () => {
+    const row = rowByName("Alex Storm");
+    await infoBtn(row).hover();
+    await expect(page.getByRole("tooltip")).toBeVisible();
   });
 
-  await test.step("Clear the inputs and validate fields are cleared", async () => {
-    await resetBtn.click();
-    await expect(namePreview).not.toHaveText("Alex Storm");
-    await expect(emailPreview).not.toHaveText("ast@testhuset.dk");
+  await test.step("TC5: Capture a screenshot of the final verified roster state", async () => {
+    await page.screenshot({ path: "screenshots/day1_exercise4.png", fullPage: true });
   });
 });`,
         },
@@ -474,10 +470,10 @@ test("Exercise 3 - Filling out the forms", async ({ page }) => {
         {
           type: 'p',
           text:
-            '• Uses stable getByTestId locators for form fields and previews (low-flake, easy to read) ' +
-            '• Demonstrates the difference between fill() (fast replacement) and pressSequentially() (character-by-character typing) ' +
+            '• Uses stable getByTestId locators for admin inputs, table rows, and actions (low-flake, easy to read) ' +
             '• Groups the flow with test.step() so failures are easier to understand in reports ' +
-            '• Verifies outcomes with web-first assertions (toHaveText / toBeVisible) instead of manual reads',
+            '• Verifies outcomes with web-first assertions (toHaveValue / toBeVisible) instead of manual reads ' +
+            '• Captures an end-state screenshot for quick review in CI artifacts',
         },
       ],
     },
