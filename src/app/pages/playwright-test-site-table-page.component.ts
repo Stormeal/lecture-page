@@ -131,7 +131,10 @@ type User = {
         </section>
 
         <!-- Directory -->
-        <section class="mt-6 rounded-xl bg-white shadow border border-slate-200 p-6">
+        <section
+          class="mt-6 rounded-xl bg-white shadow border border-slate-200 p-6"
+          data-testid="user-directory"
+        >
           <div class="flex items-center justify-between gap-4">
             <div>
               <p class="text-sm font-semibold text-slate-900">
