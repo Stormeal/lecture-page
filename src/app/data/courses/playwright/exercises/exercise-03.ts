@@ -2,8 +2,8 @@ import { CourseGroupItem } from '../../../course.model';
 
 export const EXERCISE_03: CourseGroupItem = {
   id: 'ex3',
-  title: 'Exercise 3: Locators and Assertions',
-  summary: 'How to find Locators and to assert on given Locator.',
+  title: 'Exercise 3: Text and Forms',
+  summary: 'Text and Form actions',
   type: 'group',
   overviewBlocks: [
     {
@@ -18,167 +18,167 @@ export const EXERCISE_03: CourseGroupItem = {
   ],
   children: [
     {
-      id: 'ex2-theory',
+      id: 'ex3-theory',
       title: 'Theory',
-      summary: 'Understanding the basics about Locators and Assertions.',
+      summary: 'Text input actions: fill(), press(), pressSequentially(), and clear().',
       type: 'content',
       blocks: [
-        { type: 'h2', text: 'Locators & Assertions' },
+        { type: 'h2', text: 'Input Actions' },
 
         {
           type: 'p',
-          text: `Before we jump into the theory for the exercise it's important to understand that Playwright tests are supposed to be simple. Basically they perform actions and assert the state against expectations. `,
-        },
-        {
-          type: 'p',
-          text: `Last exercise we used the navigation action, now we will start with some basics interactions. But first we need to talk, about Locators.`,
+          text: `In this exercise we focus on the most common “typing” interactions in Playwright. These actions are used on a Locator and Playwright will automatically wait for the element to be ready (actionable) before performing them.`,
         },
         { type: 'divider' },
 
-        { type: 'h3', text: 'Locators' },
-
+        { type: 'h3', text: 'fill()' },
         {
           type: 'p',
-          text: `Performing actions starts with locating certain elements. We can use Playwrights Locators API for this specific action. Locators represent a way to find element(s) on the page at the given moment. \n Playwright automatically waits for this element to be "actionable" before it performs the given action, therefore we don't actually need to wait for it to become available.`,
+          text: `fill() replaces the existing value of an input/textarea with the new value. It clears the field automatically and sets the value in one go (not character-by-character).`,
         },
         {
           type: 'code',
           language: 'ts',
-          code: `// Create a locator.
-const getStarted = page.getByRole('link', { name: 'Get started' });
+          code: `// Replaces the value of the input
+await page.getByLabel('Username').fill('john_doe');`,
+        },
+        {
+          type: 'labelValue',
+          label: 'Characteristics:',
+          list: {
+            ordered: false,
+            items: [
+              'Clears the field automatically',
+              'Fast and deterministic for most form fields',
+              `Best choice for “API-like” direct text replacement`,
+            ],
+          },
+        },
 
-// Click it.
-await getStarted.click();`,
-        },
-
-        {
-          type: 'p',
-          text: `In some cases, you can also write the locator with the action in a single line`,
-        },
-        {
-          type: 'code',
-          language: 'ts',
-          code: `await page.getByRole('link', { name: 'Get started' }).click();`,
-        },
-        {
-          type: 'p',
-          text: `Locators are strict. Meaning, that if you perform an action on a locator that targets a specific DOM element and it finds more than one element that matches your locator, it will throw an error. This doesn't mean that the locator is wrong, just not specific enough. For example, the following call below will throw an error if there is more than one button in the DOM.`,
-        },
-        {
-          type: 'code',
-          language: 'ts',
-          code: `await page.getByRole('button').click();`,
-        },
-        {
-          type: 'links',
-          links: [
-            {
-              label: 'Playwright Locators',
-              url: 'https://playwright.dev/docs/locators',
-              description: 'Official Playwright locator documentation',
-            },
-          ],
-        },
         { type: 'divider' },
 
-        { type: 'h3', text: 'Assertions' },
-
+        { type: 'h3', text: 'press()' },
         {
           type: 'p',
-          text: `Assertions are how we verify the UI is in the state we expect. In Playwright Test, assertions are done with the \`expect()\` API.`,
-        },
-        {
-          type: 'p',
-          text: `The big win: Playwright has "web-first" (auto-retrying) assertions for locators. That means \`expect(locator).toBeVisible()\` (and friends) will wait and retry until the condition is met (or it times out). This is a major reason Playwright tests can be stable without sprinkling manual waits everywhere.`,
+          text: `press() simulates pressing a keyboard key (or key combo) on a focused element. It’s great for submitting with Enter, triggering shortcuts, or using navigation keys.`,
         },
         {
           type: 'code',
           language: 'ts',
-          code: `import { test, expect } from '@playwright/test';
+          code: `// Submit a search by pressing Enter
+await page.getByRole('textbox', { name: 'Search' }).press('Enter');
 
-test('shows success message after saving', async ({ page }) => {
-  await page.getByRole('button', { name: 'Save' }).click();
-
-  // Web-first assertion: retries until the message appears.
-  await expect(page.getByRole('alert')).toBeVisible();
-  await expect(page.getByRole('alert')).toHaveText(/saved/i);
-});`,
+// Example: select all (platform-specific shortcuts may differ)
+await page.getByRole('textbox', { name: 'Search' }).press('Control+A');`,
+        },
+        {
+          type: 'labelValue',
+          label: 'Notes:',
+          list: {
+            ordered: false,
+            items: [
+              'Uses keyboard events like a real user',
+              'Does not insert text (use fill() or pressSequentially() for typing)',
+            ],
+          },
         },
 
+        { type: 'divider' },
+
+        { type: 'h3', text: 'pressSequentially()' },
         {
           type: 'p',
-          text: `Prefer asserting via locator matchers (like \`toBeVisible\`, \`toHaveText\`, \`toHaveValue\`, \`toBeChecked\`) instead of reading values yourself with \`innerText()\`, \`isVisible()\`, etc. Locator assertions are designed to avoid race conditions and flakiness.`,
+          text: `pressSequentially() types text one character at a time, emitting key events for each character. This is useful when the UI reacts to typing (masking, autocomplete, type-ahead, per-keystroke validation).`,
         },
         {
           type: 'code',
           language: 'ts',
-          code: `// ✅ Prefer locator assertions (auto-retry)
-await expect(page.getByLabel('Email')).toHaveValue('boomers@internet.com');
-await expect(page.getByRole('checkbox', { name: 'Subscribe' })).toBeChecked();
-
-// ❌ More racy: manual reads are a snapshot in time
-// const visible = await page.getByRole('alert').isVisible();
-// expect(visible).toBe(true);`,
+          code: `// Character-by-character typing (more “realistic”)
+await page.getByRole('textbox', { name: 'Chat message' }).pressSequentially('hello world');`,
         },
-
+        {
+          type: 'labelValue',
+          label: 'Why use this?:',
+          list: {
+            ordered: false,
+            items: [
+              'Autocomplete / type-ahead inputs',
+              'Masked inputs',
+              'UI logic that runs on keydown/keyup',
+            ],
+          },
+        },
         {
           type: 'p',
-          text: `Assertions have their own timeout (separate from the test timeout). By default, Playwright will keep retrying an expectation until it passes or the expect timeout is hit.`,
+          text: `Rule of thumb: start with fill() for speed and stability. If the UI doesn’t behave correctly because it expects real typing events, switch to pressSequentially().`,
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'clear()' },
+        {
+          type: 'p',
+          text: `clear() clears the input value without typing. Use it when you want to remove text but avoid triggering “typing” behavior, or when you want to be explicit about clearing before another action.`,
         },
         {
           type: 'code',
           language: 'ts',
-          code: `// Per-assertion timeout override
-await expect(page.getByRole('status')).toHaveText('Ready', { timeout: 10_000 });`,
+          code: `// Clears without typing
+await page.getByRole('textbox', { name: 'Search' }).clear();`,
+        },
+        {
+          type: 'labelValue',
+          label: 'When to use?:',
+          list: {
+            ordered: false,
+            items: [
+              'Remove text without replacing it',
+              'Inputs where typing/replacing triggers unwanted events',
+              'As a clean step before a different input strategy',
+            ],
+          },
         },
 
-        {
-          type: 'p',
-          text: `When you need to wait for a non-UI condition (or some computed value) to eventually become true, use \`expect.poll()\`. It repeatedly runs your function until the matcher passes.`,
-        },
-        {
-          type: 'code',
-          language: 'ts',
-          code: `// Poll an arbitrary condition until it matches.
-await expect.poll(async () => {
-  const countText = await page.getByTestId('cart-count').textContent();
-  return Number(countText);
-}).toBe(3);`,
-        },
+        { type: 'divider' },
 
+        { type: 'h3', text: 'Choosing the right action' },
         {
           type: 'p',
-          text: `And yes, you can even assert visuals: Playwright can compare screenshots with \`toHaveScreenshot()\`. (The future is now.)`,
-        },
-        {
-          type: 'code',
-          language: 'ts',
-          code: `// Visual regression assertion
-await expect(page).toHaveScreenshot();`,
+          text:
+            `A quick comparison:\n` +
+            `- fill(): instant replace, no per-key typing events\n` +
+            `- pressSequentially(): character-by-character, emits full key events\n` +
+            `- press(): keyboard keys/shortcuts (Enter, Tab, Arrow keys, etc.)\n` +
+            `- clear(): remove value without typing`,
         },
 
         {
           type: 'links',
           links: [
             {
-              label: 'Playwright Test Assertions',
-              url: 'https://playwright.dev/docs/test-assertions',
-              description: 'Official guide to expect() and web-first assertions',
-            },
-            {
-              label: 'Locator Assertions API',
-              url: 'https://playwright.dev/docs/api/class-locatorassertions',
-              description: 'Full list of locator-specific matchers (toBeVisible, toHaveText, etc.)',
-            },
-            {
-              label: 'Expect timeout',
-              url: 'https://playwright.dev/docs/test-timeouts#expect-timeout',
-              description: 'How assertion timeouts work (separate from test timeouts)',
-            },
-            {
-              label: 'Actionability & auto-waiting',
+              label: 'Actionability (auto-waiting)',
               url: 'https://playwright.dev/docs/actionability',
-              description: 'How Playwright waits for actions and why it reduces flakiness',
+              description: 'How Playwright waits for elements to be ready before actions',
+            },
+            {
+              label: 'Locator.fill()',
+              url: 'https://playwright.dev/docs/api/class-locator#locator-fill',
+              description: 'Official API docs for fill()',
+            },
+            {
+              label: 'Locator.press()',
+              url: 'https://playwright.dev/docs/api/class-locator#locator-press',
+              description: 'Official API docs for press()',
+            },
+            {
+              label: 'Locator.pressSequentially()',
+              url: 'https://playwright.dev/docs/api/class-locator#locator-press-sequentially',
+              description: 'Official API docs for pressSequentially()',
+            },
+            {
+              label: 'Locator.clear()',
+              url: 'https://playwright.dev/docs/api/class-locator#locator-clear',
+              description: 'Official API docs for clear()',
             },
           ],
         },
@@ -274,7 +274,6 @@ await expect(page).toHaveScreenshot();`,
                 children: [
                   'The astronaut name is reflected correctly',
                   'The contact channel is reflected correctly',
-                  'The mission notes appear as expected',
                 ],
               },
               'Once all mission data has been verified, initiate the transmission by pressing the Submit button.',
@@ -450,18 +449,17 @@ await missionNotes.press('Backspace');`,
     },
 
     {
-      id: 'ex2-solution',
+      id: 'ex3-solution',
       title: 'Solution',
       summary: 'Reveal if you are stuck',
       type: 'content',
       revealable: true,
       blocks: [
-        { type: 'h2', text: 'Solution: Exercise 2' },
+        { type: 'h2', text: 'Solution: Exercise 3' },
         {
           type: 'button',
           label: 'Open Test Site',
           routerLink: '/test-site',
-          // optionally pass where they came from (if you want it)
           queryParams: { from: 'playwright' },
           variant: 'primary',
           testId: 'open-test-site-block',
@@ -474,45 +472,54 @@ await missionNotes.press('Backspace');`,
         {
           type: 'code',
           language: 'ts',
-          filename: 'exercise_2.spec.ts',
+          filename: 'exercise_3.spec.ts',
           code: `import { test, expect } from "@playwright/test";
 
-test("Exercise 2 - Locate and Assert!", async ({ page }) => {
+test.afterEach("Close browser", async ({ page }) => {
+  page.close();
+});
 
-  // Locators:
-  const cookieBotDialogHeader = page.locator("#CybotCookiebotDialogHeader");
-  const courseMenuBtn = page.getByRole("link", { name: "Kursus" });
-  const playwrightCourseItem = page.locator('a:has-text("Automatisering med Playwright")');
-  const courseTitle = page.locator("h1.hero-title");
-  const pricingContainer = page.locator("div.pricing-part");
-  const price = pricingContainer.locator("span[data-variation-price]");
+test("Exercise 3 - Filling out the forms", async ({ page }) => {
+  const baseUrl: string = "https://stormeal.github.io/lecture-page";
+  const nameInput = page.getByTestId("contact-name");
+  const emailInput = page.getByTestId("contact-email");
+  const messageInput = page.getByTestId("contact-message");
+  const submitBtn = page.getByTestId("contact-submit");
+  const namePreview = page.getByTestId("preview-name");
+  const emailPreview = page.getByTestId("preview-email");
+  const successfullToast = page.getByTestId("submit-success");
+  const resetBtn = page.getByTestId("testsite-reset");
 
   await test.step("Navigate to page", async () => {
-    // Navigates to the page and waits for the DOM to finish loading
-    await page.goto("https://testhuset.dk", { waitUntil: "domcontentloaded" });
-
-    // Handles the cookie dialog if it appears
-    if (cookieBotDialogHeader) {
-      const cookieDialogAcceptBtn = page.getByRole("button", { name: "Tillad valgte" });
-      await cookieDialogAcceptBtn.click();
-    }
+    await page.goto(\`\${baseUrl}/test-site\`);
   });
 
-  await test.step("Press the KURSUS menu button", async () => {
-    await courseMenuBtn.click();
+  await test.step("Fill the inputs and press the submit button", async () => {
+    await nameInput.fill("Alex Storm");
+    await emailInput.pressSequentially("ast@testhuset.dk");
+    await messageInput.pressSequentially(
+      "Mission log #3613, nothing to report but a lot of testing done today. Take care now 🔥",
+      { delay: 10 }
+    );
+    await submitBtn.click();
   });
 
-  await test.step("Press the Playwright Course element and screenshot the page", async () => {
-    await playwrightCourseItem.click();
-    await page.screenshot({ path: "screenshots/day1_exercise2.png", fullPage: true });
+  await test.step("Validate the preview fields and confirmation toast", async () => {
+    await expect(namePreview).toHaveText("Alex Storm");
+    await expect(emailPreview).toHaveText("ast@testhuset.dk");
+    await expect(successfullToast).toBeVisible();
   });
 
-  await test.step("Assert course title and price", async () => {
-    await expect(courseTitle).toHaveText("Automatisering med Playwright");
-    await expect(price).toHaveText("10.499 kr.");
+  await test.step("Take a screenshot", async () => {
+    await page.screenshot({ path: "screenshots/day1_exercise3.png", fullPage: true });
   });
-});
-`,
+
+  await test.step("Clear the inputs and validate fields are cleared", async () => {
+    await resetBtn.click();
+    await expect(namePreview).not.toHaveText("Alex Storm");
+    await expect(emailPreview).not.toHaveText("ast@testhuset.dk");
+  });
+});`,
         },
 
         { type: 'divider' },
@@ -520,7 +527,11 @@ test("Exercise 2 - Locate and Assert!", async ({ page }) => {
         { type: 'h3', text: 'Why this is a good baseline' },
         {
           type: 'p',
-          text: '• Uses Playwright Test and the built-in page fixture (simple, standard, and maintainable) • Prefers semantic locators with getByRole for key actions (more resilient than CSS and aligns with accessibility) • Scopes locators via a parent container (pricingContainer.locator(...)) to reduce accidental matches • Uses test.step() to make the report and failures easier to read (great for debugging)',
+          text:
+            '• Uses stable getByTestId locators for form fields and previews (low-flake, easy to read) ' +
+            '• Demonstrates the difference between fill() (fast replacement) and pressSequentially() (character-by-character typing) ' +
+            '• Groups the flow with test.step() so failures are easier to understand in reports ' +
+            '• Verifies outcomes with web-first assertions (toHaveText / toBeVisible) instead of manual reads',
         },
       ],
     },
