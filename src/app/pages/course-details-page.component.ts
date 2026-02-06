@@ -51,7 +51,7 @@ import { NestedListComponent } from '../shared/nested-list.component';
 
       <!-- Content area -->
       <div class="max-w-7xl mx-auto px-4 sm:px-6">
-        <div class="h-[calc(100vh-4.5rem)] py-6">
+        <div class="h-[calc(100vh-6.5rem)] py-6">
           @if (course(); as c) {
             <div class="h-full grid grid-cols-1 lg:grid-cols-[1fr_460px] gap-6">
               <!-- Main pane -->
