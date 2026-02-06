@@ -1,0 +1,55 @@
+lecture-page/
+├── .angular/
+├── .github/
+│   └── workflows/
+│       └── deploy-pages.yml
+├── .vscode/
+├── dist/                       (build output)
+├── node_modules/               (dependencies)
+├── public/
+├── src/
+│   ├── app/
+│   │   ├── components/
+│   │   │   └── course-card.component.ts
+│   │   ├── course-access/
+│   │   │   ├── course-access.guard.ts
+│   │   │   ├── playwright-access.config.ts
+│   │   │   └── playwright-unlock-page.component.ts
+│   │   ├── data/
+│   │   │   ├── courses/
+│   │   │   ├── course.model.ts
+│   │   │   ├── course.service.ts
+│   │   │   └── courses.data.ts
+│   │   ├── pages/
+│   │   │   ├── course-details-page.component.ts
+│   │   │   ├── courses-list-page.component.ts
+│   │   │   ├── playwright-test-site-page.component.ts
+│   │   │   └── playwright-test-site-table-page.component.ts
+│   │   ├── shared/
+│   │   │   ├── asset-url.ts
+│   │   │   └── nested-list.component.ts
+│   │   ├── app.config.ts
+│   │   ├── app.css
+│   │   ├── app.html
+│   │   ├── app.routes.ts
+│   │   ├── app.spec.ts
+│   │   └── app.ts
+│   ├── assets/
+│   │   ├── day1-presentation.pdf
+│   │   ├── day2-presentation.pdf
+│   │   ├── fundamental-development-img.jpg
+│   │   ├── playwright-cheat-sheet.pdf
+│   │   └── playwright-course-img.jpg
+│   ├── index.html
+│   ├── main.ts
+│   └── styles.css
+├── .editorconfig
+├── .gitignore
+├── .postcssrc.json
+├── angular.json
+├── package-lock.json
+├── package.json
+├── README.md
+├── tsconfig.app.json
+├── tsconfig.json
+└── tsconfig.spec.json
