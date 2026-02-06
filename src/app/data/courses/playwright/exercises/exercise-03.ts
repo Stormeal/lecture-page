@@ -199,7 +199,7 @@ await page.getByRole('textbox', { name: 'Search' }).clear();`,
         {
           type: 'button',
           label: 'Open Test Site',
-          routerLink: '/test-site',
+          routerLink: '/test-site/input-forms',
           // optionally pass where they came from (if you want it)
           queryParams: { from: 'playwright' },
           variant: 'primary',
