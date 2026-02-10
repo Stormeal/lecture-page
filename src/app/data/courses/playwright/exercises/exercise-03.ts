@@ -8,7 +8,7 @@ export const EXERCISE_03: CourseGroupItem = {
   overviewBlocks: [
     {
       type: 'p',
-      text: `In this exercise we will take what we learned previously and apply this to deepen our knowledge within Playwright. There's two major topics we can't go without. The first one is Locators and the second is Assertions.`,
+      text: `This exercise is all about text and form actions. We will learn about how we can successfully interact with form elements while also using the skills we have learned previously.`,
     },
     {
       type: 'callout',

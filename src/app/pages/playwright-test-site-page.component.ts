@@ -31,7 +31,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
       </header>
 
       <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 flex-1 overflow-hidden">
-        <div class="h-full flex flex-col py-8 pb-20 min-h-0">
+        <div class="h-full flex flex-col py-6 pb-16 min-h-0">
           <!-- Context card (fixed, not scrollable) -->
           <section class="rounded-xl bg-white shadow border border-slate-200 p-6">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -269,7 +269,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
                       >
                       <textarea
                         id="message"
-                        rows="6"
+                        rows="3"
                         class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900
                                focus:outline-none focus:ring-4 focus:ring-blue-400/25"
                         placeholder="Type your message…"
@@ -291,30 +291,33 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
                       </div>
                     </div>
 
-                    <div class="flex items-start gap-3">
-                      <input
-                        id="newsletter"
-                        type="checkbox"
-                        class="mt-1"
-                        formControlName="newsletter"
-                      />
-                      <label for="newsletter" class="text-sm text-slate-700">
-                        Subscribe to updates (checkbox target for Playwright)
-                      </label>
+                    <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-8">
+                      <div class="flex items-start gap-3">
+                        <input
+                          id="newsletter"
+                          type="checkbox"
+                          class="mt-1"
+                          formControlName="newsletter"
+                        />
+                        <label for="newsletter" class="text-sm text-slate-700">
+                          Subscribe to updates
+                        </label>
+                      </div>
+
+                      <div class="flex items-start gap-3">
+                        <input
+                          id="acceptTerms"
+                          type="checkbox"
+                          class="mt-1"
+                          formControlName="acceptTerms"
+                          data-testid="contact-accept-terms"
+                        />
+                        <label for="acceptTerms" class="text-sm text-slate-700">
+                          Accept mission terms
+                        </label>
+                      </div>
                     </div>
 
-                    <div class="flex items-start gap-3">
-                      <input
-                        id="acceptTerms"
-                        type="checkbox"
-                        class="mt-1"
-                        formControlName="acceptTerms"
-                        data-testid="contact-accept-terms"
-                      />
-                      <label for="acceptTerms" class="text-sm text-slate-700">
-                        Accept mission terms (required)
-                      </label>
-                    </div>
                     @if (showError('acceptTerms')) {
                       <p class="text-xs text-red-600" data-testid="error-acceptTerms">
                         You must accept the mission terms.
@@ -435,10 +438,10 @@ export class PlaywrightTestSitePageComponent {
     email: ['', [Validators.required, Validators.email]],
     topic: ['', [Validators.required]],
     priority: ['normal' as 'low' | 'normal' | 'high'],
-    clearances: [<string[]>[], [Validators.required]],
+    clearances: [<string[]>[]],
     message: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
     newsletter: [false],
-    acceptTerms: [false, [Validators.requiredTrue]],
+    acceptTerms: [false],
   });
 
   messageLength = computed(() => this.form.value.message?.length ?? 0);
