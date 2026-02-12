@@ -11,7 +11,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
     <div class="h-screen flex flex-col bg-orange-50">
       <!-- Top bar -->
       <header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+        <div class="max-w-3/4 mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <a
             routerLink="/courses/playwright"
             class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 hover:text-slate-900
@@ -30,10 +30,10 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
         </div>
       </header>
 
-      <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 flex-1 overflow-hidden">
+      <main class="max-w-3/4 mx-auto w-full px-4 sm:px-6 flex-1 overflow-hidden">
         <div class="h-full flex flex-col py-6 pb-16 min-h-0">
           <!-- Context card (fixed, not scrollable) -->
-          <section class="rounded-xl bg-white shadow border border-slate-200 p-6">
+          <section class="rounded-xl bg-white shadow border border-slate-200 p-4">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div>
                 <p class="text-sm font-semibold text-slate-900">Contact Us (Test Form)</p>
