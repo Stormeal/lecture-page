@@ -57,6 +57,7 @@ jobs:
             OUT_DIR="$(ls -d dist/* | head -n 1)"
           fi
           echo "out_dir=$OUT_DIR" >> "$GITHUB_OUTPUT"
+          echo "OUT_DIR=$OUT_DIR" >> "$GITHUB_ENV"
           echo "Resolved OUT_DIR=$OUT_DIR"
 
       - name: Bundle Allure report into Pages output
@@ -65,7 +66,7 @@ jobs:
         run: |
           set -e
           REPORT_SRC="src/tests/allure-report"
-          REPORT_DST="${{ steps.dist.outputs.out_dir }}/allure"
+          REPORT_DST="$OUT_DIR/allure"
 
           if [ -f "$REPORT_SRC/index.html" ]; then
             mkdir -p "$REPORT_DST"
