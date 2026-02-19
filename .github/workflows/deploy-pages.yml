@@ -53,8 +53,11 @@ jobs:
         run: |
           set -euo pipefail
 
-          PROJECT="$(node -p "require('./angular.json').defaultProject")"
-          OUT_BASE="$(node -p "require('./angular.json').projects['$PROJECT'].architect.build.options.outputPath")"
+          PROJECT="$(node -p "const a=require('./angular.json'); a.defaultProject || Object.keys(a.projects)[0]")"
+          OUT_BASE="$(node -p "const a=require('./angular.json'); a.projects['$PROJECT'].architect.build.options.outputPath")"
+
+          echo "PROJECT=$PROJECT"
+          echo "OUT_BASE=$OUT_BASE"
 
           if [ -f "$OUT_BASE/browser/index.html" ]; then
             OUT_DIR="$OUT_BASE/browser"
