@@ -207,6 +207,23 @@ export const PLAYWRIGHT_COURSE: Course = {
     },
 
     {
+      id: 'reporters',
+      title: 'Reporters',
+      summary: 'Various reporters for displaying Playwright report',
+      badge: 'Files',
+      type: 'content',
+      blocks: [
+        { type: 'h2', text: 'Links' },
+        {
+          type: 'links',
+          links: [
+            { label: 'Allure Reporter', url: 'https://stormeal.github.io/lecture-page/reports' },
+          ],
+        },
+      ],
+    },
+
+    {
       id: 'downloads',
       title: 'Downloads',
       summary: 'Handouts and downloadable material',
