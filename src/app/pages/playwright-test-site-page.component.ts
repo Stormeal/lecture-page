@@ -436,7 +436,7 @@ export class PlaywrightTestSitePageComponent {
   form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(80)]],
     email: ['', [Validators.required, Validators.email]],
-    topic: ['', [Validators.required]],
+    topic: [''],
     priority: ['normal' as 'low' | 'normal' | 'high'],
     clearances: [<string[]>[]],
     message: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],

@@ -45,6 +45,7 @@ src/tests/allure-report/
 testem.log
 /typings
 __screenshots__/
+src/tests/test-results/
 
 # System files
 .DS_Store
