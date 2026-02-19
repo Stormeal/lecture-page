@@ -29,6 +29,13 @@ yarn-error.log
 !.vscode/mcp.json
 .history/*
 
+# Allure
+/src/tests/allure-results/
+/src/tests/allure-report/
+**/allure-results/
+**/allure-report/
+
+
 # Miscellaneous
 /.angular/cache
 .sass-cache/
