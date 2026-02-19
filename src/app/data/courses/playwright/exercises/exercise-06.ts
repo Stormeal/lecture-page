@@ -403,7 +403,7 @@ expect(body).toHaveProperty('status');`,
 
     {
       id: 'ex6_1-solution',
-      title: 'Solution 6.1: Red Team Recon',
+      title: 'Solution 6.1',
       summary: 'Reveal if you are stuck',
       type: 'content',
       revealable: true,
@@ -463,6 +463,325 @@ test('Exercise 6.1 - Red Team Recon (Health Check)', async ({ request }) => {
             '• Fails fast: asserts status before parsing JSON\n' +
             '• Validates a stable contract: checks for key fields without asserting the full payload\n' +
             '• Includes header validation: verifies Content-Type for correct response format\n' +
+            '• Uses test.step(): keeps the report readable and failures easy to locate',
+        },
+      ],
+    },
+
+    {
+      id: 'ex6_2-exercise',
+      title: 'Exercise 6.2: Authentication Verification',
+      summary: `Register, login, and extract token (APIRequestContext)`,
+      type: 'content',
+      blocks: [
+        { type: 'h2', text: 'Red Team Simulation – Credential Verification' },
+
+        { type: 'labelValue', label: 'System', text: `Public API Surface` },
+        { type: 'labelValue', label: 'Division', text: `Internal Red Team` },
+        { type: 'labelValue', label: 'Operation Status', text: `Auth Flow Validation` },
+        { type: 'labelValue', label: 'Mission Duration', text: `30–45 minutes` },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Mission Briefing' },
+
+        { type: 'p', text: `Engineer,` },
+        {
+          type: 'p',
+          text: `Recon confirmed the API is alive. Your next task is to validate the authentication boundary: a legitimate user should be able to register and obtain access, and the API should return an authentication token we can use for controlled probing of protected endpoints.`,
+        },
+        {
+          type: 'p',
+          text: `This is not a UI login. This is a direct API authentication verification using Playwright.`,
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Mission Objectives' },
+
+        {
+          type: 'labelValue',
+          label: 'Your mission is to:',
+          list: {
+            ordered: false,
+            items: [
+              'Create a pure API test using Playwright (no browser UI involved)',
+              'Register a new user via the Notes API',
+              'Login with the registered credentials',
+              'Validate the login response contract (stable fields only)',
+              'Extract the auth token from the response and verify it is present',
+            ],
+          },
+          testId: 'ex6-2-mission-objectives',
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Operational Instructions' },
+
+        {
+          type: 'labelValue',
+          label: 'Follow these steps:',
+          list: {
+            ordered: true,
+            items: [
+              'Create a new test file for Exercise 6.2.',
+              'Write a pure API test using the Playwright Test runner request fixture (do not use page).',
+              'Generate unique test data for each run (at minimum: unique email).',
+              'Send a registration request to: https://practice.expandtesting.com/notes/api/users/register',
+              'Assert that registration succeeded (status + stable response fields).',
+              'Send a login request to: https://practice.expandtesting.com/notes/api/users/login using the same email and password.',
+              'Assert that login succeeded (status + stable response fields).',
+              'Parse the login response body and extract the token from the response payload.',
+              'Assert that the token exists and is non-empty.',
+              'Store the token in test scope for the next exercise (do not write it to a file, and do not hardcode it).',
+            ],
+          },
+          testId: 'ex6-2-operational-instructions',
+        },
+
+        {
+          type: 'callout',
+          variant: 'info',
+          text: `Keep your assertions stable. Validate the presence of key fields (success/message/token), not the full response payload.`,
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Mission Completion Criteria (Definition of Done)' },
+
+        {
+          type: 'labelValue',
+          label: 'The mission is considered successful when:',
+          list: {
+            ordered: false,
+            items: [
+              'The test runs without launching a browser UI',
+              'A user is registered with unique credentials',
+              'Login succeeds for the registered user',
+              'The login response is validated using stable contract assertions',
+              'An auth token is extracted from the response',
+              'The token is asserted to be present and non-empty',
+              'The test is structured and readable in the Playwright report',
+            ],
+          },
+          testId: 'ex6-2-definition-of-done',
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Test Cases' },
+
+        {
+          type: 'labelValue',
+          label: 'TC-621',
+          text: 'Registering a new user succeeds and returns a stable confirmation contract.',
+          testId: 'ex6-2-tc-621',
+        },
+        {
+          type: 'labelValue',
+          label: 'TC-622',
+          text: 'Logging in with the registered credentials succeeds and returns a stable login contract.',
+          testId: 'ex6-2-tc-622',
+        },
+        {
+          type: 'labelValue',
+          label: 'TC-623',
+          text: 'A non-empty authentication token is returned on successful login and can be extracted for later use.',
+          testId: 'ex6-2-tc-623',
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Hints' },
+
+        {
+          type: 'hint',
+          id: 'ex6-2-hint-spec-structure',
+          title: 'Hint 0: Structuring an auth flow API spec',
+          blocks: [
+            {
+              type: 'p',
+              text: `Keep the flow in one test: register first, then login, then extract token. Use test.step() to make each phase readable in reports.`,
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              filename: 'auth flow structure example',
+              code: `test('Register + login returns token', async ({ request }) => {
+  // step 1: register
+  // step 2: login
+  // step 3: extract token
+});`,
+            },
+          ],
+        },
+
+        {
+          type: 'hint',
+          id: 'ex6-2-hint-unique-data',
+          title: 'Hint 1: Avoid collisions with unique credentials',
+          blocks: [
+            {
+              type: 'p',
+              text: `Hosted practice APIs are shared by many users. Use a unique email each run so registration does not fail due to an existing user.`,
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              filename: 'unique email example',
+              code: `const email = \`user+\${Date.now()}@example.com\`;`,
+            },
+          ],
+        },
+
+        {
+          type: 'hint',
+          id: 'ex6-2-hint-post-shape',
+          title: 'Hint 2: Sending POST data and headers',
+          blocks: [
+            {
+              type: 'p',
+              text: `Most auth endpoints require a POST body and appropriate headers. If the API expects form-encoded input, send it as form data. If it expects JSON, send JSON. Use the API docs to confirm which one applies.`,
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              filename: 'post examples (choose one)',
+              code: `// If the API expects JSON:
+await request.post('https://example.com/api/login', {
+  data: { email, password },
+});
+
+// If the API expects form data:
+await request.post('https://example.com/api/login', {
+  form: { email, password },
+});`,
+            },
+          ],
+        },
+
+        {
+          type: 'hint',
+          id: 'ex6-2-hint-token-extraction',
+          title: 'Hint 3: Extracting and validating the token',
+          blocks: [
+            {
+              type: 'p',
+              text: `Parse JSON after asserting the response is successful. Extract the token from the response payload and assert it is non-empty.`,
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              filename: 'token extraction example',
+              code: `expect(response.ok()).toBeTruthy();
+const body = await response.json();
+const token = body?.data?.token;
+expect(token).toBeTruthy();`,
+            },
+          ],
+        },
+      ],
+    },
+
+    {
+      id: 'ex6_2-solution',
+      title: 'Solution 6.2',
+      summary: 'Reveal if you are stuck',
+      type: 'content',
+      revealable: true,
+      blocks: [
+        {
+          type: 'callout',
+          variant: 'info',
+          text: `This solution uses a pure API test with the request fixture. It registers a unique user, logs in with the same credentials, validates a stable response contract, and extracts the token for later exercises.`,
+        },
+
+        {
+          type: 'code',
+          language: 'ts',
+          filename: 'exercise_6_2.spec.ts',
+          code: `import { test, expect } from '@playwright/test';
+
+test('Exercise 6.2 - Authentication Verification (Register + Login)', async ({ request }) => {
+  const email = \`redteam+\${Date.now()}@example.com\`;
+  const password = '123456';
+  const name = 'Red Team Analyst';
+
+  await test.step('Register a new user', async () => {
+    const response = await request.post('https://practice.expandtesting.com/notes/api/users/register', {
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/x-www-form-urlencoded',
+      },
+      form: {
+        name,
+        email,
+        password,
+      },
+    });
+
+    expect(response.ok()).toBeTruthy();
+
+    const body = await response.json();
+
+    // Stable contract checks (avoid full payload matching)
+    expect(body).toEqual(
+      expect.objectContaining({
+        success: expect.any(Boolean),
+        message: expect.any(String),
+      }),
+    );
+  });
+
+  let token = '';
+
+  await test.step('Login and extract token', async () => {
+    const response = await request.post('https://practice.expandtesting.com/notes/api/users/login', {
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/x-www-form-urlencoded',
+      },
+      form: {
+        email,
+        password,
+      },
+    });
+
+    expect(response.ok()).toBeTruthy();
+
+    const body = await response.json();
+
+    // Stable contract checks
+    expect(body).toEqual(
+      expect.objectContaining({
+        success: expect.any(Boolean),
+        message: expect.any(String),
+        data: expect.any(Object),
+      }),
+    );
+
+    token = body?.data?.token ?? '';
+    expect(token).toBeTruthy();
+  });
+
+  await test.step('Token is available for later exercises', async () => {
+    expect(token.length).toBeGreaterThan(0);
+  });
+});`,
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Why this is a good baseline' },
+
+        {
+          type: 'p',
+          text:
+            '• Pure API test: uses the request fixture and does not rely on page/UI\n' +
+            '• Collision-safe: generates a unique email to avoid shared-environment conflicts\n' +
+            '• Clear flow: register → login → extract token (ready for Exercise 6.3)\n' +
+            '• Stable assertions: validates presence and types of key fields instead of the full payload\n' +
             '• Uses test.step(): keeps the report readable and failures easy to locate',
         },
       ],
