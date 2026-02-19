@@ -34,6 +34,10 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
+      - name: Clean Allure folders
+        shell: bash
+        run: rm -rf src/tests/allure-results src/tests/allure-report
+
       - name: Run Playwright tests
         continue-on-error: true
         run: npx playwright test
