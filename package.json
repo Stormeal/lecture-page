@@ -6,7 +6,7 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "npx playwright test --headed",
+    "test": "npx playwright test",
     "allure:report": "npx allure generate ./src/tests/allure-results -o ./src/tests/allure-report",
     "allure:open": "npx allure open ./src/tests/allure-report"
   },
