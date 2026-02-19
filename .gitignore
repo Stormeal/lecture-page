@@ -31,9 +31,7 @@ yarn-error.log
 
 # Allure
 /src/tests/allure-results/
-/src/tests/allure-report/
 **/allure-results/
-**/allure-report/
 
 
 # Miscellaneous
