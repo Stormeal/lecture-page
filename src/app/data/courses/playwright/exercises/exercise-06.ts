@@ -402,73 +402,6 @@ expect(body).toHaveProperty('status');`,
     },
 
     {
-      id: 'ex6_1-solution',
-      title: 'Solution 6.1',
-      summary: 'Reveal if you are stuck',
-      type: 'content',
-      revealable: true,
-      blocks: [
-        { type: 'divider' },
-
-        { type: 'h3', text: 'Playwright Test solution (recommended)' },
-
-        {
-          type: 'callout',
-          variant: 'info',
-          text: `This solution demonstrates the expected structure for a pure API test using the request fixture. It validates status, a stable response contract, and the Content-Type header.`,
-        },
-
-        {
-          type: 'code',
-          language: 'ts',
-          filename: 'exercise_6_1.spec.ts',
-          code: `import { test, expect } from '@playwright/test';
-
-test('Exercise 6.1 - Red Team Recon (Health Check)', async ({ request }) => {
-  const response = await request.get('https://practice.expandtesting.com/api/health-check');
-
-  await test.step('Assert status is successful', async () => {
-    expect(response.ok()).toBeTruthy();
-    expect(response.status()).toBeGreaterThanOrEqual(200);
-    expect(response.status()).toBeLessThan(300);
-  });
-
-  await test.step('Assert Content-Type indicates JSON', async () => {
-    const headers = response.headers();
-    expect(headers['content-type']).toContain('application/json');
-  });
-
-  await test.step('Parse JSON and validate stable contract fields', async () => {
-    const body = await response.json();
-
-    expect(body).toEqual(
-      expect.objectContaining({
-        success: expect.any(Boolean),
-        status: expect.any(String),
-        message: expect.any(String),
-      }),
-    );
-  });
-});`,
-        },
-
-        { type: 'divider' },
-
-        { type: 'h3', text: 'Why this is a good baseline' },
-
-        {
-          type: 'p',
-          text:
-            '• Pure API test: uses the request fixture and does not rely on page/UI\n' +
-            '• Fails fast: asserts status before parsing JSON\n' +
-            '• Validates a stable contract: checks for key fields without asserting the full payload\n' +
-            '• Includes header validation: verifies Content-Type for correct response format\n' +
-            '• Uses test.step(): keeps the report readable and failures easy to locate',
-        },
-      ],
-    },
-
-    {
       id: 'ex6_2-exercise',
       title: 'Exercise 6.2: Authentication Verification',
       summary: `Register, login, and extract token (APIRequestContext)`,
@@ -685,6 +618,265 @@ expect(token).toBeTruthy();`,
     },
 
     {
+      id: 'ex6_3-exercise',
+      title: 'Exercise 6.3: Authorized Access Validation',
+      summary: `Call a protected endpoint with token (APIRequestContext)`,
+      type: 'content',
+      blocks: [
+        { type: 'h2', text: 'Red Team Simulation – Authorized Access Validation' },
+
+        { type: 'labelValue', label: 'System', text: `Public API Surface` },
+        { type: 'labelValue', label: 'Division', text: `Internal Red Team` },
+        { type: 'labelValue', label: 'Operation Status', text: `Access Boundary Validation` },
+        { type: 'labelValue', label: 'Mission Duration', text: `30–45 minutes` },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Mission Briefing' },
+
+        { type: 'p', text: `Engineer,` },
+        {
+          type: 'p',
+          text: `You have confirmed that valid credentials can obtain an authentication token. Your next task is to verify that the token grants access to protected resources and that the API returns data according to contract when properly authorized.`,
+        },
+        {
+          type: 'p',
+          text: `This is a controlled validation of authorization behavior. You will call a protected endpoint with a token and verify the response.`,
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Mission Objectives' },
+
+        {
+          type: 'labelValue',
+          label: 'Your mission is to:',
+          list: {
+            ordered: false,
+            items: [
+              'Create a pure API test using Playwright (no browser UI involved)',
+              'Authenticate (reuse your Exercise 6.2 logic) to obtain a token',
+              'Call a protected endpoint using the token',
+              'Assert that the response is successful (authorized)',
+              'Validate a stable response contract (avoid full payload assertions)',
+            ],
+          },
+          testId: 'ex6-3-mission-objectives',
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Operational Instructions' },
+
+        {
+          type: 'labelValue',
+          label: 'Follow these steps:',
+          list: {
+            ordered: true,
+            items: [
+              'Create a new test file for Exercise 6.3.',
+              'Write a pure API test using the Playwright Test runner request fixture (do not use page).',
+              'Register and login to obtain a fresh token (reuse your Exercise 6.2 approach).',
+              'Call a protected endpoint using the token header: https://practice.expandtesting.com/notes/api/users/profile',
+              'Assert that the HTTP status indicates success.',
+              'Parse the response as JSON.',
+              'Validate stable fields that prove the request was authorized (for example: success/message and a data object).',
+              'Validate that the returned profile relates to the authenticated user (for example: email matches the one you registered).',
+              'Keep assertions stable and minimal. Avoid asserting timestamps or full response bodies.',
+            ],
+          },
+          testId: 'ex6-3-operational-instructions',
+        },
+
+        {
+          type: 'callout',
+          variant: 'info',
+          text: `This exercise is about authorization behavior. Your key signal is that the same endpoint should be successful with a valid token and rejected without it (that rejection is Exercise 6.4).`,
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Mission Completion Criteria (Definition of Done)' },
+
+        {
+          type: 'labelValue',
+          label: 'The mission is considered successful when:',
+          list: {
+            ordered: false,
+            items: [
+              'The test runs without launching a browser UI',
+              'A token is obtained through a valid authentication flow',
+              'A protected endpoint is called with the token',
+              'The response indicates authorized access (successful status)',
+              'The response body is parsed and validated using stable contract checks',
+              'The returned profile is verified to match the authenticated user (for example email)',
+              'The test is structured and readable in the Playwright report',
+            ],
+          },
+          testId: 'ex6-3-definition-of-done',
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Test Cases' },
+
+        {
+          type: 'labelValue',
+          label: 'TC-631',
+          text: 'Authenticated token is obtained and stored in test scope for authorized requests.',
+          testId: 'ex6-3-tc-631',
+        },
+        {
+          type: 'labelValue',
+          label: 'TC-632',
+          text: 'Calling the protected profile endpoint with a valid token succeeds and returns a stable success contract.',
+          testId: 'ex6-3-tc-632',
+        },
+        {
+          type: 'labelValue',
+          label: 'TC-633',
+          text: 'Returned profile data matches the authenticated user (for example email), proving authorization is applied to the correct identity.',
+          testId: 'ex6-3-tc-633',
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Hints' },
+
+        {
+          type: 'hint',
+          id: 'ex6-3-hint-flow-structure',
+          title: 'Hint 0: Keep the flow readable',
+          blocks: [
+            {
+              type: 'p',
+              text: `Structure the test as: register → login → call protected endpoint. Use test.step() so the report tells you exactly which phase failed.`,
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              filename: 'flow structure example',
+              code: `test('Authorized profile access', async ({ request }) => {
+  // step 1: register
+  // step 2: login (extract token)
+  // step 3: call profile with token
+});`,
+            },
+          ],
+        },
+
+        {
+          type: 'hint',
+          id: 'ex6-3-hint-auth-header',
+          title: 'Hint 1: Send the token as a header',
+          blocks: [
+            {
+              type: 'p',
+              text: `Protected endpoints usually require a token header. Use the token you extracted from login and include it in the request headers.`,
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              filename: 'auth header example',
+              code: `await request.get('https://example.com/api/protected', {
+  headers: { 'x-auth-token': token },
+});`,
+            },
+          ],
+        },
+
+        {
+          type: 'hint',
+          id: 'ex6-3-hint-stable-assertions',
+          title: 'Hint 2: Validate stable fields only',
+          blocks: [
+            {
+              type: 'p',
+              text: `Validate that the request was authorized by asserting success signals and a data object. Then assert one identity field like email to prove you got the right profile.`,
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              filename: 'stable assertions example',
+              code: `expect(response.ok()).toBeTruthy();
+const body = await response.json();
+expect(body).toHaveProperty('success');
+expect(body).toHaveProperty('data');
+expect(body.data.email).toBe(email);`,
+            },
+          ],
+        },
+      ],
+    },
+
+    {
+      id: 'ex6_1-solution',
+      title: 'Solution 6.1',
+      summary: 'Reveal if you are stuck',
+      type: 'content',
+      revealable: true,
+      blocks: [
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Playwright Test solution (recommended)' },
+
+        {
+          type: 'callout',
+          variant: 'info',
+          text: `This solution demonstrates the expected structure for a pure API test using the request fixture. It validates status, a stable response contract, and the Content-Type header.`,
+        },
+
+        {
+          type: 'code',
+          language: 'ts',
+          filename: 'exercise_6_1.spec.ts',
+          code: `import { test, expect } from '@playwright/test';
+
+test('Exercise 6.1 - Red Team Recon (Health Check)', async ({ request }) => {
+  const response = await request.get('https://practice.expandtesting.com/api/health-check');
+
+  await test.step('Assert status is successful', async () => {
+    expect(response.ok()).toBeTruthy();
+    expect(response.status()).toBeGreaterThanOrEqual(200);
+    expect(response.status()).toBeLessThan(300);
+  });
+
+  await test.step('Assert Content-Type indicates JSON', async () => {
+    const headers = response.headers();
+    expect(headers['content-type']).toContain('application/json');
+  });
+
+  await test.step('Parse JSON and validate stable contract fields', async () => {
+    const body = await response.json();
+
+    expect(body).toEqual(
+      expect.objectContaining({
+        success: expect.any(Boolean),
+        status: expect.any(String),
+        message: expect.any(String),
+      }),
+    );
+  });
+});`,
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Why this is a good baseline' },
+
+        {
+          type: 'p',
+          text:
+            '• Pure API test: uses the request fixture and does not rely on page/UI\n' +
+            '• Fails fast: asserts status before parsing JSON\n' +
+            '• Validates a stable contract: checks for key fields without asserting the full payload\n' +
+            '• Includes header validation: verifies Content-Type for correct response format\n' +
+            '• Uses test.step(): keeps the report readable and failures easy to locate',
+        },
+      ],
+    },
+
+    {
       id: 'ex6_2-solution',
       title: 'Solution 6.2',
       summary: 'Reveal if you are stuck',
@@ -783,6 +975,119 @@ test('Exercise 6.2 - Authentication Verification (Register + Login)', async ({ r
             '• Clear flow: register → login → extract token (ready for Exercise 6.3)\n' +
             '• Stable assertions: validates presence and types of key fields instead of the full payload\n' +
             '• Uses test.step(): keeps the report readable and failures easy to locate',
+        },
+      ],
+    },
+
+    {
+      id: 'ex6_3-solution',
+      title: 'Solution 6.3',
+      summary: 'Reveal if you are stuck',
+      type: 'content',
+      revealable: true,
+      blocks: [
+        {
+          type: 'callout',
+          variant: 'info',
+          text: `This solution obtains a token through a fresh register + login flow, then calls a protected endpoint using the token header and validates a stable response contract.`,
+        },
+
+        {
+          type: 'code',
+          language: 'ts',
+          filename: 'exercise_6_3.spec.ts',
+          code: `import { test, expect } from '@playwright/test';
+
+test('Exercise 6.3 - Authorized Access Validation (Profile)', async ({ request }) => {
+  const email = \`redteam+\${Date.now()}@example.com\`;
+  const password = '123456';
+  const name = 'Red Team Analyst';
+
+  let token = '';
+
+  await test.step('Register a new user', async () => {
+    const response = await request.post('https://practice.expandtesting.com/notes/api/users/register', {
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/x-www-form-urlencoded',
+      },
+      form: { name, email, password },
+    });
+
+    expect(response.ok()).toBeTruthy();
+
+    const body = await response.json();
+    expect(body).toEqual(
+      expect.objectContaining({
+        success: expect.any(Boolean),
+        message: expect.any(String),
+      }),
+    );
+  });
+
+  await test.step('Login and extract token', async () => {
+    const response = await request.post('https://practice.expandtesting.com/notes/api/users/login', {
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/x-www-form-urlencoded',
+      },
+      form: { email, password },
+    });
+
+    expect(response.ok()).toBeTruthy();
+
+    const body = await response.json();
+    expect(body).toEqual(
+      expect.objectContaining({
+        success: expect.any(Boolean),
+        message: expect.any(String),
+        data: expect.any(Object),
+      }),
+    );
+
+    token = body?.data?.token ?? '';
+    expect(token).toBeTruthy();
+  });
+
+  await test.step('Call protected profile endpoint with token', async () => {
+    const response = await request.get('https://practice.expandtesting.com/notes/api/users/profile', {
+      headers: {
+        accept: 'application/json',
+        'x-auth-token': token,
+      },
+    });
+
+    expect(response.ok()).toBeTruthy();
+
+    const body = await response.json();
+
+    // Stable contract checks
+    expect(body).toEqual(
+      expect.objectContaining({
+        success: expect.any(Boolean),
+        message: expect.any(String),
+        data: expect.any(Object),
+      }),
+    );
+
+    // Identity proof (stable): returned profile should match the authenticated user
+    expect(body?.data?.email).toBe(email);
+  });
+});`,
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Why this is a good baseline' },
+
+        {
+          type: 'p',
+          text:
+            '• Pure API test: uses the request fixture and avoids page/UI entirely\n' +
+            '• Clear flow: register → login → profile (token in headers)\n' +
+            '• Stable assertions: checks key fields and identity (email) rather than full payload snapshots\n' +
+            '• Authorization proof: demonstrates that access depends on a valid token\n' +
+            '• Uses test.step(): makes reports easy to read and debug',
         },
       ],
     },
