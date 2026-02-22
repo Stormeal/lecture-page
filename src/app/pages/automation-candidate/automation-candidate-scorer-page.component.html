@@ -1,0 +1,109 @@
+<section class="page">
+  <header class="header">
+    <h1>Automation Candidate Scorer</h1>
+    <p>
+      Enter scores and risks to estimate whether a manual test case is a good first automation
+      candidate.
+    </p>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Candidate</h2>
+
+      <label class="field">
+        <span>Name</span>
+        <input
+          type="text"
+          [ngModel]="candidateName()"
+          (ngModelChange)="candidateName.set($event)"
+          data-testid="candidate-name"
+        />
+      </label>
+
+      <h3>Scores (1 to 5)</h3>
+
+      <div class="rows">
+        <div class="row" *ngFor="let key of categoryKeys">
+          <div class="row-label">{{ labelForCategory(key) }}</div>
+
+          <input
+            class="num"
+            type="number"
+            min="1"
+            max="5"
+            [ngModel]="scores()[key]"
+            (ngModelChange)="setScore(key, $event)"
+            [attr.data-testid]="'score-' + key"
+          />
+
+          <div class="row-sub">Weight</div>
+
+          <input
+            class="num"
+            type="number"
+            min="1"
+            max="5"
+            [ngModel]="weights()[key]"
+            (ngModelChange)="setWeight(key, $event)"
+            [attr.data-testid]="'weight-' + key"
+          />
+        </div>
+      </div>
+
+      <button class="btn" type="button" (click)="reset()" data-testid="reset">Reset</button>
+    </div>
+
+    <div class="card">
+      <h2>Risks</h2>
+      <p>Each selected risk subtracts 5 points (max 25).</p>
+
+      <div class="risks">
+        <label class="risk" *ngFor="let r of riskKeys">
+          <input
+            type="checkbox"
+            [checked]="risks()[r]"
+            (change)="setRisk(r, $any($event.target).checked)"
+            [attr.data-testid]="'risk-' + r"
+          />
+          <span>{{ labelForRisk(r) }}</span>
+        </label>
+      </div>
+
+      <hr />
+
+      <h2>Result</h2>
+
+      <div class="result">
+        <div class="badge" [attr.data-testid]="'recommendation'">
+          {{ recommendation() }}
+        </div>
+
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-label">Base</div>
+            <div class="metric-value" data-testid="base-percent">
+              {{ basePercent() * 100 | number: '1.0-0' }}%
+            </div>
+          </div>
+
+          <div class="metric">
+            <div class="metric-label">Penalty</div>
+            <div class="metric-value" data-testid="penalty-points">{{ penaltyPoints() }} pts</div>
+          </div>
+
+          <div class="metric">
+            <div class="metric-label">Final</div>
+            <div class="metric-value" data-testid="final-percent">
+              {{ finalPercent() * 100 | number: '1.0-0' }}%
+            </div>
+          </div>
+        </div>
+
+        <p class="summary" data-testid="summary">
+          {{ summary() }}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

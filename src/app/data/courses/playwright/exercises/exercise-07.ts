@@ -194,7 +194,7 @@ export const EXERCISE_07: CourseGroupItem = {
 
         { type: 'h3', text: 'Qualification Briefing' },
 
-        { type: 'p', text: `Engineer,` },
+        { type: 'p', text: `Judge,` },
         {
           type: 'p',
           text: `Four competitors have entered the Winter Automation Trials. Each competitor represents a manual test case targeting testhuset.dk. Only one will advance to the finals and earn the Gold Medal position as the first automation candidate.`,

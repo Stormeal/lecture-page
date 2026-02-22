@@ -6,6 +6,7 @@ import { courseAccessGuard } from './course-access/course-access.guard';
 import { PlaywrightTestSitePageComponent } from './pages/playwright-test-site-page.component';
 import { PlaywrightTestSiteTablePageComponent } from './pages/playwright-test-site-table-page.component';
 import { ReportsRedirectPageComponent } from './pages/reports-redirect-page.component';
+import { AutomationCandidateScorerPageComponent } from './pages/automation-candidate/automation-candidate-scorer-page.component';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'courses' },
@@ -27,6 +28,7 @@ export const routes: Routes = [
     canActivate: [courseAccessGuard],
   },
 
+  { path: 'candidate-scorer', component: AutomationCandidateScorerPageComponent },
   { path: 'reports', component: ReportsRedirectPageComponent },
   { path: '**', redirectTo: 'courses' },
 ];
