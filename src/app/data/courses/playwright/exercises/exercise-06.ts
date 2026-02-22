@@ -989,7 +989,7 @@ test('Exercise 6.2 - Authentication Verification (Register + Login)', async ({ r
         {
           type: 'callout',
           variant: 'info',
-          text: `This solution obtains a token through a fresh register + login flow, then calls a protected endpoint using the token header and validates a stable response contract.`,
+          text: `This solution obtains a token, calls a protected endpoint, and then removes the created user to keep the shared environment clean.`,
         },
 
         {
@@ -998,7 +998,7 @@ test('Exercise 6.2 - Authentication Verification (Register + Login)', async ({ r
           filename: 'exercise_6_3.spec.ts',
           code: `import { test, expect } from '@playwright/test';
 
-test('Exercise 6.3 - Authorized Access Validation (Profile)', async ({ request }) => {
+test('Exercise 6.3 - Authorized Access Validation (Profile + Cleanup)', async ({ request }) => {
   const email = \`redteam+\${Date.now()}@example.com\`;
   const password = '123456';
   const name = 'Red Team Analyst';
@@ -1061,7 +1061,6 @@ test('Exercise 6.3 - Authorized Access Validation (Profile)', async ({ request }
 
     const body = await response.json();
 
-    // Stable contract checks
     expect(body).toEqual(
       expect.objectContaining({
         success: expect.any(Boolean),
@@ -1070,24 +1069,42 @@ test('Exercise 6.3 - Authorized Access Validation (Profile)', async ({ request }
       }),
     );
 
-    // Identity proof (stable): returned profile should match the authenticated user
     expect(body?.data?.email).toBe(email);
+  });
+
+  await test.step('Cleanup: delete created user', async () => {
+    const response = await request.delete('https://practice.expandtesting.com/notes/api/users/delete-account', {
+      headers: {
+        accept: 'application/json',
+        'x-auth-token': token,
+      },
+    });
+
+    expect(response.ok()).toBeTruthy();
+
+    const body = await response.json();
+    expect(body).toEqual(
+      expect.objectContaining({
+        success: expect.any(Boolean),
+        message: expect.any(String),
+      }),
+    );
   });
 });`,
         },
 
         { type: 'divider' },
 
-        { type: 'h3', text: 'Why this is a good baseline' },
+        { type: 'h3', text: 'Why this is a stronger baseline' },
 
         {
           type: 'p',
           text:
-            '• Pure API test: uses the request fixture and avoids page/UI entirely\n' +
-            '• Clear flow: register → login → profile (token in headers)\n' +
-            '• Stable assertions: checks key fields and identity (email) rather than full payload snapshots\n' +
-            '• Authorization proof: demonstrates that access depends on a valid token\n' +
-            '• Uses test.step(): makes reports easy to read and debug',
+            '• Pure API test with no UI involvement\n' +
+            '• Clear authentication flow (register → login → authorized call)\n' +
+            '• Stable contract validation (no brittle full-payload assertions)\n' +
+            '• Verifies identity consistency (email matches authenticated user)\n' +
+            '• Includes cleanup step to prevent shared-environment pollution',
         },
       ],
     },
