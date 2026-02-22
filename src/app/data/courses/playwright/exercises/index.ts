@@ -5,6 +5,7 @@ import { EXERCISE_03 } from './exercise-03';
 import { EXERCISE_04 } from './exercise-04';
 import { EXERCISE_05 } from './exercise-05';
 import { EXERCISE_06 } from './exercise-06';
+import { EXERCISE_07 } from './exercise-07';
 
 export const PLAYWRIGHT_EXERCISES: CourseItem[] = [
   EXERCISE_01,
@@ -13,5 +14,6 @@ export const PLAYWRIGHT_EXERCISES: CourseItem[] = [
   EXERCISE_04,
   EXERCISE_05,
   EXERCISE_06,
+  EXERCISE_07,
   // ...
 ];
