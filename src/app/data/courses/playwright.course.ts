@@ -110,7 +110,7 @@ export const PLAYWRIGHT_COURSE: Course = {
           links: [
             {
               label: 'Download latest release (GitHub)',
-              url: 'https://github.com/TestHusetQI/playwright-course-exercises/releases/latest',
+              url: 'https://github.com/Stormeal/playwright-course/releases/latest',
               description: 'Open the latest release and download the ZIP under “Assets”.',
             },
           ],
