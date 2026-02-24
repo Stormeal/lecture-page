@@ -459,5 +459,313 @@ main().catch((err) => {
         },
       ],
     },
+
+    {
+      id: 'ex1-quiz',
+      title: 'Quiz',
+      summary: 'Check your understanding of Browser, Context, and Page',
+      type: 'quiz',
+      intro: 'One question at a time. If you miss one, try again and read the explanation.',
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'In Playwright, what is a Browser Context best described as?',
+          correctOptionId: 'b',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'A single browser tab.',
+              wrongExplanation:
+                'A single tab is a Page, not a Browser Context. A context is the container that can hold one or more pages.',
+              wrongExplainFurther:
+                'Use the mental model from the theory: Browser = building, Context = apartment, Page = room. Tabs are pages, and they live inside the apartment (context).',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'A brand-new, isolated browser session (like a temporary browser profile).',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. A Browser Context is an isolated browser session with its own cookies, storage, cache, and permissions.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'A browser engine like Chromium or Firefox.',
+              wrongExplanation:
+                'That describes the Browser (Chromium/Firefox/WebKit). A context is created inside a Browser to isolate session state.',
+              wrongExplainFurther:
+                'You launch a Browser first (engine choice), then create one or more contexts inside it to simulate separate users or clean sessions.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'A saved user profile that persists between test runs.',
+              wrongExplanation:
+                'By default, contexts are designed to be temporary and start clean. Persistence across runs requires explicit configuration and is not the default testing mental model.',
+              wrongExplainFurther:
+                'The reason Playwright contexts are so useful for testing is that you can start clean every time, which makes failures easier to reproduce.',
+            },
+          ],
+        },
+
+        {
+          id: 'q2',
+          prompt:
+            'Which of the following is NOT part of what a Browser Context isolates by default (as taught in this section)?',
+          correctOptionId: 'd',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Cookies',
+              wrongExplanation:
+                'Cookies are part of a context’s isolated session state. Each context gets its own cookies.',
+              wrongExplainFurther:
+                'This is why tests do not “inherit” login sessions from other tests when using separate contexts.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Local and session storage',
+              wrongExplanation:
+                'Storage is isolated per context. That includes both localStorage and sessionStorage.',
+              wrongExplainFurther:
+                'This prevents tests from leaking application state into each other through storage.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Cache',
+              wrongExplanation:
+                'Cache is part of the isolated session state in a context, keeping sessions independent.',
+              wrongExplainFurther:
+                'If two contexts shared cache, it could change behavior and make tests order-dependent.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'The Playwright test runner configuration',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. The test runner configuration is not part of the browser model. Context isolation is about browser session state (cookies/storage/cache/permissions).',
+            },
+          ],
+        },
+
+        {
+          id: 'q3',
+          prompt: 'Why does Browser Context isolation make tests more reliable and reproducible?',
+          correctOptionId: 'b',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Because it forces tests to run slower and therefore more stable.',
+              wrongExplanation:
+                'Stability does not come from being slower. It comes from being predictable and starting from a clean, known state.',
+              wrongExplainFurther:
+                'A test can still be slow and flaky if it relies on shared state or order-dependent behavior.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Because every test can start from a clean state without leaking cookies/storage between tests.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. Isolation prevents “state leakage” between tests, which is one of the biggest sources of flaky behavior.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Because contexts automatically fix flaky locators.',
+              wrongExplanation:
+                'Contexts do not affect how locators work. Locator stability comes from Playwright’s locator model and assertions.',
+              wrongExplainFurther:
+                'Even with perfect isolation, weak selectors can still be flaky. Isolation only ensures the session state is clean.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Because contexts prevent network requests from happening.',
+              wrongExplanation:
+                'Contexts do not block network traffic by default. They isolate session state.',
+              wrongExplainFurther:
+                'You can intercept or block network requests, but that is done via routing APIs, not by context isolation.',
+            },
+          ],
+        },
+
+        {
+          id: 'q4',
+          prompt: 'What is a Page in Playwright?',
+          correctOptionId: 'a',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'A single browser tab where interactions happen.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. A Page represents one tab inside a browser context and is where navigation, clicks, and form interaction happen.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'An isolated browser session.',
+              wrongExplanation: 'That describes a Browser Context. A page lives inside a context.',
+              wrongExplainFurther:
+                'A single context can hold multiple pages, like multiple tabs inside the same isolated session.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'A collection of cookies and storage values.',
+              wrongExplanation:
+                'Cookies and storage are part of session state held by the Browser Context, not the Page.',
+              wrongExplainFurther:
+                'A page uses the context’s state. If you open two pages in the same context, they share cookies/storage.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'A running browser engine (Chromium/Firefox/WebKit).',
+              wrongExplanation: 'That describes the Browser. A page is created from a context.',
+              wrongExplainFurther:
+                'The hierarchy is Browser → Context → Page. The page is the tab you automate.',
+            },
+          ],
+        },
+
+        {
+          id: 'q5',
+          prompt: 'Which statement about Pages and Contexts is correct?',
+          correctOptionId: 'a',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'One context can contain multiple pages (tabs).',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. A browser context can contain multiple pages, like multiple tabs in one isolated session.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'One page can contain multiple contexts.',
+              wrongExplanation: 'The relationship is reversed. Pages are created inside a context.',
+              wrongExplainFurther: 'Contexts are containers. Pages are children of contexts.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'A page is shared between contexts by default.',
+              wrongExplanation:
+                'Pages are not shared across contexts. Contexts are isolated, and a page belongs to exactly one context.',
+              wrongExplainFurther:
+                'Sharing pages would break isolation, because cookies and storage would leak across sessions.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Contexts can only contain one page.',
+              wrongExplanation:
+                'A context can contain multiple pages. This is how you model multiple tabs for the same isolated session.',
+              wrongExplainFurther:
+                'If you need a second tab in the same session, you create another page from the same context.',
+            },
+          ],
+        },
+
+        {
+          id: 'q6',
+          prompt:
+            'When you want to navigate, click, fill forms, or take screenshots, which Playwright object do you use directly?',
+          correctOptionId: 'c',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Browser',
+              wrongExplanation:
+                'The Browser hosts contexts but is not where interactions happen. You interact through a Page.',
+              wrongExplainFurther:
+                'The Browser is the top-level engine container. It is used to create contexts.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Browser Context',
+              wrongExplanation:
+                'A context holds session state and creates pages. Most user actions are performed on a Page.',
+              wrongExplainFurther:
+                'You create a page from a context, then interact with the UI via that page.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Page',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. The Page is where navigation, clicks, form filling, screenshots, and data extraction happen.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Test runner',
+              wrongExplanation:
+                'The test runner orchestrates tests. It is not part of Playwright’s browser model.',
+              wrongExplainFurther:
+                'Playwright Test provides fixtures (like the page fixture), but actions still happen on the Page.',
+            },
+          ],
+        },
+
+        {
+          id: 'q7',
+          prompt:
+            'What is the correct “typical flow” order in Playwright (as described in the theory)?',
+          correctOptionId: 'b',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Create page → Create context → Launch browser → Interact',
+              wrongExplanation: 'You cannot create a context or a page before a browser exists.',
+              wrongExplainFurther:
+                'The Browser is the top-level object. Contexts come from the browser. Pages come from the context.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Launch browser → Create context → Open page → Interact',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. This is the standard Playwright flow: Browser → Context → Page → actions.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Launch browser → Open page → Create context → Interact',
+              wrongExplanation:
+                'A page is opened inside a context, so the context must exist first.',
+              wrongExplainFurther:
+                'Pages cannot exist without a context because the context provides the isolated session environment.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Create context → Launch browser → Open page → Interact',
+              wrongExplanation:
+                'A context is created from an already launched browser, not before it.',
+              wrongExplainFurther:
+                'The API shape reflects the hierarchy: browser.newContext() then context.newPage().',
+            },
+          ],
+        },
+      ],
+    },
   ],
 };

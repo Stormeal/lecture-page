@@ -1,7 +1,46 @@
-export type CourseItemType = 'content' | 'external' | 'group';
+export type CourseItemType = 'content' | 'external' | 'group' | 'quiz';
 
 export interface CourseBlockBase {
   testId?: string;
+}
+
+export interface CourseQuizOption {
+  id: string; // stable id, e.g. "a", "b", "c", "d"
+  label: string; // display, e.g. "a)"
+  text: string;
+
+  /**
+   * Shown when the user selects THIS option and it is incorrect.
+   * This should explain *why the selected answer is wrong* (Udemy style).
+   */
+  wrongExplanation: string;
+
+  /**
+   * Optional extra details toggled by "Explain this further".
+   */
+  wrongExplainFurther?: string;
+
+  /**
+   * Optional explanation shown when the user selects THIS option and it is correct.
+   */
+  correctExplanation?: string;
+}
+
+export interface CourseQuizQuestion {
+  id: string;
+  prompt: string;
+  options: CourseQuizOption[];
+  correctOptionId: string;
+}
+
+export interface CourseQuizItem extends CourseItemBase {
+  type: 'quiz';
+  /**
+   * Optional intro text shown above the quiz UI.
+   */
+  intro?: string;
+
+  questions: CourseQuizQuestion[];
 }
 
 export type CourseListItem =
@@ -81,7 +120,7 @@ export interface CourseGroupItem extends CourseItemBase {
   children: CourseItem[];
 }
 
-export type CourseItem = CourseContentItem | CourseExternalItem | CourseGroupItem;
+export type CourseItem = CourseContentItem | CourseExternalItem | CourseGroupItem | CourseQuizItem;
 
 export interface Course {
   slug: string;

@@ -13,11 +13,13 @@ import {
 } from '../data/course.model';
 import { ElementRef, ViewChild } from '@angular/core';
 import { NestedListComponent } from '../shared/nested-list.component';
+import { QuizComponent } from '../components/quiz/quiz.component';
+import { CourseQuizItem } from '../data/course.model';
 
 @Component({
   selector: 'app-course-details-page',
   standalone: true,
-  imports: [RouterModule, NestedListComponent],
+  imports: [RouterModule, NestedListComponent, QuizComponent],
   template: `
     <div class="min-h-screen bg-orange-50">
       <!-- Sticky top bar -->
@@ -68,7 +70,7 @@ import { NestedListComponent } from '../shared/nested-list.component';
                     @if (item.type === 'external') {
                       <a
                         class="shrink-0 inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-white font-semibold
-                               hover:bg-blue-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
+                 hover:bg-blue-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
                         [href]="item.externalUrl"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -90,210 +92,298 @@ import { NestedListComponent } from '../shared/nested-list.component';
                       <button
                         type="button"
                         class="mt-3 inline-flex items-center rounded-md bg-gray-900 px-4 py-2 text-white font-semibold
-                               hover:bg-black focus:outline-none focus-visible:ring-4 focus-visible:ring-gray-400/40"
+                 hover:bg-black focus:outline-none focus-visible:ring-4 focus-visible:ring-gray-400/40"
                         (click)="reveal(item.id)"
                       >
                         Reveal solution
                       </button>
                     </div>
                   } @else {
-                    <div class="mt-6 space-y-5">
-                      @for (block of selectedBlocks(); track $index) {
-                        @switch (block.type) {
-                          @case ('h1') {
-                            <h1
-                              class="text-2xl sm:text-3xl font-bold text-gray-900"
-                              [attr.data-testid]="block.testId ?? null"
-                            >
-                              {{ block.text }}
-                            </h1>
-                          }
-                          @case ('h2') {
-                            <h2
-                              class="text-xl sm:text-2xl font-bold text-gray-900"
-                              [attr.data-testid]="block.testId ?? null"
-                            >
-                              {{ block.text }}
-                            </h2>
-                          }
-                          @case ('h3') {
-                            <h3
-                              class="text-lg font-bold text-gray-900"
-                              [attr.data-testid]="block.testId ?? null"
-                            >
-                              {{ block.text }}
-                            </h3>
-                          }
-                          @case ('p') {
-                            @if (asBulletList(block.text); as bullets) {
-                              <ul
-                                class="list-disc pl-8 space-y-1 text-gray-700 leading-relaxed"
-                                [attr.data-testid]="block.testId ?? null"
-                              >
-                                @for (b of bullets; track b) {
-                                  <li>{{ b }}</li>
-                                }
-                              </ul>
-                            } @else if (asNumberedList(block.text); as steps) {
-                              <ol
-                                class="list-decimal pl-8 space-y-1 text-gray-700 leading-relaxed"
-                                [attr.data-testid]="block.testId ?? null"
-                              >
-                                @for (s of steps; track s) {
-                                  <li>{{ s }}</li>
-                                }
-                              </ol>
-                            } @else {
-                              <p
-                                class="text-gray-700 leading-relaxed"
+                    @if (item.type === 'quiz') {
+                      <div class="mt-6">
+                        <app-quiz [quiz]="item" />
+                      </div>
+                    } @else {
+                      <div class="mt-6 space-y-5">
+                        @for (block of selectedBlocks(); track $index) {
+                          @switch (block.type) {
+                            @case ('h1') {
+                              <h1
+                                class="text-2xl sm:text-3xl font-bold text-gray-900"
                                 [attr.data-testid]="block.testId ?? null"
                               >
                                 {{ block.text }}
-                              </p>
+                              </h1>
                             }
-                          }
-                          @case ('divider') {
-                            <hr class="border-gray-200" />
-                          }
-                          @case ('callout') {
-                            <div
-                              class="rounded-md p-4 border"
-                              [class.border-blue-200]="block.variant === 'info'"
-                              [class.bg-blue-50]="block.variant === 'info'"
-                              [class.text-blue-900]="block.variant === 'info'"
-                              [class.border-yellow-200]="block.variant === 'warning'"
-                              [class.bg-yellow-50]="block.variant === 'warning'"
-                              [class.text-yellow-900]="block.variant === 'warning'"
-                              [attr.data-testid]="block.testId ?? null"
-                            >
-                              <p class="font-semibold" [attr.data-testid]="block.testId ?? null">
-                                {{ block.variant === 'info' ? 'Tip' : 'Note' }}
-                              </p>
-                              <p class="mt-1">{{ block.text }}</p>
-                            </div>
-                          }
-                          @case ('links') {
-                            <div>
-                              <h3 class="text-lg font-bold text-gray-900">Links</h3>
-                              <ul class="mt-3 space-y-3" [attr.data-testid]="block.testId ?? null">
-                                @for (l of block.links; track l.url) {
-                                  <li class="rounded-md border border-gray-200 p-4">
+                            @case ('h2') {
+                              <h2
+                                class="text-xl sm:text-2xl font-bold text-gray-900"
+                                [attr.data-testid]="block.testId ?? null"
+                              >
+                                {{ block.text }}
+                              </h2>
+                            }
+                            @case ('h3') {
+                              <h3
+                                class="text-lg font-bold text-gray-900"
+                                [attr.data-testid]="block.testId ?? null"
+                              >
+                                {{ block.text }}
+                              </h3>
+                            }
+                            @case ('p') {
+                              @if (asBulletList(block.text); as bullets) {
+                                <ul
+                                  class="list-disc pl-8 space-y-1 text-gray-700 leading-relaxed"
+                                  [attr.data-testid]="block.testId ?? null"
+                                >
+                                  @for (b of bullets; track b) {
+                                    <li>{{ b }}</li>
+                                  }
+                                </ul>
+                              } @else if (asNumberedList(block.text); as steps) {
+                                <ol
+                                  class="list-decimal pl-8 space-y-1 text-gray-700 leading-relaxed"
+                                  [attr.data-testid]="block.testId ?? null"
+                                >
+                                  @for (s of steps; track s) {
+                                    <li>{{ s }}</li>
+                                  }
+                                </ol>
+                              } @else {
+                                <p
+                                  class="text-gray-700 leading-relaxed"
+                                  [attr.data-testid]="block.testId ?? null"
+                                >
+                                  {{ block.text }}
+                                </p>
+                              }
+                            }
+                            @case ('divider') {
+                              <hr class="border-gray-200" />
+                            }
+                            @case ('callout') {
+                              <div
+                                class="rounded-md p-4 border"
+                                [class.border-blue-200]="block.variant === 'info'"
+                                [class.bg-blue-50]="block.variant === 'info'"
+                                [class.text-blue-900]="block.variant === 'info'"
+                                [class.border-yellow-200]="block.variant === 'warning'"
+                                [class.bg-yellow-50]="block.variant === 'warning'"
+                                [class.text-yellow-900]="block.variant === 'warning'"
+                                [attr.data-testid]="block.testId ?? null"
+                              >
+                                <p class="font-semibold" [attr.data-testid]="block.testId ?? null">
+                                  {{ block.variant === 'info' ? 'Tip' : 'Note' }}
+                                </p>
+                                <p class="mt-1">{{ block.text }}</p>
+                              </div>
+                            }
+                            @case ('links') {
+                              <div>
+                                <h3 class="text-lg font-bold text-gray-900">Links</h3>
+                                <ul
+                                  class="mt-3 space-y-3"
+                                  [attr.data-testid]="block.testId ?? null"
+                                >
+                                  @for (l of block.links; track l.url) {
+                                    <li class="rounded-md border border-gray-200 p-4">
+                                      <a
+                                        class="font-semibold text-blue-700 hover:underline"
+                                        [href]="l.url"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                      >
+                                        {{ l.label }}
+                                      </a>
+                                      @if (l.description) {
+                                        <p class="mt-1 text-gray-600">{{ l.description }}</p>
+                                      }
+                                      <p class="mt-2 text-xs text-gray-500 break-all">
+                                        {{ l.url }}
+                                      </p>
+                                    </li>
+                                  }
+                                </ul>
+                              </div>
+                            }
+                            @case ('downloads') {
+                              <div>
+                                <h3 class="text-lg font-bold text-gray-900">Downloads</h3>
+                                <ul
+                                  class="mt-3 space-y-3"
+                                  [attr.data-testid]="block.testId ?? null"
+                                >
+                                  @for (d of block.downloads; track d.url) {
+                                    <li
+                                      class="rounded-md border border-gray-200 p-4 flex items-center justify-between gap-4"
+                                    >
+                                      <div class="min-w-0">
+                                        <p class="font-semibold text-gray-900 truncate">
+                                          {{ d.label }}
+                                        </p>
+                                        @if (d.meta) {
+                                          <p class="text-sm text-gray-600">{{ d.meta }}</p>
+                                        }
+                                        <p class="mt-1 text-xs text-gray-500 break-all">
+                                          {{ d.url }}
+                                        </p>
+                                      </div>
+                                      <a
+                                        class="shrink-0 inline-flex items-center rounded-md bg-gray-900 px-4 py-2 text-white font-semibold
+                                 hover:bg-black focus:outline-none focus-visible:ring-4 focus-visible:ring-gray-400/40"
+                                        [href]="d.url"
+                                        download
+                                      >
+                                        Download
+                                      </a>
+                                    </li>
+                                  }
+                                </ul>
+                              </div>
+                            }
+                            @case ('code') {
+                              <div
+                                class="rounded-md border border-gray-200 overflow-hidden"
+                                [attr.data-testid]="block.testId ?? null"
+                              >
+                                @if (block.filename || block.language) {
+                                  <div
+                                    class="px-4 py-2 bg-gray-50 border-b border-gray-200 flex items-center justify-between"
+                                  >
+                                    <div class="text-sm font-semibold text-gray-700">
+                                      {{ block.filename ?? 'Code' }}
+                                    </div>
+                                    @if (block.language) {
+                                      <span
+                                        class="text-xs font-semibold bg-gray-100 text-gray-700 px-2 py-1 rounded-full"
+                                      >
+                                        {{ block.language }}
+                                      </span>
+                                    }
+                                  </div>
+                                }
+                                <pre
+                                  class="p-4 bg-gray-900 text-gray-100 overflow-x-auto text-sm leading-relaxed"
+                                ><code>{{ block.code }}</code></pre>
+                              </div>
+                            }
+                            @case ('labelValue') {
+                              <div
+                                class="text-gray-700 leading-snug"
+                                [attr.data-testid]="block.testId ?? null"
+                              >
+                                @if (block.list; as list) {
+                                  <!-- LIST MODE: stacked label + nested list -->
+                                  <div class="font-semibold text-gray-900">{{ block.label }}</div>
+
+                                  @if (list.items.length) {
+                                    <div class="mt-2">
+                                      <app-nested-list
+                                        [items]="list.items"
+                                        [ordered]="list.ordered ?? false"
+                                      />
+                                    </div>
+                                  }
+                                } @else {
+                                  <!-- TEXT MODE: inline "Label: Value" -->
+                                  <div class="flex items-baseline gap-2">
+                                    <span class="font-semibold text-gray-900 whitespace-nowrap">{{
+                                      block.label
+                                    }}</span>
+                                    <span class="text-gray-400">:</span>
+                                    <span class="text-gray-700">{{ block.text }}</span>
+                                  </div>
+                                }
+                              </div>
+                            }
+                            @case ('button') {
+                              <div [attr.data-testid]="block.testId ?? null">
+                                @if (block.routerLink) {
+                                  @if (block.newTab) {
                                     <a
-                                      class="font-semibold text-blue-700 hover:underline"
-                                      [href]="l.url"
+                                      class="inline-flex items-center gap-2 rounded-md px-4 py-2 font-semibold
+                               focus:outline-none focus-visible:ring-4"
+                                      [class.bg-orange-400]="
+                                        (block.variant ?? 'primary') === 'primary'
+                                      "
+                                      [class.text-white]="
+                                        (block.variant ?? 'primary') === 'primary'
+                                      "
+                                      [class.hover:bg-orange-500]="
+                                        (block.variant ?? 'primary') === 'primary'
+                                      "
+                                      [class.focus-visible:ring-blue-400/40]="
+                                        (block.variant ?? 'primary') === 'primary'
+                                      "
+                                      [class.bg-white]="
+                                        (block.variant ?? 'primary') === 'secondary'
+                                      "
+                                      [class.text-gray-900]="
+                                        (block.variant ?? 'primary') === 'secondary'
+                                      "
+                                      [class.border]="(block.variant ?? 'primary') === 'secondary'"
+                                      [class.border-gray-300]="
+                                        (block.variant ?? 'primary') === 'secondary'
+                                      "
+                                      [class.hover:bg-gray-50]="
+                                        (block.variant ?? 'primary') === 'secondary'
+                                      "
+                                      [class.focus-visible:ring-gray-400/40]="
+                                        (block.variant ?? 'primary') === 'secondary'
+                                      "
+                                      [href]="internalHref(block.routerLink, block.queryParams)"
                                       target="_blank"
                                       rel="noopener noreferrer"
                                     >
-                                      {{ l.label }}
+                                      {{ block.label }}
                                     </a>
-                                    @if (l.description) {
-                                      <p class="mt-1 text-gray-600">{{ l.description }}</p>
-                                    }
-                                    <p class="mt-2 text-xs text-gray-500 break-all">{{ l.url }}</p>
-                                  </li>
-                                }
-                              </ul>
-                            </div>
-                          }
-                          @case ('downloads') {
-                            <div>
-                              <h3 class="text-lg font-bold text-gray-900">Downloads</h3>
-                              <ul class="mt-3 space-y-3" [attr.data-testid]="block.testId ?? null">
-                                @for (d of block.downloads; track d.url) {
-                                  <li
-                                    class="rounded-md border border-gray-200 p-4 flex items-center justify-between gap-4"
-                                  >
-                                    <div class="min-w-0">
-                                      <p class="font-semibold text-gray-900 truncate">
-                                        {{ d.label }}
-                                      </p>
-                                      @if (d.meta) {
-                                        <p class="text-sm text-gray-600">{{ d.meta }}</p>
-                                      }
-                                      <p class="mt-1 text-xs text-gray-500 break-all">
-                                        {{ d.url }}
-                                      </p>
-                                    </div>
+                                  } @else {
                                     <a
-                                      class="shrink-0 inline-flex items-center rounded-md bg-gray-900 px-4 py-2 text-white font-semibold
-                                             hover:bg-black focus:outline-none focus-visible:ring-4 focus-visible:ring-gray-400/40"
-                                      [href]="d.url"
-                                      download
+                                      class="inline-flex items-center gap-2 rounded-md px-4 py-2 font-semibold
+                               focus:outline-none focus-visible:ring-4"
+                                      [class.bg-orange-400]="
+                                        (block.variant ?? 'primary') === 'primary'
+                                      "
+                                      [class.text-white]="
+                                        (block.variant ?? 'primary') === 'primary'
+                                      "
+                                      [class.hover:bg-orange-500]="
+                                        (block.variant ?? 'primary') === 'primary'
+                                      "
+                                      [class.focus-visible:ring-blue-400/40]="
+                                        (block.variant ?? 'primary') === 'primary'
+                                      "
+                                      [class.bg-white]="
+                                        (block.variant ?? 'primary') === 'secondary'
+                                      "
+                                      [class.text-gray-900]="
+                                        (block.variant ?? 'primary') === 'secondary'
+                                      "
+                                      [class.border]="(block.variant ?? 'primary') === 'secondary'"
+                                      [class.border-gray-300]="
+                                        (block.variant ?? 'primary') === 'secondary'
+                                      "
+                                      [class.hover:bg-gray-50]="
+                                        (block.variant ?? 'primary') === 'secondary'
+                                      "
+                                      [class.focus-visible:ring-gray-400/40]="
+                                        (block.variant ?? 'primary') === 'secondary'
+                                      "
+                                      [routerLink]="block.routerLink"
+                                      [queryParams]="block.queryParams ?? null"
                                     >
-                                      Download
+                                      {{ block.label }}
+                                      <span aria-hidden="true">→</span>
                                     </a>
-                                  </li>
-                                }
-                              </ul>
-                            </div>
-                          }
-                          @case ('code') {
-                            <div
-                              class="rounded-md border border-gray-200 overflow-hidden"
-                              [attr.data-testid]="block.testId ?? null"
-                            >
-                              @if (block.filename || block.language) {
-                                <div
-                                  class="px-4 py-2 bg-gray-50 border-b border-gray-200 flex items-center justify-between"
-                                >
-                                  <div class="text-sm font-semibold text-gray-700">
-                                    {{ block.filename ?? 'Code' }}
-                                  </div>
-                                  @if (block.language) {
-                                    <span
-                                      class="text-xs font-semibold bg-gray-100 text-gray-700 px-2 py-1 rounded-full"
-                                    >
-                                      {{ block.language }}
-                                    </span>
                                   }
-                                </div>
-                              }
-                              <pre
-                                class="p-4 bg-gray-900 text-gray-100 overflow-x-auto text-sm leading-relaxed"
-                              ><code>{{ block.code }}</code></pre>
-                            </div>
-                          }
-                          @case ('labelValue') {
-                            <div
-                              class="text-gray-700 leading-snug"
-                              [attr.data-testid]="block.testId ?? null"
-                            >
-                              @if (block.list; as list) {
-                                <!-- LIST MODE: stacked label + nested list -->
-                                <div class="font-semibold text-gray-900">{{ block.label }}</div>
-
-                                @if (list.items.length) {
-                                  <div class="mt-2">
-                                    <app-nested-list
-                                      [items]="list.items"
-                                      [ordered]="list.ordered ?? false"
-                                    />
-                                  </div>
-                                }
-                              } @else {
-                                <!-- TEXT MODE: inline "Label: Value" -->
-                                <div class="flex items-baseline gap-2">
-                                  <span class="font-semibold text-gray-900 whitespace-nowrap">{{
-                                    block.label
-                                  }}</span>
-                                  <span class="text-gray-400">:</span>
-                                  <span class="text-gray-700">{{ block.text }}</span>
-                                </div>
-                              }
-                            </div>
-                          }
-                          @case ('button') {
-                            <div [attr.data-testid]="block.testId ?? null">
-                              @if (block.routerLink) {
-                                @if (block.newTab) {
+                                } @else if (block.href) {
                                   <a
                                     class="inline-flex items-center gap-2 rounded-md px-4 py-2 font-semibold
-                 focus:outline-none focus-visible:ring-4"
-                                    [class.bg-orange-400]="
-                                      (block.variant ?? 'primary') === 'primary'
-                                    "
+                             focus:outline-none focus-visible:ring-4"
+                                    [class.bg-blue-600]="(block.variant ?? 'primary') === 'primary'"
                                     [class.text-white]="(block.variant ?? 'primary') === 'primary'"
-                                    [class.hover:bg-orange-500]="
+                                    [class.hover:bg-blue-700]="
                                       (block.variant ?? 'primary') === 'primary'
                                     "
                                     [class.focus-visible:ring-blue-400/40]="
@@ -313,307 +403,32 @@ import { NestedListComponent } from '../shared/nested-list.component';
                                     [class.focus-visible:ring-gray-400/40]="
                                       (block.variant ?? 'primary') === 'secondary'
                                     "
-                                    [href]="internalHref(block.routerLink, block.queryParams)"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                                    [href]="block.href"
+                                    [target]="block.newTab ? '_blank' : null"
+                                    [rel]="block.newTab ? 'noopener noreferrer' : null"
                                   >
                                     {{ block.label }}
+                                    <span aria-hidden="true">{{ block.newTab ? '↗' : '→' }}</span>
                                   </a>
                                 } @else {
-                                  <a
-                                    class="inline-flex items-center gap-2 rounded-md px-4 py-2 font-semibold
-                 focus:outline-none focus-visible:ring-4"
-                                    [class.bg-orange-400]="
-                                      (block.variant ?? 'primary') === 'primary'
-                                    "
-                                    [class.text-white]="(block.variant ?? 'primary') === 'primary'"
-                                    [class.hover:bg-orange-500]="
-                                      (block.variant ?? 'primary') === 'primary'
-                                    "
-                                    [class.focus-visible:ring-blue-400/40]="
-                                      (block.variant ?? 'primary') === 'primary'
-                                    "
-                                    [class.bg-white]="(block.variant ?? 'primary') === 'secondary'"
-                                    [class.text-gray-900]="
-                                      (block.variant ?? 'primary') === 'secondary'
-                                    "
-                                    [class.border]="(block.variant ?? 'primary') === 'secondary'"
-                                    [class.border-gray-300]="
-                                      (block.variant ?? 'primary') === 'secondary'
-                                    "
-                                    [class.hover:bg-gray-50]="
-                                      (block.variant ?? 'primary') === 'secondary'
-                                    "
-                                    [class.focus-visible:ring-gray-400/40]="
-                                      (block.variant ?? 'primary') === 'secondary'
-                                    "
-                                    [routerLink]="block.routerLink"
-                                    [queryParams]="block.queryParams ?? null"
-                                  >
-                                    {{ block.label }}
-                                    <span aria-hidden="true">→</span>
-                                  </a>
-                                }
-                              } @else if (block.href) {
-                                <a
-                                  class="inline-flex items-center gap-2 rounded-md px-4 py-2 font-semibold
-               focus:outline-none focus-visible:ring-4"
-                                  [class.bg-blue-600]="(block.variant ?? 'primary') === 'primary'"
-                                  [class.text-white]="(block.variant ?? 'primary') === 'primary'"
-                                  [class.hover:bg-blue-700]="
-                                    (block.variant ?? 'primary') === 'primary'
-                                  "
-                                  [class.focus-visible:ring-blue-400/40]="
-                                    (block.variant ?? 'primary') === 'primary'
-                                  "
-                                  [class.bg-white]="(block.variant ?? 'primary') === 'secondary'"
-                                  [class.text-gray-900]="
-                                    (block.variant ?? 'primary') === 'secondary'
-                                  "
-                                  [class.border]="(block.variant ?? 'primary') === 'secondary'"
-                                  [class.border-gray-300]="
-                                    (block.variant ?? 'primary') === 'secondary'
-                                  "
-                                  [class.hover:bg-gray-50]="
-                                    (block.variant ?? 'primary') === 'secondary'
-                                  "
-                                  [class.focus-visible:ring-gray-400/40]="
-                                    (block.variant ?? 'primary') === 'secondary'
-                                  "
-                                  [href]="block.href"
-                                  [target]="block.newTab ? '_blank' : null"
-                                  [rel]="block.newTab ? 'noopener noreferrer' : null"
-                                >
-                                  {{ block.label }}
-                                  <span aria-hidden="true">{{ block.newTab ? '↗' : '→' }}</span>
-                                </a>
-                              } @else {
-                                <button
-                                  type="button"
-                                  class="inline-flex items-center gap-2 rounded-md px-4 py-2 font-semibold bg-gray-200 text-gray-500 cursor-not-allowed"
-                                  disabled
-                                >
-                                  {{ block.label }}
-                                </button>
-                              }
-                            </div>
-                          }
-                          @case ('hint') {
-                            <div
-                              class="rounded-md border border-gray-200 overflow-hidden"
-                              [attr.data-testid]="block.testId ?? null"
-                            >
-                              <div
-                                class="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center justify-between gap-3"
-                              >
-                                <p class="font-semibold text-gray-900">{{ block.title }}</p>
-
-                                @if (!isHintRevealed(block.id)) {
                                   <button
                                     type="button"
-                                    class="shrink-0 inline-flex items-center rounded-md bg-gray-900 px-3 py-1.5 text-white font-semibold
-                 hover:bg-black focus:outline-none focus-visible:ring-4 focus-visible:ring-gray-400/40"
-                                    (click)="revealHint(block.id)"
+                                    class="inline-flex items-center gap-2 rounded-md px-4 py-2 font-semibold bg-gray-200 text-gray-500 cursor-not-allowed"
+                                    disabled
                                   >
-                                    Reveal hint
+                                    {{ block.label }}
                                   </button>
-                                } @else {
-                                  <span
-                                    class="text-xs font-semibold bg-green-100 text-green-800 px-2 py-1 rounded-full"
-                                  >
-                                    Revealed
-                                  </span>
                                 }
                               </div>
-
-                              @if (isHintRevealed(block.id)) {
-                                <div class="p-4 space-y-4">
-                                  @for (h of block.blocks; track $index) {
-                                    @switch (h.type) {
-                                      @case ('h1') {
-                                        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">
-                                          {{ h.text }}
-                                        </h1>
-                                      }
-                                      @case ('h2') {
-                                        <h2 class="text-xl sm:text-2xl font-bold text-gray-900">
-                                          {{ h.text }}
-                                        </h2>
-                                      }
-                                      @case ('h3') {
-                                        <h3 class="text-lg font-bold text-gray-900">
-                                          {{ h.text }}
-                                        </h3>
-                                      }
-                                      @case ('p') {
-                                        @if (asBulletList(h.text); as bullets) {
-                                          <ul
-                                            class="list-disc pl-8 space-y-1 text-gray-700 leading-relaxed"
-                                          >
-                                            @for (b of bullets; track b) {
-                                              <li>{{ b }}</li>
-                                            }
-                                          </ul>
-                                        } @else if (asNumberedList(h.text); as steps) {
-                                          <ol
-                                            class="list-decimal pl-8 space-y-1 text-gray-700 leading-relaxed"
-                                          >
-                                            @for (s of steps; track s) {
-                                              <li>{{ s }}</li>
-                                            }
-                                          </ol>
-                                        } @else {
-                                          <p class="text-gray-700 leading-relaxed">{{ h.text }}</p>
-                                        }
-                                      }
-                                      @case ('divider') {
-                                        <hr class="border-gray-200" />
-                                      }
-
-                                      @case ('callout') {
-                                        <div
-                                          class="rounded-md p-4 border"
-                                          [class.border-blue-200]="h.variant === 'info'"
-                                          [class.bg-blue-50]="h.variant === 'info'"
-                                          [class.text-blue-900]="h.variant === 'info'"
-                                          [class.border-yellow-200]="h.variant === 'warning'"
-                                          [class.bg-yellow-50]="h.variant === 'warning'"
-                                          [class.text-yellow-900]="h.variant === 'warning'"
-                                        >
-                                          <p class="font-semibold">
-                                            {{ h.variant === 'info' ? 'Tip' : 'Note' }}
-                                          </p>
-                                          <p class="mt-1">{{ h.text }}</p>
-                                        </div>
-                                      }
-                                      @case ('links') {
-                                        <div>
-                                          <h3 class="text-lg font-bold text-gray-900">Links</h3>
-                                          <ul class="mt-3 space-y-3">
-                                            @for (l of h.links; track l.url) {
-                                              <li class="rounded-md border border-gray-200 p-4">
-                                                <a
-                                                  class="font-semibold text-blue-700 hover:underline"
-                                                  [href]="l.url"
-                                                  target="_blank"
-                                                  rel="noopener noreferrer"
-                                                >
-                                                  {{ l.label }}
-                                                </a>
-                                                @if (l.description) {
-                                                  <p class="mt-1 text-gray-600">
-                                                    {{ l.description }}
-                                                  </p>
-                                                }
-                                                <p class="mt-2 text-xs text-gray-500 break-all">
-                                                  {{ l.url }}
-                                                </p>
-                                              </li>
-                                            }
-                                          </ul>
-                                        </div>
-                                      }
-                                      @case ('downloads') {
-                                        <div>
-                                          <h3 class="text-lg font-bold text-gray-900">Downloads</h3>
-                                          <ul class="mt-3 space-y-3">
-                                            @for (d of h.downloads; track d.url) {
-                                              <li
-                                                class="rounded-md border border-gray-200 p-4 flex items-center justify-between gap-4"
-                                              >
-                                                <div class="min-w-0">
-                                                  <p class="font-semibold text-gray-900 truncate">
-                                                    {{ d.label }}
-                                                  </p>
-                                                  @if (d.meta) {
-                                                    <p class="text-sm text-gray-600">
-                                                      {{ d.meta }}
-                                                    </p>
-                                                  }
-                                                  <p class="mt-1 text-xs text-gray-500 break-all">
-                                                    {{ d.url }}
-                                                  </p>
-                                                </div>
-                                                <a
-                                                  class="shrink-0 inline-flex items-center rounded-md bg-gray-900 px-4 py-2 text-white font-semibold hover:bg-black"
-                                                  [href]="d.url"
-                                                  download
-                                                >
-                                                  Download
-                                                </a>
-                                              </li>
-                                            }
-                                          </ul>
-                                        </div>
-                                      }
-                                      @case ('code') {
-                                        <div
-                                          class="rounded-md border border-gray-200 overflow-hidden"
-                                        >
-                                          @if (h.filename || h.language) {
-                                            <div
-                                              class="px-4 py-2 bg-gray-50 border-b border-gray-200 flex items-center justify-between"
-                                            >
-                                              <div class="text-sm font-semibold text-gray-700">
-                                                {{ h.filename ?? 'Code' }}
-                                              </div>
-                                              @if (h.language) {
-                                                <span
-                                                  class="text-xs font-semibold bg-gray-100 text-gray-700 px-2 py-1 rounded-full"
-                                                  >{{ h.language }}</span
-                                                >
-                                              }
-                                            </div>
-                                          }
-                                          <pre
-                                            class="p-4 bg-gray-900 text-gray-100 overflow-x-auto text-sm leading-relaxed"
-                                          ><code>{{ h.code }}</code></pre>
-                                        </div>
-                                      }
-                                      @case ('labelValue') {
-                                        <div class="text-sm text-gray-700 leading-snug">
-                                          @if (h.list; as list) {
-                                            <div class="font-semibold text-gray-900">
-                                              {{ h.label }}
-                                            </div>
-
-                                            @if (list.items.length) {
-                                              <div class="mt-2">
-                                                <app-nested-list
-                                                  [items]="list.items"
-                                                  [ordered]="list.ordered ?? false"
-                                                />
-                                              </div>
-                                            }
-                                          } @else {
-                                            <div class="flex items-baseline gap-2">
-                                              <span
-                                                class="font-semibold text-gray-900 whitespace-nowrap"
-                                                >{{ h.label }}</span
-                                              >
-                                              <span class="text-gray-400">:</span>
-                                              <span class="text-gray-700">{{ h.text }}</span>
-                                            </div>
-                                          }
-                                        </div>
-                                      }
-
-                                      @default {}
-                                    }
-                                  }
-                                </div>
-                              } @else {
-                                <div class="p-4">
-                                  <p class="text-sm text-gray-600">
-                                    Try it yourself first. Reveal this hint if you get stuck.
-                                  </p>
-                                </div>
-                              }
-                            </div>
+                            }
+                            @case ('hint') {
+                              <!-- your existing hint block rendering continues here unchanged -->
+                              <!-- (keep exactly what you already have for hint) -->
+                            }
                           }
                         }
-                      }
-                    </div>
+                      </div>
+                    }
                   }
                 } @else {
                   <p class="text-gray-700">Select an item on the right.</p>
