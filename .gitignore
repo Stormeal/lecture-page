@@ -46,6 +46,7 @@ testem.log
 /typings
 __screenshots__/
 src/tests/test-results/
+src/tests/screenshots/
 
 # System files
 .DS_Store
