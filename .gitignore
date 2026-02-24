@@ -47,6 +47,7 @@ testem.log
 __screenshots__/
 src/tests/test-results/
 src/tests/screenshots/
+google-credentials.json
 
 # System files
 .DS_Store
