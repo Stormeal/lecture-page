@@ -4,17 +4,15 @@ import { ActivatedRoute, RouterModule, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs/operators';
 import { CoursesService } from '../data/course.service';
-import {
-  CourseItem,
-  CourseContentBlock,
-  CourseGroupItem,
-  CourseContentItem,
-  CourseExternalItem,
-} from '../data/course.model';
+import { CourseItem, CourseContentBlock } from '../data/course.model';
 import { ElementRef, ViewChild } from '@angular/core';
 import { NestedListComponent } from '../shared/nested-list.component';
 import { QuizComponent } from '../components/quiz/quiz.component';
-import { CourseQuizItem } from '../data/course.model';
+
+import {
+  readPlaywrightSession,
+  clearPlaywrightSession,
+} from '../course-access/auth-session.storage';
 
 @Component({
   selector: 'app-course-details-page',
@@ -47,7 +45,18 @@ import { CourseQuizItem } from '../data/course.model';
             </div>
           </div>
 
-          <div class="shrink-0 w-[84px] sm:w-[104px]"></div>
+          <div class="shrink-0 w-[84px] sm:w-[104px] flex justify-end">
+            @if (isLoggedIn()) {
+              <button
+                type="button"
+                class="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-semibold text-gray-800
+                       hover:bg-gray-50 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
+                (click)="logout()"
+              >
+                Logout
+              </button>
+            }
+          </div>
         </div>
       </header>
 
@@ -274,7 +283,6 @@ import { CourseQuizItem } from '../data/course.model';
                                 [attr.data-testid]="block.testId ?? null"
                               >
                                 @if (block.list; as list) {
-                                  <!-- LIST MODE: stacked label + nested list -->
                                   <div class="font-semibold text-gray-900">{{ block.label }}</div>
 
                                   @if (list.items.length) {
@@ -286,7 +294,6 @@ import { CourseQuizItem } from '../data/course.model';
                                     </div>
                                   }
                                 } @else {
-                                  <!-- TEXT MODE: inline "Label: Value" -->
                                   <div class="flex items-baseline gap-2">
                                     <span class="font-semibold text-gray-900 whitespace-nowrap">{{
                                       block.label
@@ -445,7 +452,6 @@ import { CourseQuizItem } from '../data/course.model';
                 <nav class="p-2">
                   @for (item of c.items; track item.id) {
                     @if (item.type === 'group') {
-                      <!-- Group item -->
                       <button
                         type="button"
                         class="w-full text-left rounded-md px-3 py-3 m-1 border border-transparent hover:bg-gray-50
@@ -478,7 +484,6 @@ import { CourseQuizItem } from '../data/course.model';
                         </div>
                       </button>
 
-                      <!-- Children -->
                       @if (isExpanded(item.id)) {
                         <div class="ml-3 pl-2 border-l border-gray-200">
                           @for (child of item.children; track child.id) {
@@ -571,7 +576,6 @@ import { CourseQuizItem } from '../data/course.model';
                         </div>
                       }
                     } @else if (item.type === 'external') {
-                      <!-- Top-level external -->
                       <a
                         class="block rounded-md px-3 py-3 m-1 border border-transparent hover:bg-gray-50
                                focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
@@ -586,7 +590,6 @@ import { CourseQuizItem } from '../data/course.model';
                         <span class="ml-1 text-xs text-gray-500">↗</span>
                       </a>
                     } @else {
-                      <!-- Top-level content -->
                       <button
                         type="button"
                         class="w-full text-left rounded-md px-3 py-3 m-1 border border-transparent hover:bg-gray-50
@@ -634,6 +637,14 @@ export class CourseDetailsPageComponent {
 
   private expanded = signal<Set<string>>(new Set());
   private revealed = signal<Set<string>>(new Set());
+
+  // Simple local check for whether we have a stored session
+  isLoggedIn = computed(() => !!readPlaywrightSession());
+
+  logout() {
+    clearPlaywrightSession();
+    this.router.navigateByUrl('/courses');
+  }
 
   constructor() {
     effect(() => {

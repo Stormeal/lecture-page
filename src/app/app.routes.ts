@@ -11,6 +11,9 @@ import { AutomationCandidateScorerPageComponent } from './pages/automation-candi
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'courses' },
   { path: 'courses', component: CoursesListPageComponent },
+
+  // Dedicated unlock page for the Playwright course.
+  // The guard redirects here with ?redirect=<originalUrl>
   { path: 'courses/playwright/unlock', component: PlaywrightUnlockPageComponent },
 
   {
