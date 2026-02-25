@@ -6,3 +6,10 @@
 body {
   font-family: 'Poppins';
 }
+
+.xp-background {
+  background:
+    radial-gradient(1100px 700px at 18% 20%, rgba(255, 255, 255, 0.18), transparent 62%),
+    radial-gradient(900px 560px at 82% 30%, rgba(255, 255, 255, 0.12), transparent 62%),
+    linear-gradient(180deg, #e6efff 0%, #ccdefa 100%);
+}

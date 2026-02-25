@@ -8,7 +8,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   template: `
-    <div class="h-screen flex flex-col bg-orange-50">
+    <div class="h-screen flex flex-col xp-background">
       <!-- Top bar -->
       <header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200">
         <div class="max-w-3/4 mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
@@ -327,8 +327,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
                     <div class="flex items-center gap-3">
                       <button
                         type="submit"
-                        class="inline-flex items-center rounded-md bg-orange-400 px-5 py-2.5 text-white font-semibold
-                               hover:bg-orange-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40
+                        class="inline-flex items-center rounded-md bg-blue-400 px-5 py-2.5 text-white font-semibold
+                               hover:bg-blue-700 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40
                                disabled:opacity-60"
                         [disabled]="isSubmitting()"
                         data-testid="contact-submit"

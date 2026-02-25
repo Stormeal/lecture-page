@@ -19,7 +19,7 @@ import {
   standalone: true,
   imports: [RouterModule, NestedListComponent, QuizComponent],
   template: `
-    <div class="min-h-screen bg-orange-50">
+    <div class="min-h-screen xp-background">
       <!-- Sticky top bar -->
       <header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center">
@@ -311,13 +311,13 @@ import {
                                     <a
                                       class="inline-flex items-center gap-2 rounded-md px-4 py-2 font-semibold
                                focus:outline-none focus-visible:ring-4"
-                                      [class.bg-orange-400]="
+                                      [class.bg-blue-400]="
                                         (block.variant ?? 'primary') === 'primary'
                                       "
                                       [class.text-white]="
                                         (block.variant ?? 'primary') === 'primary'
                                       "
-                                      [class.hover:bg-orange-500]="
+                                      [class.hover:bg-blue-500]="
                                         (block.variant ?? 'primary') === 'primary'
                                       "
                                       [class.focus-visible:ring-blue-400/40]="
@@ -349,13 +349,13 @@ import {
                                     <a
                                       class="inline-flex items-center gap-2 rounded-md px-4 py-2 font-semibold
                                focus:outline-none focus-visible:ring-4"
-                                      [class.bg-orange-400]="
+                                      [class.bg-blue-400]="
                                         (block.variant ?? 'primary') === 'primary'
                                       "
                                       [class.text-white]="
                                         (block.variant ?? 'primary') === 'primary'
                                       "
-                                      [class.hover:bg-orange-500]="
+                                      [class.hover:bg-blue-500]="
                                         (block.variant ?? 'primary') === 'primary'
                                       "
                                       [class.focus-visible:ring-blue-400/40]="

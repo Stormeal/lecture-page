@@ -9,7 +9,7 @@ import { CoursesService } from '../data/course.service';
   standalone: true,
   imports: [CourseCardComponent],
   template: `
-    <div class="min-h-screen bg-orange-50 grid place-items-center p-6">
+    <div class="min-h-screen inset-0 xp-background grid place-items-center p-6">
       <div
         class="grid gap-6 place-items-center
          items-stretch

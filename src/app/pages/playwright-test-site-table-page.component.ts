@@ -20,7 +20,7 @@ type User = {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink, LucideAngularModule],
   template: `
-    <div class="min-h-screen bg-orange-50">
+    <div class="min-h-screen xp-background">
       <header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           <a
@@ -121,8 +121,8 @@ type User = {
 
             <button
               type="submit"
-              class="inline-flex w-fit items-center justify-center rounded-md bg-orange-400 px-5 py-2.5 text-white text-sm font-semibold
-                     hover:bg-orange-600 focus:outline-none focus-visible:ring-4 focus-visible:ring-orange-400/40"
+              class="inline-flex w-fit items-center justify-center rounded-md bg-blue-400 px-5 py-2.5 text-white text-sm font-semibold
+                     hover:bg-blue-600 focus:outline-none focus-visible:ring-4 focus-visible:ring-orange-400/40"
               data-testid="add-user-submit"
             >
               Add user
@@ -172,7 +172,7 @@ type User = {
                       class="text-xs rounded-full px-2 py-0.5 border"
                       [class]="
                         user.role === 'Admin'
-                          ? 'bg-orange-50 border-orange-200 text-orange-800'
+                          ? 'bg-blue-50 border-orange-200 text-orange-800'
                           : 'bg-slate-50 border-slate-200 text-slate-700'
                       "
                       [attr.data-testid]="'badge-role-' + user.role.toLowerCase()"
