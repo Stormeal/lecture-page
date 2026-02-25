@@ -184,6 +184,309 @@ export const EXERCISE_06: CourseGroupItem = {
     },
 
     {
+      id: 'ex6-quiz',
+      title: 'Quiz',
+      summary:
+        'Check your understanding of fundamental API testing with Playwright (APIRequestContext).',
+      type: 'quiz',
+      intro: 'One question at a time. If you miss one, try again and read the explanation.',
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'What is APIRequestContext in Playwright?',
+          correctOptionId: 'b',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'A browser tab abstraction used for UI interactions.',
+              wrongExplanation: 'That describes a Page. APIRequestContext is for HTTP requests.',
+              wrongExplainFurther:
+                'APIRequestContext is Playwright’s HTTP client for API testing, separate from UI automation.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Playwright’s built-in HTTP client used to send requests like GET/POST/PUT/PATCH/DELETE.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. APIRequestContext is Playwright’s HTTP client that integrates with the Playwright Test runner and supports standard HTTP methods.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'A screenshot comparison engine for visual regression testing.',
+              wrongExplanation: 'That relates to screenshot assertions, not APIRequestContext.',
+              wrongExplainFurther:
+                'APIRequestContext is used to test backend behavior by sending HTTP requests and validating responses.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'A CLI tool that generates API mocks automatically.',
+              wrongExplanation:
+                'Playwright does not provide a CLI that auto-generates API mocks as part of APIRequestContext.',
+              wrongExplainFurther:
+                'APIRequestContext focuses on making real HTTP calls and validating contract and behavior.',
+            },
+          ],
+        },
+
+        {
+          id: 'q2',
+          prompt: 'Why is API testing useful alongside UI tests?',
+          correctOptionId: 'c',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Because it replaces all UI testing and makes browser tests unnecessary.',
+              wrongExplanation:
+                'API tests and UI tests cover different risks and complement each other.',
+              wrongExplainFurther:
+                'API tests validate backend contracts and logic. UI tests validate end-to-end user flows.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Because it is only useful for taking screenshots faster.',
+              wrongExplanation: 'Screenshots are a UI concern, not an API testing reason.',
+              wrongExplainFurther:
+                'API testing is about validating backend behavior and system state without UI interaction.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Because it can validate backend behavior, prepare test data, and verify system state without using the UI.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. API testing helps validate server logic directly, create or reset data for tests, and confirm backend state independently of the browser.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Because APIRequestContext automatically shares state across all tests by default.',
+              wrongExplanation:
+                'Sharing state across tests is not the goal and is not guaranteed by default.',
+              wrongExplainFurther:
+                'A key goal is reliable, independent tests that do not leak state between runs.',
+            },
+          ],
+        },
+
+        {
+          id: 'q3',
+          prompt:
+            'Which list best describes the typical components of an API request in APIRequestContext?',
+          correctOptionId: 'a',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'HTTP method, URL (or baseURL + endpoint), headers, and optional body payload.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. A typical request includes the method, the URL (or baseURL + path), optional headers (like Content-Type/Authorization), and an optional body (often JSON).',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Selector, locator, assertions, and screenshots.',
+              wrongExplanation: 'Those are UI testing concepts, not API request components.',
+              wrongExplainFurther:
+                'API requests are based on HTTP concepts: method, URL, headers, and body.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Browser, context, page, and route.',
+              wrongExplanation:
+                'Those are Playwright browser model terms, not API request components.',
+              wrongExplainFurther:
+                'APIRequestContext is an HTTP client. It does not require a Page to send requests.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Timeout, retries, trace viewer, and screenshots.',
+              wrongExplanation: 'Those are test runner/debugging features, not the request itself.',
+              wrongExplainFurther:
+                'They can affect execution, but they are not part of the request components list.',
+            },
+          ],
+        },
+
+        {
+          id: 'q4',
+          prompt:
+            'After sending a request, Playwright returns an APIResponse. Which helpers can you use to read the body?',
+          correctOptionId: 'd',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'html(), png(), and csv()',
+              wrongExplanation: 'Those are not APIResponse helpers.',
+              wrongExplainFurther:
+                'APIResponse supports json(), text(), and body() depending on the response format.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'innerText(), isVisible(), and click()',
+              wrongExplanation: 'Those are Locator/Page UI APIs, not APIResponse helpers.',
+              wrongExplainFurther:
+                'APIResponse is not a DOM element. Use json(), text(), or body() to read response content.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'parse(), stringify(), and eval()',
+              wrongExplanation: 'Those are general JS concepts and not the APIResponse helper set.',
+              wrongExplainFurther:
+                'Playwright provides explicit helpers: json(), text(), and body().',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'json(), text(), and body()',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. Use json() for JSON APIs, text() for plain text/HTML/log output, and body() for binary responses like images or files.',
+            },
+          ],
+        },
+
+        {
+          id: 'q5',
+          prompt: 'Which validation strategy is most reliable for API tests (as taught here)?',
+          correctOptionId: 'b',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Assert the entire payload matches exactly, including timestamps and ordering.',
+              wrongExplanation:
+                'Full-payload exact matches are often brittle due to dynamic fields and harmless changes.',
+              wrongExplainFurther:
+                'Prefer stable validations: status code, required fields, and critical values.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Assert status code first, then validate required fields and critical values, and optionally verify important headers.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. A stable approach is to check the HTTP status first, then validate required JSON fields and key values, and optionally confirm important headers like Content-Type.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Only log the response and assume it is correct if it looks right.',
+              wrongExplanation: 'Logs help debugging but do not prove correctness.',
+              wrongExplainFurther:
+                'API tests should use assertions to validate contracts and behavior.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Skip parsing the body and only assert that the response exists.',
+              wrongExplanation:
+                'That does not validate behavior. You typically need at least status and key fields.',
+              wrongExplainFurther:
+                'Parse and validate the response after confirming success (status code).',
+            },
+          ],
+        },
+
+        {
+          id: 'q6',
+          prompt:
+            'What is a common authentication and request chaining pattern for protected endpoints?',
+          correctOptionId: 'a',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Send a login request to get a token, extract it, then include it in headers for subsequent requests.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. A common pattern is: login → extract token → attach token in Authorization (or similar) header for protected requests, and reuse returned IDs across requests.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Hover the login button, then click it until you are authenticated.',
+              wrongExplanation: 'That describes a UI flow, not API authentication.',
+              wrongExplainFurther:
+                'For API auth, you typically authenticate via a request and then pass a token/cookie to later requests.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Always use selectOption() to choose the token from a dropdown.',
+              wrongExplanation: 'selectOption() is for native <select> elements, not API auth.',
+              wrongExplainFurther:
+                'API auth tokens are typically returned in response bodies or headers.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Hardcode a token in the test and reuse it forever.',
+              wrongExplanation: 'Hardcoded tokens often expire and can be unsafe to store.',
+              wrongExplainFurther:
+                'Prefer obtaining tokens dynamically via a login request, and never log secrets.',
+            },
+          ],
+        },
+
+        {
+          id: 'q7',
+          prompt:
+            'Which best practice improves reliability for hosted practice APIs that may have latency?',
+          correctOptionId: 'c',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Assert dynamic values like timestamps on every response, even if they are not required.',
+              wrongExplanation:
+                'Dynamic values tend to make tests brittle unless they are part of the contract you must verify.',
+              wrongExplainFurther:
+                'Prefer stable and meaningful validations, and avoid asserting timestamps unless required.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Share one global mutable test dataset across all tests to make them faster.',
+              wrongExplanation:
+                'Shared mutable state creates collisions and order-dependent failures.',
+              wrongExplainFurther:
+                'Prefer unique test data and independent tests to avoid interference between runs/users.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Generate unique test data and keep tests self-contained and independent.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. Unique data reduces collisions, and independent tests are more reliable in shared or hosted environments that may have latency and other users.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Avoid assertions to reduce flakiness.',
+              wrongExplanation:
+                'Removing assertions does not improve reliability. It removes verification.',
+              wrongExplainFurther:
+                'Use stable assertions on the contract and critical fields instead.',
+            },
+          ],
+        },
+      ],
+    },
+
+    {
       id: 'ex6_1-exercise',
       title: 'Exercise 6.1: Red Team Recon',
       summary: `Health endpoint probe (APIRequestContext)`,
