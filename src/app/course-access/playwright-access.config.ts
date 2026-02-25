@@ -1,4 +1,9 @@
 export const PLAYWRIGHT_ACCESS = {
-  password: 'Testhuset03',
-  storageKey: 'course_access_playwright_v2',
+  courseSlug: 'playwright',
+
+  // Where the lecture-page-api is deployed
+  apiBaseUrl: 'https://lecture-page-api.vercel.app/api',
+
+  // Stores JSON: { sessionId, expiresAt, username }
+  storageKey: 'course_access_playwright_session_v1',
 };
