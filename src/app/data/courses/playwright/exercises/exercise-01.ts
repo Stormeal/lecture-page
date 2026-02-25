@@ -207,260 +207,6 @@ await page.goto('https://example.com');`,
     },
 
     {
-      id: 'ex1-exercise',
-      title: 'Exercise',
-      summary: 'Write your first Playwright Test and save a screenshot',
-      type: 'content',
-      blocks: [
-        { type: 'h2', text: 'Exercise 1: Browser contexts and pages', testId: 'ex1-exercise' },
-
-        {
-          type: 'p',
-          text: 'Let’s write your first Playwright Test. You will open a website, confirm it loaded, and save a screenshot. Simple, useful, and a great foundation.',
-        },
-
-        { type: 'divider' },
-
-        { type: 'h3', text: 'Goal' },
-        {
-          type: 'p',
-          text: '• Open https://testhuset.dk • Wait until the page is loaded • Take a screenshot and save it under screenshots/day1_ex1.png',
-        },
-
-        { type: 'divider' },
-
-        { type: 'h3', text: 'Recommended approach (Playwright Test)' },
-        {
-          type: 'p',
-          text: 'We will use the Playwright Test runner and the built-in page fixture. That keeps the test clean and removes lifecycle noise so you can focus on the important parts.',
-        },
-
-        { type: 'h3', text: 'Steps' },
-        {
-          type: 'p',
-          text: '1. Create a new test file named exercise_1.spec.ts in the same folder as this exercise. 2. Import test and expect from @playwright/test. 3. In the test, navigate to https://testhuset.dk and wait for domcontentloaded. 4. Save a full-page screenshot to screenshots/day1_ex1.png.',
-        },
-
-        {
-          type: 'callout',
-          variant: 'info',
-          text: 'Tip: A beginner-friendly way to prove a page loaded is domcontentloaded combined with a simple assertion such as the page title.',
-        },
-
-        { type: 'divider' },
-
-        { type: 'h3', text: 'Definition of done' },
-        {
-          type: 'p',
-          text: '• The test passes without errors • A screenshot exists at screenshots/day1_ex1.png',
-        },
-
-        { type: 'divider' },
-
-        { type: 'h3', text: 'Optional: run it headed' },
-        {
-          type: 'p',
-          text: 'If you want to see the browser window while the test runs, run Playwright Test in headed mode.',
-        },
-
-        { type: 'divider' },
-
-        {
-          type: 'hint',
-          id: 'ex1-hint-file-location',
-          title: 'Hint 1: Where should I put the test file?',
-          blocks: [
-            {
-              type: 'p',
-              text: 'Place exercise_1.spec.ts next to the existing exercise folder for Day 1, Exercise 1, so it is easy to find and easy to run.',
-            },
-          ],
-        },
-        {
-          type: 'hint',
-          id: 'ex1-hint-page-fixture',
-          title: 'Hint 2: How do I get a page object?',
-          blocks: [
-            {
-              type: 'p',
-              text: 'Use Playwright Test. The test runner provides a built-in page fixture. Your test function can receive { page } and you can use it immediately.',
-            },
-            {
-              type: 'code',
-              language: 'ts',
-              code: `// Simple Page Object example (Playwright Test)
-import { Page, expect } from '@playwright/test';
-
-export class StatusPage {
-  constructor(private readonly page: Page) {}
-
-  // Locators (keep them in one place)
-  readonly status = this.page.getByRole('status');
-
-  // Assertions (web-first, auto-retrying)
-  async expectReady(timeout = 10_000) {
-    await expect(this.status).toHaveText('Ready', { timeout });
-  }
-}
-
-// --- usage in a test ---
-import { test } from '@playwright/test';
-
-test('status becomes ready', async ({ page }) => {
-  const statusPage = new StatusPage(page); // <-- "get" the page object
-  await statusPage.expectReady();
-});`,
-            },
-          ],
-        },
-        {
-          type: 'hint',
-          id: 'ex1-hint-goto-and-wait',
-          title: 'Hint 3: What does “wait until loaded” mean here?',
-          blocks: [
-            {
-              type: 'p',
-              text: 'A good starting point is to wait for domcontentloaded in page.goto. After that, add an assertion such as checking the title.',
-            },
-            {
-              type: 'code',
-              language: 'ts',
-              code: `// Hint: tell goto what "loaded" should mean
-await page.goto('YOUR_URL_HERE', { waitUntil: 'domcontentloaded' });
-
-// Hint: then assert something stable, e.g. title
-await expect(page).toHaveTitle(/YOUR_EXPECTED_TITLE/);`,
-            },
-          ],
-        },
-        {
-          type: 'hint',
-          id: 'ex1-hint-screenshot-folder',
-          title: 'Hint 4: My screenshot fails to save',
-          blocks: [
-            {
-              type: 'p',
-              text: 'Make sure the screenshots folder exists before saving. If the folder is missing, Node cannot write the file.',
-            },
-          ],
-        },
-        {
-          type: 'hint',
-          id: 'ex1-hint-runner-not-working',
-          title: 'Hint 5: Playwright runner not working for my test',
-          blocks: [
-            {
-              type: 'p',
-              text: 'If you are having issues with your playwright runner not having the run icon, it could be because of three things. ',
-            },
-            {
-              type: 'p',
-              text: '• If you just installed the Playwright extention, you might have to restart Visual Studio Code and try again. • Make sure that the test file is located with the "tests" folder. Playwright is configured to looks for tests within that folder. • Make sure that your test file is "*.spec.ts" it only looks for tests within spec files.  ',
-            },
-          ],
-        },
-        { type: 'divider' },
-        { type: 'h3', text: 'Helpful Playwright documentation' },
-        {
-          type: 'links',
-          links: [
-            {
-              label: 'Playwright Test runner',
-              url: 'https://playwright.dev/docs/test-intro',
-              description: 'How Playwright Test works and how to run tests',
-            },
-            {
-              label: 'page.goto',
-              url: 'https://playwright.dev/docs/api/class-page#page-goto',
-              description: 'Navigation and waiting options',
-            },
-            {
-              label: 'Screenshots',
-              url: 'https://playwright.dev/docs/screenshots',
-              description: 'Taking screenshots with Playwright',
-            },
-          ],
-        },
-      ],
-    },
-
-    {
-      id: 'ex1-solution',
-      title: 'Solution',
-      summary: 'Reveal if you are stuck',
-      type: 'content',
-      revealable: true,
-      blocks: [
-        { type: 'h2', text: 'Solution: Exercise 1' },
-
-        { type: 'divider' },
-
-        { type: 'h3', text: 'Playwright Test solution (recommended)' },
-        {
-          type: 'code',
-          language: 'ts',
-          filename: 'exercise_1.spec.ts',
-          code: `import { test, expect } from '@playwright/test';
-
-test('Day 1, Exercise 1: open site and take screenshot', async ({ page }) => {
-  // Navigates to the page and waits for the dom to load before proceeding
-  await page.goto('https://testhuset.dk', { waitUntil: 'domcontentloaded' });
-
-  // Takes a fullpage screenshot of the page and saves it in the desired path
-  await page.screenshot({ path: 'screenshots/day1_ex1.png', fullPage: true });
-});`,
-        },
-
-        { type: 'divider' },
-
-        { type: 'h3', text: 'Why this is a good baseline' },
-        {
-          type: 'p',
-          text: '• Uses Playwright Test and the built-in page fixture • Uses a reliable load signal (domcontentloaded) • Adds a meaningful assertion (title check) • Ensures the screenshots folder exists before writing the file',
-        },
-
-        { type: 'divider' },
-
-        { type: 'h3', text: 'Optional manual solution (Browser, Context, Page)' },
-        {
-          type: 'p',
-          text: `This is the approach if you don't want to use the Playwright fixtures and want to try to build it manually. Notice that we have to manually close the context and browser, where the Playwright's fixture provides us with the built-in functionality, so that we don't have to do it manually.`,
-        },
-        {
-          type: 'code',
-          language: 'ts',
-          filename: 'exercise_1.ts',
-          code: `import { chromium } from 'playwright';
-
-async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext();
-  const page = await context.newPage();
-
-  try {
-    await page.goto('https://testhuset.dk', { waitUntil: 'domcontentloaded' });
-    await page.screenshot({ path: 'screenshots/day1_ex1.png', fullPage: true });
-  } finally {
-    await context.close();
-    await browser.close();
-  }
-}
-
-main().catch((err) => {
-  console.error(err);
-  process.exitCode = 1;
-});`,
-        },
-
-        {
-          type: 'callout',
-          variant: 'info',
-          text: 'Tip: If you want to watch the manual version run, set headless to false.',
-        },
-      ],
-    },
-
-    {
       id: 'ex1-quiz',
       title: 'Quiz',
       summary: 'Check your understanding of Browser, Context, and Page',
@@ -764,6 +510,260 @@ main().catch((err) => {
                 'The API shape reflects the hierarchy: browser.newContext() then context.newPage().',
             },
           ],
+        },
+      ],
+    },
+
+    {
+      id: 'ex1-exercise',
+      title: 'Exercise',
+      summary: 'Write your first Playwright Test and save a screenshot',
+      type: 'content',
+      blocks: [
+        { type: 'h2', text: 'Exercise 1: Browser contexts and pages', testId: 'ex1-exercise' },
+
+        {
+          type: 'p',
+          text: 'Let’s write your first Playwright Test. You will open a website, confirm it loaded, and save a screenshot. Simple, useful, and a great foundation.',
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Goal' },
+        {
+          type: 'p',
+          text: '• Open https://testhuset.dk • Wait until the page is loaded • Take a screenshot and save it under screenshots/day1_ex1.png',
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Recommended approach (Playwright Test)' },
+        {
+          type: 'p',
+          text: 'We will use the Playwright Test runner and the built-in page fixture. That keeps the test clean and removes lifecycle noise so you can focus on the important parts.',
+        },
+
+        { type: 'h3', text: 'Steps' },
+        {
+          type: 'p',
+          text: '1. Create a new test file named exercise_1.spec.ts in the same folder as this exercise. 2. Import test and expect from @playwright/test. 3. In the test, navigate to https://testhuset.dk and wait for domcontentloaded. 4. Save a full-page screenshot to screenshots/day1_ex1.png.',
+        },
+
+        {
+          type: 'callout',
+          variant: 'info',
+          text: 'Tip: A beginner-friendly way to prove a page loaded is domcontentloaded combined with a simple assertion such as the page title.',
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Definition of done' },
+        {
+          type: 'p',
+          text: '• The test passes without errors • A screenshot exists at screenshots/day1_ex1.png',
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Optional: run it headed' },
+        {
+          type: 'p',
+          text: 'If you want to see the browser window while the test runs, run Playwright Test in headed mode.',
+        },
+
+        { type: 'divider' },
+
+        {
+          type: 'hint',
+          id: 'ex1-hint-file-location',
+          title: 'Hint 1: Where should I put the test file?',
+          blocks: [
+            {
+              type: 'p',
+              text: 'Place exercise_1.spec.ts next to the existing exercise folder for Day 1, Exercise 1, so it is easy to find and easy to run.',
+            },
+          ],
+        },
+        {
+          type: 'hint',
+          id: 'ex1-hint-page-fixture',
+          title: 'Hint 2: How do I get a page object?',
+          blocks: [
+            {
+              type: 'p',
+              text: 'Use Playwright Test. The test runner provides a built-in page fixture. Your test function can receive { page } and you can use it immediately.',
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              code: `// Simple Page Object example (Playwright Test)
+import { Page, expect } from '@playwright/test';
+
+export class StatusPage {
+  constructor(private readonly page: Page) {}
+
+  // Locators (keep them in one place)
+  readonly status = this.page.getByRole('status');
+
+  // Assertions (web-first, auto-retrying)
+  async expectReady(timeout = 10_000) {
+    await expect(this.status).toHaveText('Ready', { timeout });
+  }
+}
+
+// --- usage in a test ---
+import { test } from '@playwright/test';
+
+test('status becomes ready', async ({ page }) => {
+  const statusPage = new StatusPage(page); // <-- "get" the page object
+  await statusPage.expectReady();
+});`,
+            },
+          ],
+        },
+        {
+          type: 'hint',
+          id: 'ex1-hint-goto-and-wait',
+          title: 'Hint 3: What does “wait until loaded” mean here?',
+          blocks: [
+            {
+              type: 'p',
+              text: 'A good starting point is to wait for domcontentloaded in page.goto. After that, add an assertion such as checking the title.',
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              code: `// Hint: tell goto what "loaded" should mean
+await page.goto('YOUR_URL_HERE', { waitUntil: 'domcontentloaded' });
+
+// Hint: then assert something stable, e.g. title
+await expect(page).toHaveTitle(/YOUR_EXPECTED_TITLE/);`,
+            },
+          ],
+        },
+        {
+          type: 'hint',
+          id: 'ex1-hint-screenshot-folder',
+          title: 'Hint 4: My screenshot fails to save',
+          blocks: [
+            {
+              type: 'p',
+              text: 'Make sure the screenshots folder exists before saving. If the folder is missing, Node cannot write the file.',
+            },
+          ],
+        },
+        {
+          type: 'hint',
+          id: 'ex1-hint-runner-not-working',
+          title: 'Hint 5: Playwright runner not working for my test',
+          blocks: [
+            {
+              type: 'p',
+              text: 'If you are having issues with your playwright runner not having the run icon, it could be because of three things. ',
+            },
+            {
+              type: 'p',
+              text: '• If you just installed the Playwright extention, you might have to restart Visual Studio Code and try again. • Make sure that the test file is located with the "tests" folder. Playwright is configured to looks for tests within that folder. • Make sure that your test file is "*.spec.ts" it only looks for tests within spec files.  ',
+            },
+          ],
+        },
+        { type: 'divider' },
+        { type: 'h3', text: 'Helpful Playwright documentation' },
+        {
+          type: 'links',
+          links: [
+            {
+              label: 'Playwright Test runner',
+              url: 'https://playwright.dev/docs/test-intro',
+              description: 'How Playwright Test works and how to run tests',
+            },
+            {
+              label: 'page.goto',
+              url: 'https://playwright.dev/docs/api/class-page#page-goto',
+              description: 'Navigation and waiting options',
+            },
+            {
+              label: 'Screenshots',
+              url: 'https://playwright.dev/docs/screenshots',
+              description: 'Taking screenshots with Playwright',
+            },
+          ],
+        },
+      ],
+    },
+
+    {
+      id: 'ex1-solution',
+      title: 'Solution',
+      summary: 'Reveal if you are stuck',
+      type: 'content',
+      revealable: true,
+      blocks: [
+        { type: 'h2', text: 'Solution: Exercise 1' },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Playwright Test solution (recommended)' },
+        {
+          type: 'code',
+          language: 'ts',
+          filename: 'exercise_1.spec.ts',
+          code: `import { test, expect } from '@playwright/test';
+
+test('Day 1, Exercise 1: open site and take screenshot', async ({ page }) => {
+  // Navigates to the page and waits for the dom to load before proceeding
+  await page.goto('https://testhuset.dk', { waitUntil: 'domcontentloaded' });
+
+  // Takes a fullpage screenshot of the page and saves it in the desired path
+  await page.screenshot({ path: 'screenshots/day1_ex1.png', fullPage: true });
+});`,
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Why this is a good baseline' },
+        {
+          type: 'p',
+          text: '• Uses Playwright Test and the built-in page fixture • Uses a reliable load signal (domcontentloaded) • Adds a meaningful assertion (title check) • Ensures the screenshots folder exists before writing the file',
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Optional manual solution (Browser, Context, Page)' },
+        {
+          type: 'p',
+          text: `This is the approach if you don't want to use the Playwright fixtures and want to try to build it manually. Notice that we have to manually close the context and browser, where the Playwright's fixture provides us with the built-in functionality, so that we don't have to do it manually.`,
+        },
+        {
+          type: 'code',
+          language: 'ts',
+          filename: 'exercise_1.ts',
+          code: `import { chromium } from 'playwright';
+
+async function main() {
+  const browser = await chromium.launch({ headless: true });
+  const context = await browser.newContext();
+  const page = await context.newPage();
+
+  try {
+    await page.goto('https://testhuset.dk', { waitUntil: 'domcontentloaded' });
+    await page.screenshot({ path: 'screenshots/day1_ex1.png', fullPage: true });
+  } finally {
+    await context.close();
+    await browser.close();
+  }
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exitCode = 1;
+});`,
+        },
+
+        {
+          type: 'callout',
+          variant: 'info',
+          text: 'Tip: If you want to watch the manual version run, set headless to false.',
         },
       ],
     },

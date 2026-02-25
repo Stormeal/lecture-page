@@ -186,6 +186,220 @@ await page.getByRole('textbox', { name: 'Search' }).clear();`,
     },
 
     {
+      id: 'ex3-quiz',
+      title: 'Quiz',
+      summary:
+        'Check your understanding of input actions: fill(), press(), pressSequentially(), and clear().',
+      type: 'quiz',
+      intro: 'One question at a time. If you miss one, try again and read the explanation.',
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'What does fill() do when used on an input or textarea?',
+          correctOptionId: 'b',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'It appends text to the existing value character-by-character.',
+              wrongExplanation:
+                'fill() does not append, and it does not type character-by-character.',
+              wrongExplainFurther:
+                'Appending and per-key typing behavior is closer to pressSequentially() than fill().',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'It replaces the existing value by clearing the field automatically and setting the new value in one go.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. fill() clears the field automatically and replaces the value in one go (not character-by-character). It is fast and deterministic for most form fields.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'It types like a real user and triggers keydown/keyup for each character.',
+              wrongExplanation:
+                'That describes character-by-character typing, which is what pressSequentially() is for.',
+              wrongExplainFurther:
+                'fill() is closer to setting the value directly, while pressSequentially() emits full key events per character.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'It clears the field but cannot set a new value.',
+              wrongExplanation: 'fill() both clears and sets a new value.',
+              wrongExplainFurther:
+                'If you only want to remove text, clear() is the dedicated action for that.',
+            },
+          ],
+        },
+
+        {
+          id: 'q2',
+          prompt: 'What is press() best used for?',
+          correctOptionId: 'a',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Simulating keyboard keys or key combos (Enter, Tab, Arrow keys, shortcuts) on a focused element.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. press() simulates pressing a key (or key combo) on a focused element, which is useful for submitting with Enter, using Tab navigation, or triggering shortcuts.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Typing full text into an input.',
+              wrongExplanation: 'press() is for keys and shortcuts, not for typing full strings.',
+              wrongExplainFurther:
+                'Use fill() for fast replacement, or pressSequentially() for character-by-character typing.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Replacing an input value without typing events.',
+              wrongExplanation: 'Replacing the value is what fill() is designed for.',
+              wrongExplainFurther:
+                'press() can be used for keys like Control+A, but it does not replace the full value by itself.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Clearing the input value.',
+              wrongExplanation: 'Clearing is done with clear(), or implicitly when you use fill().',
+              wrongExplainFurther: 'Use clear() when you want to remove text without typing.',
+            },
+          ],
+        },
+
+        {
+          id: 'q3',
+          prompt: 'When should you prefer pressSequentially() over fill()?',
+          correctOptionId: 'c',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'When you want the fastest possible input every time.',
+              wrongExplanation:
+                'pressSequentially() is usually slower than fill() because it types character-by-character.',
+              wrongExplainFurther: 'Rule of thumb: start with fill() for speed and stability.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'When you want to replace an input value deterministically without key events.',
+              wrongExplanation: 'That is exactly what fill() is for.',
+              wrongExplainFurther:
+                'fill() sets the value in one go and is the most deterministic option for typical inputs.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'When the UI reacts to per-keystroke events (autocomplete, masked inputs, type-ahead, per-key validation).',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. pressSequentially() emits key events for each character. Use it when the UI logic depends on real typing events like keydown/keyup.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'When the input must be cleared without changing it.',
+              wrongExplanation: 'If your goal is to remove text, use clear().',
+              wrongExplainFurther: 'pressSequentially() is about typing, not clearing.',
+            },
+          ],
+        },
+
+        {
+          id: 'q4',
+          prompt: 'What does clear() do, and why might you choose it?',
+          correctOptionId: 'd',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'It clears by sending Backspace repeatedly (typing behavior).',
+              wrongExplanation: 'clear() clears the value without typing character-by-character.',
+              wrongExplainFurther:
+                'If you need typing events, use pressSequentially(). clear() is for removing the value without typing.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'It replaces the value with an empty string using fill().',
+              wrongExplanation: 'clear() is its own action and does not require fill() to work.',
+              wrongExplainFurther:
+                'While fill("") can result in an empty value, clear() is more explicit about intent and avoids typing behavior.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'It submits the form after clearing.',
+              wrongExplanation: 'clear() only clears the value. It does not submit forms.',
+              wrongExplainFurther:
+                'Submitting is typically done via clicking a button or pressing Enter (press("Enter")).',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'It clears the input value without typing, useful when you want to remove text without triggering typing behavior.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. clear() removes the value without typing. Use it when you want to delete text without triggering typing-related UI behavior, or to be explicit before another input strategy.',
+            },
+          ],
+        },
+
+        {
+          id: 'q5',
+          prompt:
+            'You are testing a search box with type-ahead suggestions that only appear when real key events fire. Which input action is the best fit?',
+          correctOptionId: 'b',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'fill()',
+              wrongExplanation:
+                'fill() replaces the value in one go and may not trigger per-key typing behavior that type-ahead relies on.',
+              wrongExplainFurther:
+                'If the UI depends on key events (keydown/keyup), you typically need character-by-character typing.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'pressSequentially()',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. pressSequentially() types one character at a time and emits key events for each character, which is ideal for type-ahead/autocomplete behaviors.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'press()',
+              wrongExplanation:
+                'press() is for individual keys or shortcuts, not for typing a full string.',
+              wrongExplainFurther:
+                'You might still use press("Enter") to submit, but pressSequentially() is the right tool for the typing itself.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'clear()',
+              wrongExplanation:
+                'clear() removes text but does not type, so it will not trigger type-ahead suggestions by itself.',
+              wrongExplainFurther:
+                'clear() is useful as a cleanup step, but not for triggering per-keystroke UI behavior.',
+            },
+          ],
+        },
+      ],
+    },
+
+    {
       id: 'ex3-exercise',
       title: 'Exercise',
       summary: `It's exercise time! `,

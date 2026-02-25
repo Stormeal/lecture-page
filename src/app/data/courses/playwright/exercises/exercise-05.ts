@@ -130,6 +130,302 @@ export const EXERCISE_05: CourseGroupItem = {
     },
 
     {
+      id: 'ex5-quiz',
+      title: 'Quiz',
+      summary: 'Check your understanding of intent-based form actions: check() and selectOption().',
+      type: 'quiz',
+      intro: 'One question at a time. If you miss one, try again and read the explanation.',
+      questions: [
+        {
+          id: 'q1',
+          prompt:
+            'Why should you prefer intent-based actions (like check() and selectOption()) over click() for form controls?',
+          correctOptionId: 'b',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Because click() is not supported in Playwright.',
+              wrongExplanation: 'click() is supported and is a common action in Playwright.',
+              wrongExplainFurther:
+                'The key point is reliability. Intent-based actions express the end state you want and Playwright works to reach it.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Because they describe the end state you want, and Playwright will wait and retry until the control reaches that state.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. Intent-based actions are more reliable for form controls because they ensure the control ends up in the desired state and Playwright will wait and retry until it does.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Because intent-based actions automatically write assertions for you.',
+              wrongExplanation:
+                'Intent-based actions do not create assertions. They only perform the interaction.',
+              wrongExplainFurther:
+                'You still need to assert the result (for example toBeChecked() or toHaveValue()) to prove the UI changed as expected.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Because click() always fails on form controls.',
+              wrongExplanation:
+                'click() can work on form controls, but it is not always the most reliable way to express your intent.',
+              wrongExplainFurther:
+                'With click(), you are hoping the state changes correctly. With check()/selectOption(), you tell Playwright the state you want.',
+            },
+          ],
+        },
+
+        {
+          id: 'q2',
+          prompt: 'What is locator.check() used for?',
+          correctOptionId: 'c',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Typing into a textbox.',
+              wrongExplanation: 'Typing is done with fill(), press(), or pressSequentially().',
+              wrongExplainFurther: 'check() is specifically for checkbox and radio inputs.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Selecting an option in a <select> dropdown.',
+              wrongExplanation:
+                'Dropdown selection is done with selectOption() for native <select> elements.',
+              wrongExplainFurther: 'check() is for checkbox/radio controls, not select dropdowns.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Ensuring a checkbox or radio button becomes checked.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. check() is used to ensure checkbox inputs are turned on and radio inputs are selected.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Clearing an input value.',
+              wrongExplanation: 'Clearing is done with clear() (or by fill() replacing the value).',
+              wrongExplainFurther: 'check() is not an input clearing action.',
+            },
+          ],
+        },
+
+        {
+          id: 'q3',
+          prompt:
+            'What happens if you call check() on an element that is not a checkbox or radio input?',
+          correctOptionId: 'a',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Playwright fails because check() only works on checkbox and radio inputs.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. check() only works on checkbox and radio inputs. Using it on other elements will fail.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Playwright silently falls back to click().',
+              wrongExplanation: 'Playwright does not silently switch behavior for check().',
+              wrongExplainFurther:
+                'This is intentional: if you’re using check(), Playwright expects a checkbox or radio input. Otherwise it fails so you can fix the test.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Playwright ignores the call and continues.',
+              wrongExplanation:
+                'Playwright treats it as a misuse and fails rather than ignoring it.',
+              wrongExplainFurther:
+                'Failing fast prevents hidden bugs where the test “passes” without performing the intended interaction.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Playwright checks the nearest checkbox on the page.',
+              wrongExplanation: 'Playwright never guesses which control you “meant”.',
+              wrongExplainFurther:
+                'Tests should be explicit and precise. If the locator is wrong, the test should fail.',
+            },
+          ],
+        },
+
+        {
+          id: 'q4',
+          prompt: 'What is locator.selectOption() intended for?',
+          correctOptionId: 'd',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Selecting a row in a table.',
+              wrongExplanation:
+                'selectOption() is not for tables. It is for native <select> dropdowns.',
+              wrongExplainFurther:
+                'For tables/lists, you typically scope locators (and sometimes use filter()) to select the right row.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Selecting an item in a custom dropdown component.',
+              wrongExplanation:
+                'selectOption() is for native HTML <select> elements, not custom dropdown widgets.',
+              wrongExplainFurther:
+                'Custom dropdowns usually require clicking the trigger and then clicking an option element in the opened list.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Selecting a checkbox.',
+              wrongExplanation: 'Checkboxes are handled with check()/uncheck().',
+              wrongExplainFurther:
+                'selectOption() is specifically tied to the <select> element API.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Selecting an option in a native HTML <select> dropdown.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. selectOption() is designed for native <select> dropdowns and selects the option you specify.',
+            },
+          ],
+        },
+
+        {
+          id: 'q5',
+          prompt: 'Which ways can you select options with selectOption() (as taught here)?',
+          correctOptionId: 'b',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'By CSS class, URL, or role.',
+              wrongExplanation: 'Those are not selection methods for selectOption().',
+              wrongExplainFurther:
+                'selectOption() supports selecting by value, label (visible text), or index.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'By value, label, or index.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. You can select an option by value (often most stable), label (visible text), or index (position).',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'By pixel position.',
+              wrongExplanation: 'selectOption() does not select options by coordinates.',
+              wrongExplainFurther: 'It selects logically based on option data (value/label/index).',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'By screenshot comparison.',
+              wrongExplanation:
+                'Screenshots are for visual assertions, not selecting dropdown options.',
+              wrongExplainFurther:
+                'For dropdowns, prefer selecting by value or label via selectOption().',
+            },
+          ],
+        },
+
+        {
+          id: 'q6',
+          prompt: 'Which selectOption() strategy is usually the most stable?',
+          correctOptionId: 'a',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Selecting by value.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. Selecting by value is usually the most stable because visible labels can change due to copy updates or translations.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Selecting by label.',
+              wrongExplanation: 'Labels are human-friendly but often less stable than values.',
+              wrongExplainFurther:
+                'Copy changes and translations can alter labels, causing tests to break even though the underlying value stayed the same.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Selecting by index.',
+              wrongExplanation: 'Index can be fragile if option order changes.',
+              wrongExplainFurther:
+                'Index is sometimes useful, but changes in the list order can break the test even if the values are unchanged.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Selecting by placeholder.',
+              wrongExplanation:
+                'Placeholder is not one of the selection methods described for selectOption().',
+              wrongExplainFurther: 'The supported approaches here are value, label, or index.',
+            },
+          ],
+        },
+
+        {
+          id: 'q7',
+          prompt:
+            'After using check() or selectOption(), what should you do to prove the UI changed as expected?',
+          correctOptionId: 'c',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Add waitForTimeout(1000).',
+              wrongExplanation:
+                'Time-based waits are usually unnecessary and can make tests flaky.',
+              wrongExplainFurther:
+                'Instead, assert the expected state using web-first assertions like toBeChecked() or toHaveValue().',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Print the locator to the console.',
+              wrongExplanation: 'Logs can help debugging but do not verify correctness.',
+              wrongExplainFurther: 'Assertions are what prove the UI is in the expected state.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Assert the result (for example, toBeChecked() or toHaveValue() on the control).',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. Always assert after interacting. Use toBeChecked() for checkboxes/radios and toHaveValue() (or similar) for a <select> to prove the UI changed as expected.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Rerun the test to confirm.',
+              wrongExplanation:
+                'Rerunning is not a verification strategy. Tests should prove correctness in a single run.',
+              wrongExplainFurther:
+                'Reliable tests combine intent-based actions with assertions that auto-retry until the UI reaches the expected state.',
+            },
+          ],
+        },
+      ],
+    },
+
+    {
       id: 'ex5-exercise',
       title: 'Exercise',
       summary: `Mission Part 2: Control Elements`,

@@ -178,8 +178,305 @@ export const EXERCISE_07: CourseGroupItem = {
     },
 
     {
+      id: 'ex7-quiz',
+      title: 'Quiz',
+      summary: 'Check your understanding of choosing the best candidates for automation.',
+      type: 'quiz',
+      intro: 'One question at a time. If you miss one, try again and read the explanation.',
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'What is the main goal when selecting manual test cases for automation?',
+          correctOptionId: 'b',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Automate every test case that is possible to automate.',
+              wrongExplanation: 'Automation is not about automating everything that is possible.',
+              wrongExplainFurther:
+                'The goal is to pick tests that are worth maintaining and provide frequent value with low maintenance cost.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Pick tests that are worth maintaining over time and provide fast, reliable feedback when something breaks.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. The goal is to choose stable, deterministic tests with clear assertions that provide valuable, fast feedback and are not expensive to maintain.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Only automate tests that validate UI animations and transitions.',
+              wrongExplanation:
+                'Animations and transitions are often unstable targets and not the core value of automation.',
+              wrongExplainFurther:
+                'Prefer asserting end state instead of motion, and prioritize stable, meaningful checks.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Choose tests that require the most human judgement, because that proves quality.',
+              wrongExplanation: 'Subjective validation is a warning sign for automation.',
+              wrongExplainFurther:
+                'If it relies on “looks right” or “feels right”, it is likely expensive and noisy to automate.',
+            },
+          ],
+        },
+
+        {
+          id: 'q2',
+          prompt:
+            'Which set best matches the core selection criteria for a good automation candidate?',
+          correctOptionId: 'd',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'High number of steps, heavy visual judgement, and many external dependencies.',
+              wrongExplanation:
+                'Those are warning signs that typically increase maintenance cost and noise.',
+              wrongExplainFurther:
+                'Good candidates tend to be stable, deterministic, and easy to assert.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Mostly subjective validation, frequently changing content, and long setup flows.',
+              wrongExplanation: 'These are common warning signs of expensive automation.',
+              wrongExplainFurther: 'They tend to produce flaky tests and high maintenance.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Randomized inputs, unstable timing, and hard-to-observe outcomes.',
+              wrongExplanation:
+                'These reduce determinism and observability, making tests unreliable.',
+              wrongExplainFurther:
+                'Strong candidates should fail for meaningful reasons and be easy to diagnose.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Business value, repeat frequency, determinism, stable UI contracts, clear assertions, and fast feedback.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. Strong candidates protect valuable journeys, are run often, behave deterministically, have stable contracts/selectors, have clear assertions, and provide fast feedback.',
+            },
+          ],
+        },
+
+        {
+          id: 'q3',
+          prompt: 'Which statement best reflects the “warning sign” rule of thumb from the theory?',
+          correctOptionId: 'a',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'If you cannot explain what should be asserted in a single sentence, the test is probably not a strong automation candidate.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. If expected outcomes are ambiguous or subjective, automation becomes noisy and expensive because failures are hard to interpret and assertions are unstable.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'If a test is valuable, it is always the best candidate to automate first.',
+              wrongExplanation: 'High value alone does not guarantee good ROI.',
+              wrongExplainFurther:
+                'If it is unstable or expensive to maintain, you may get better ROI by automating a smaller but more reliable slice first.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'The best candidates are the ones with the most third-party dependencies, because they test integrations.',
+              wrongExplanation:
+                'Third-party dependencies are a common warning sign for flakiness and maintenance.',
+              wrongExplainFurther:
+                'They can be tested, but they are often expensive and noisy compared to stable contract checks.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Tests should assert motion (animations) because end state is less important.',
+              wrongExplanation:
+                'The recommended approach is the opposite: assert end state, not motion.',
+              wrongExplainFurther:
+                'Animations and transitions tend to introduce timing instability.',
+            },
+          ],
+        },
+
+        {
+          id: 'q4',
+          prompt:
+            'Which of the following is a common warning sign that a test will be expensive to automate?',
+          correctOptionId: 'c',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Clear expectations with measurable outcomes.',
+              wrongExplanation: 'Clear, measurable outcomes are a positive sign for automation.',
+              wrongExplainFurther: 'They make assertions stable and failures easy to diagnose.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Stable UI contracts and selectors that rarely change.',
+              wrongExplanation: 'Stable UI contracts reduce maintenance cost and flakiness.',
+              wrongExplainFurther: 'They are a strong indicator of a good automation candidate.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Subjective validation like “looks correct” or “feels right”.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. Subjective validation is hard to assert reliably, often leads to noisy failures, and increases maintenance cost.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'A test that runs quickly and fails close to the root cause.',
+              wrongExplanation:
+                'Fast feedback and close-to-root-cause failures are desirable traits.',
+              wrongExplainFurther: 'They make the suite trustworthy and reduce debugging time.',
+            },
+          ],
+        },
+
+        {
+          id: 'q5',
+          prompt:
+            'Which rewriting rule best helps turn a manual test case into an automation-ready test?',
+          correctOptionId: 'b',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Make expectations more human-friendly, even if they are vague.',
+              wrongExplanation: 'Vagueness is the enemy of stable automation.',
+              wrongExplainFurther:
+                'Automation needs measurable outcomes like text, URL, state, or count.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Rewrite vague expectations into measurable outcomes (text, URL, state, count).',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. To automate reliably, replace subjective or vague expectations with measurable checks you can assert consistently.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Prefer asserting animations and transitions, because they are the most visible.',
+              wrongExplanation: 'Animations are often unstable and timing-sensitive.',
+              wrongExplainFurther: 'The guidance is to assert end state instead of motion.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Couple the test to dynamic data like campaigns and rotating banners to increase coverage.',
+              wrongExplanation: 'Dynamic data increases flakiness and maintenance.',
+              wrongExplainFurther: 'Avoid coupling to dynamic data unless the test controls it.',
+            },
+          ],
+        },
+
+        {
+          id: 'q6',
+          prompt: 'Which categories are included in the suggested 1-to-5 scoring model?',
+          correctOptionId: 'd',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Speed, style, colors, animations, and screenshots.',
+              wrongExplanation:
+                'These are not the suggested scoring categories for automation candidacy.',
+              wrongExplainFurther:
+                'The scoring model focuses on value, stability, determinism, observability, and maintenance cost.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Browser type, device type, viewport size, geolocation, and locale.',
+              wrongExplanation:
+                'Those are test configuration concerns, not candidate scoring categories.',
+              wrongExplainFurther:
+                'Candidate scoring is about ROI and reliability characteristics.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Coverage, randomness, number of steps, number of assertions, and number of clicks.',
+              wrongExplanation: 'Those are not the suggested categories in the theory.',
+              wrongExplainFurther:
+                'The goal is consistent decision-making using stability and ROI oriented criteria.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Value, Stability, Determinism, Observability, and Maintenance cost.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. The suggested categories are Value, Stability, Determinism, Observability, and Maintenance cost (each scored 1 to 5).',
+            },
+          ],
+        },
+
+        {
+          id: 'q7',
+          prompt: 'What is a common prioritization order when building an automation suite?',
+          correctOptionId: 'a',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Start with smoke tests and stable critical paths, then expand into higher-risk areas and edge cases once the suite is trusted.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. The recommended approach is to build trust first with stable smoke tests and critical happy paths, then add high-risk areas, fast contract checks, and finally edge cases.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Start with edge cases first, then add smoke tests later.',
+              wrongExplanation:
+                'Edge cases can be valuable, but they are typically added after the suite is trusted.',
+              wrongExplainFurther:
+                'Starting with unstable or complex tests early can create noise fatigue and reduce trust in the suite.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Start with the longest multi-step flows first, because they give maximum coverage.',
+              wrongExplanation:
+                'Long flows often have high setup cost and can be expensive to maintain early on.',
+              wrongExplainFurther:
+                'Start with stable, high-signal tests that fail close to the root cause.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Start with tests that rely on third-party systems, then move to internal flows.',
+              wrongExplanation:
+                'Third-party dependencies are often warning signs for flakiness and maintenance.',
+              wrongExplainFurther:
+                'Internal stable checks and contract validations usually provide better early ROI.',
+            },
+          ],
+        },
+      ],
+    },
+
+    {
       id: 'ex7_1-exercise',
-      title: 'Exercise 7.1: Olympic Qualification',
+      title: 'Exercise',
       summary: `Select the Gold Medal automation candidate (testhuset.dk)`,
       type: 'content',
       blocks: [

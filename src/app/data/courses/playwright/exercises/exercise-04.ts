@@ -238,6 +238,226 @@ test('example with logging', async ({ page }) => {
     },
 
     {
+      id: 'ex4-quiz',
+      title: 'Quiz',
+      summary:
+        'Check your understanding of hover(), locator filtering, and practical logging patterns.',
+      type: 'quiz',
+      intro: 'One question at a time. If you miss one, try again and read the explanation.',
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'Why is hover() useful in Playwright tests?',
+          correctOptionId: 'b',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Because hover() is required before every click.',
+              wrongExplanation:
+                'Hovering is only needed when the UI requires it (menus, tooltips, hidden actions).',
+              wrongExplainFurther:
+                'Most interactions do not require hover. Use it when hover is part of the user flow.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Because some UI elements only appear or become usable after a hover interaction.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. Hovering is essential for UI interactions like dropdown menus, tooltips, and hover-only actions that appear only after you hover.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Because hover() automatically logs each step.',
+              wrongExplanation:
+                'hover() performs a user-like mouse interaction. It does not add logs by itself.',
+              wrongExplainFurther:
+                'For structure and logs, use test.step() and your logger/console output.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Because hover() disables animations.',
+              wrongExplanation:
+                'hover() does not disable animations. It triggers hover events like a real user.',
+              wrongExplainFurther:
+                'Animations can still happen. Playwright’s auto-waiting and web-first assertions help handle dynamic UI timing.',
+            },
+          ],
+        },
+
+        {
+          id: 'q2',
+          prompt: 'When is locator.filter() most useful?',
+          correctOptionId: 'c',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'When you want to speed up navigation.',
+              wrongExplanation:
+                'filter() is not a navigation feature. It refines which elements your locator matches.',
+              wrongExplainFurther:
+                'Use filter() when many elements match the same base locator and you need to narrow it down.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'When you want to type into an input.',
+              wrongExplanation:
+                'Typing actions are done with fill(), press(), or pressSequentially().',
+              wrongExplainFurther:
+                'filter() is about selecting the right element in repeated UI structures like lists and tables.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'When many elements match the same base locator and you need to narrow down to the correct one.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. filter() is ideal for lists and repeated components where a base locator matches multiple elements and you need precise targeting.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'When you want to create a new browser context.',
+              wrongExplanation: 'A browser context is created from the browser, not from locators.',
+              wrongExplainFurther:
+                'filter() is part of the Locator API and only affects which DOM elements are matched.',
+            },
+          ],
+        },
+
+        {
+          id: 'q3',
+          prompt: 'Which constraints can you use with locator.filter() (as taught here)?',
+          correctOptionId: 'a',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'hasText and has',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. filter() can refine a locator using hasText (text content matching) and has (contains another locator).',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'timeout and retries',
+              wrongExplanation:
+                'Those relate to waiting/retry configuration, not locator filtering constraints.',
+              wrongExplainFurther:
+                'filter() is about narrowing matches, not changing timeouts or retry behavior.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'color and position',
+              wrongExplanation:
+                'filter() does not filter based on visual styling properties like color or coordinates.',
+              wrongExplainFurther:
+                'Instead, filter by text content (hasText) or by structure (has another locator).',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'url and method',
+              wrongExplanation: 'Those are network concepts, not locator constraints.',
+              wrongExplainFurther: 'filter() is purely about narrowing down DOM element matches.',
+            },
+          ],
+        },
+
+        {
+          id: 'q4',
+          prompt:
+            'What is a practical benefit of wrapping actions in test.step() and adding minimal logs?',
+          correctOptionId: 'd',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'It makes tests run faster.',
+              wrongExplanation: 'test.step() is for structure and reporting, not speed.',
+              wrongExplainFurther:
+                'Better structure can reduce debugging time, but it does not speed up execution directly.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'It automatically fixes flaky locators.',
+              wrongExplanation:
+                'Steps and logs do not fix locators. They help you diagnose what happened.',
+              wrongExplainFurther:
+                'To reduce flakiness, use good locators, web-first assertions, and avoid manual time-based waits.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'It replaces the need for assertions.',
+              wrongExplanation: 'Logs never replace assertions. Assertions verify correctness.',
+              wrongExplainFurther:
+                'Logs provide context, while expect() ensures the UI state matches expectations.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'It structures the test into meaningful phases and provides context right before a failure.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. test.step() structures the test into readable phases. Minimal, useful logs help you see what happened right before a failure, making debugging easier.',
+            },
+          ],
+        },
+
+        {
+          id: 'q5',
+          prompt: 'Which logging rule is most important for test safety?',
+          correctOptionId: 'b',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Always log every click.',
+              wrongExplanation:
+                'Logging every click usually creates noise and makes failures harder to diagnose.',
+              wrongExplainFurther:
+                'Prefer high-signal logs: key state, important data points, and step boundaries.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Never log secrets (passwords, tokens, personal data).',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. Never log secrets. Logs often end up in CI output and shared reports, so leaking credentials or personal data is a serious security risk.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Always log the full DOM.',
+              wrongExplanation: 'Dumping the full DOM is extremely noisy and rarely useful.',
+              wrongExplainFurther:
+                'Use traces/screenshots for “what did the page look like?”, and keep logs focused.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Never use console.log.',
+              wrongExplanation:
+                'console.log can be useful, especially early on, if used sparingly and intentionally.',
+              wrongExplainFurther:
+                'What matters is consistency, signal-to-noise ratio, and never logging secrets.',
+            },
+          ],
+        },
+      ],
+    },
+
+    {
       id: 'ex4-exercise',
       title: 'Exercise',
       summary: `Mission Control requires an immediate crew roster update.`,

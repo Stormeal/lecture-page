@@ -186,6 +186,224 @@ await expect(page).toHaveScreenshot();`,
     },
 
     {
+      id: 'ex2-quiz',
+      title: 'Quiz',
+      summary: 'Check your understanding of Locators and Assertions',
+      type: 'quiz',
+      intro: 'One question at a time. If you miss one, try again and read the explanation.',
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'In Playwright, what does a Locator represent?',
+          correctOptionId: 'a',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'A way to find element(s) on the page at the moment an action or assertion is performed.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. A Locator represents a way to find element(s) dynamically when an action or assertion runs. It is evaluated at the time of use, not when it is created.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'A snapshot of the DOM captured when the test starts.',
+              wrongExplanation:
+                'A Locator is not a snapshot. It is evaluated when you perform an action or assertion.',
+              wrongExplainFurther:
+                'Thinking of locators as snapshots leads to misunderstandings about why they reflect current DOM state.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'A special assertion that verifies visibility.',
+              wrongExplanation:
+                'A Locator is used to find elements. Assertions are performed using expect() on locators.',
+              wrongExplainFurther:
+                'Locators and assertions work together, but they are separate concepts.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'A reference to a Browser Context.',
+              wrongExplanation:
+                'A Browser Context represents an isolated session. A Locator operates inside a Page to find elements.',
+              wrongExplainFurther: 'The hierarchy is Browser → Context → Page → Locator.',
+            },
+          ],
+        },
+
+        {
+          id: 'q2',
+          prompt:
+            "What happens if you call await page.getByRole('button').click(); and multiple buttons match?",
+          correctOptionId: 'c',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'It clicks the first matching button automatically.',
+              wrongExplanation:
+                'Playwright locators are strict by default and do not silently choose one match.',
+              wrongExplainFurther:
+                'If multiple elements match, Playwright throws an error to prevent unintended interactions.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'It clicks all matching buttons.',
+              wrongExplanation:
+                'Playwright does not perform bulk actions unless explicitly instructed.',
+              wrongExplainFurther:
+                'A strict locator must resolve to exactly one element when performing actions.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Playwright throws an error because the locator matches more than one element.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. Locators are strict. If an action resolves to more than one element, Playwright throws an error so you can make the locator more specific.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'It waits until only one button exists in the DOM.',
+              wrongExplanation: 'Playwright does not wait for ambiguity to resolve automatically.',
+              wrongExplainFurther:
+                'You must make your locator specific enough to uniquely identify the intended element.',
+            },
+          ],
+        },
+
+        {
+          id: 'q3',
+          prompt:
+            'Why do we typically not need manual waits before clicking a button located with Playwright’s Locator API?',
+          correctOptionId: 'b',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Because click() is always instant and cannot fail.',
+              wrongExplanation: 'Clicks can fail if elements are not ready or actionable.',
+              wrongExplainFurther:
+                'Stability does not come from speed but from actionability checks and auto-waiting.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Because Playwright automatically waits for the element to become actionable before performing the action.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. Playwright automatically waits for elements to be actionable before performing actions like click(), reducing the need for manual waits.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Because Playwright retries the entire test automatically if it fails.',
+              wrongExplanation:
+                'Test retries are a separate configuration and not related to locator auto-waiting.',
+              wrongExplainFurther: 'Auto-waiting happens before each action to ensure stability.',
+            },
+            {
+              id: 'd)',
+              label: 'd)',
+              text: 'Because we must always use waitForTimeout() before interactions.',
+              wrongExplanation:
+                'Using waitForTimeout() is generally discouraged and can introduce flakiness.',
+              wrongExplainFurther:
+                'Auto-waiting and web-first assertions remove most need for manual time-based waits.',
+            },
+          ],
+        },
+
+        {
+          id: 'q4',
+          prompt:
+            'What makes await expect(locator).toBeVisible() more stable than manually checking isVisible()?',
+          correctOptionId: 'a',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'It automatically retries until the condition is met or it times out.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. Web-first assertions retry until the condition passes or the expect timeout is reached, which reduces race conditions.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'It reads the DOM faster.',
+              wrongExplanation: 'Speed is not the key factor in stability.',
+              wrongExplainFurther:
+                'The stability comes from retrying until the expected state is reached.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'It converts visibility into a boolean snapshot.',
+              wrongExplanation: 'Manual reads like isVisible() produce a snapshot in time.',
+              wrongExplainFurther:
+                'Locator assertions are designed to avoid snapshot-based race conditions.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'It disables animations on the page.',
+              wrongExplanation: 'Assertions do not automatically disable animations.',
+              wrongExplainFurther:
+                'Animations can affect timing, but stability here comes from auto-retry behavior.',
+            },
+          ],
+        },
+
+        {
+          id: 'q5',
+          prompt: 'How do assertion timeouts differ from test timeouts in Playwright?',
+          correctOptionId: 'd',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Assertions share the exact same timeout as the test.',
+              wrongExplanation:
+                'Assertions have their own timeout separate from the overall test timeout.',
+              wrongExplainFurther:
+                'The test timeout controls total test duration, while expect() has its own retry timeout.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Assertions do not have timeouts.',
+              wrongExplanation: 'Assertions retry until they pass or their timeout is reached.',
+              wrongExplainFurther:
+                'If the condition never becomes true, the assertion eventually times out.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Assertions stop retrying after one second.',
+              wrongExplanation:
+                'The default expect timeout is configurable and not limited to one second.',
+              wrongExplainFurther: 'You can also override the timeout per assertion.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Assertions have their own retry timeout separate from the overall test timeout.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. expect() has its own timeout and retry behavior, separate from the total test timeout.',
+            },
+          ],
+        },
+      ],
+    },
+
+    {
       id: 'ex2-exercise',
       title: 'Exercise',
       summary: `It's exercise time! `,

@@ -406,8 +406,302 @@ export const EXERCISE_08: CourseGroupItem = {
     },
 
     {
+      id: 'ex8-quiz',
+      title: 'Quiz',
+      summary: 'Check your understanding of BDD and how to apply the mindset in Playwright.',
+      type: 'quiz',
+      intro: 'One question at a time. If you miss one, try again and read the explanation.',
+      questions: [
+        {
+          id: 'q1',
+          prompt: 'What is the core idea of Behavior-Driven Development (BDD)?',
+          correctOptionId: 'b',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'BDD is mainly a tool for converting UI clicks into automated scripts.',
+              wrongExplanation: 'BDD is not about tools or scripting UI actions.',
+              wrongExplainFurther:
+                'BDD focuses on describing observable behavior in a shared language that business and engineering can align on.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'BDD describes system behavior in business-readable language to create shared understanding between business and engineering.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. BDD starts from observable behavior and shared understanding, not technical implementation details.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'BDD replaces the need for technical design and engineering discipline.',
+              wrongExplanation: 'BDD is not a replacement for good engineering practices.',
+              wrongExplainFurther:
+                'BDD helps clarify expectations, but implementation quality still requires discipline and good design.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'BDD means writing tests in plain English without assertions.',
+              wrongExplanation: 'Assertions are still needed to verify outcomes.',
+              wrongExplainFurther:
+                'BDD scenarios should lead to clear, measurable Then steps that translate into assertions.',
+            },
+          ],
+        },
+
+        {
+          id: 'q2',
+          prompt: 'What problem does BDD primarily solve?',
+          correctOptionId: 'c',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'It makes browsers faster and removes the need for waiting.',
+              wrongExplanation: 'BDD is about communication and clarity, not browser performance.',
+              wrongExplainFurther:
+                'Playwright’s waiting and assertions are separate technical concerns.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'It guarantees zero defects if scenarios are written.',
+              wrongExplanation: 'BDD does not automatically improve quality without discipline.',
+              wrongExplainFurther:
+                'BDD reduces ambiguity and misalignment, which helps quality, but it is not a magic guarantee.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'It reduces ambiguity and misalignment by making behavior and expectations clear and readable for both business and engineers.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. BDD provides a structured way to describe behavior so stakeholders can align and engineers can implement consistently.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'It replaces UI tests with API-only checks.',
+              wrongExplanation: 'BDD is not about replacing test types.',
+              wrongExplainFurther:
+                'BDD can be applied to UI tests, API tests, or other types, as long as behavior and outcomes are clear.',
+            },
+          ],
+        },
+
+        {
+          id: 'q3',
+          prompt:
+            'Which statement best reflects the BDD principle “describe behavior, not implementation”?',
+          correctOptionId: 'a',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Scenarios should focus on outcomes and rules from the user’s perspective, not DOM structure or selectors.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. Behavior-focused scenarios describe what the system does and what should be observable, without coupling to UI structure.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Scenarios should mention CSS classes and DOM structure to be precise.',
+              wrongExplanation: 'That couples scenarios to implementation details.',
+              wrongExplainFurther:
+                'If your scenario mentions CSS classes, button colors, or DOM structure, it is no longer behavior-focused.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Scenarios should list every click and selector so engineers can implement faster.',
+              wrongExplanation:
+                'That turns scenarios into UI scripts rather than behavior descriptions.',
+              wrongExplainFurther:
+                'BDD aims to keep scenarios readable and stable across UI refactors.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Scenarios should avoid measurable checks to stay flexible.',
+              wrongExplanation: 'Then steps must be measurable and verifiable.',
+              wrongExplainFurther:
+                'A strong Then step can be translated into a clear assertion without interpretation.',
+            },
+          ],
+        },
+
+        {
+          id: 'q4',
+          prompt: 'In Gherkin, what is the purpose of the Then step?',
+          correctOptionId: 'd',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Describe the initial system state before anything happens.',
+              wrongExplanation: 'That is the role of Given.',
+              wrongExplainFurther: 'Given sets preconditions and context.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Describe a single meaningful action the user performs.',
+              wrongExplanation: 'That is the role of When.',
+              wrongExplainFurther: 'When represents intent, not mechanical steps.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'List the UI selectors needed for the scenario.',
+              wrongExplanation:
+                'Selectors are implementation details and do not belong in behavior steps.',
+              wrongExplainFurther:
+                'BDD scenarios should remain readable and stable even if the UI changes.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Describe the expected observable outcome in a measurable, verifiable way.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. Then describes the observable outcome. A strong Then step maps to a clear assertion without interpretation.',
+            },
+          ],
+        },
+
+        {
+          id: 'q5',
+          prompt:
+            'How can you apply a BDD mindset in Playwright without using Gherkin feature files?',
+          correctOptionId: 'b',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Force every test to parse a .feature file at runtime.',
+              wrongExplanation: 'The goal is not to force a tool choice.',
+              wrongExplainFurther:
+                'BDD is about readable behavior and maintainable implementation, not mandatory feature files.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Write scenario-like test titles and structure tests into clear Given/When/Then sections.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. A practical approach is to treat each test as a scenario: business-readable title, then clear Given/When/Then structure in the test body.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Write tests as long end-to-end scripts to cover everything at once.',
+              wrongExplanation: 'Long “everything” tests are harder to maintain and diagnose.',
+              wrongExplainFurther:
+                'BDD-style suites prefer focused scenarios that fail close to the root cause.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Avoid reusable helpers so every test shows all details.',
+              wrongExplanation:
+                'Reusability helps keep tests readable and maintainable when done by intent.',
+              wrongExplainFurther:
+                'Encapsulate intent in step functions, but avoid “clickAndTypeAndWait” helpers that hide meaning.',
+            },
+          ],
+        },
+
+        {
+          id: 'q6',
+          prompt: 'What is a key characteristic of a good BDD-style step function in Playwright?',
+          correctOptionId: 'a',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'It is named by intent and accepts domain-level inputs, keeping selectors and technical details inside the implementation.',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. Good step functions encode behavior (intent), accept domain inputs, and keep selectors inside one place so tests stay readable through UI refactors.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'It bundles many unrelated actions into one helper to reduce the number of lines in a test.',
+              wrongExplanation: 'That hides meaning and often creates brittle tests.',
+              wrongExplainFurther:
+                'Avoid “clickAndTypeAndWait” style helpers that mix actions without a clear behavioral intent.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'It uses raw CSS chains everywhere to be more explicit.',
+              wrongExplanation:
+                'Raw CSS chains are often brittle and tightly coupled to UI structure.',
+              wrongExplainFurther:
+                'Prefer stable selectors like data-testid or strong semantics like roles.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'It avoids assertions entirely to keep steps reusable.',
+              wrongExplanation:
+                'Assertions may belong inside a step when they are part of the step’s meaning.',
+              wrongExplainFurther:
+                'BDD strength comes from strong Then steps that translate into clear assertions.',
+            },
+          ],
+        },
+
+        {
+          id: 'q7',
+          prompt: 'Which locator and assertion approach best matches a BDD mindset in Playwright?',
+          correctOptionId: 'c',
+          options: [
+            {
+              id: 'a',
+              label: 'a)',
+              text: 'Prefer pixel-based assertions and CSS class checks to confirm layout.',
+              wrongExplanation: 'That tests implementation details rather than behavior.',
+              wrongExplainFurther:
+                'BDD emphasizes observable outcomes, not layout or styling internals.',
+            },
+            {
+              id: 'b',
+              label: 'b)',
+              text: 'Prefer brittle CSS chains and text selectors because they are easy to write.',
+              wrongExplanation: 'Easy-to-write is not the same as stable over time.',
+              wrongExplainFurther:
+                'BDD scenarios should survive UI refactors, which usually means stable selectors like data-testid.',
+            },
+            {
+              id: 'c',
+              label: 'c)',
+              text: 'Prefer stable selectors (data-testid or strong roles) and assert user-visible outcomes (messages, URL, counts, state changes).',
+              wrongExplanation: '',
+              correctExplanation:
+                'Correct. A BDD mindset favors stable selectors and assertions that reflect behavior: end state changes that a user or system actor can observe and verify.',
+            },
+            {
+              id: 'd',
+              label: 'd)',
+              text: 'Avoid controlling test data so tests reflect real-world randomness.',
+              wrongExplanation: 'Randomness reduces determinism and increases flakiness.',
+              wrongExplainFurther:
+                'To keep scenarios reliable, prefer controlled data setup (API seeding/fixtures), unique test data, and cleanup when needed.',
+            },
+          ],
+        },
+      ],
+    },
+
+    {
       id: 'ex8_1-exercise',
-      title: 'Exercise 8: Converting Test to Cucumber',
+      title: 'Exercise',
       summary: `Rewrite an existing Playwright test using Gherkin + step definitions`,
       type: 'content',
       blocks: [
@@ -662,7 +956,7 @@ export const EXERCISE_08: CourseGroupItem = {
 
     {
       id: 'ex8_1-solution',
-      title: 'Solution 8.1',
+      title: 'Solution',
       summary: 'Reveal if you are stuck',
       type: 'content',
       revealable: true,
