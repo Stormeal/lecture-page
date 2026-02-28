@@ -1,14 +1,15 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { PLAYWRIGHT_ACCESS } from './playwright-access.config';
-import { writePlaywrightSession } from './auth-session.storage';
+import { writeCourseSession } from './auth-session.storage';
 
 type AuthLoginResponse =
   | { success: true; sessionId: string; expiresAt: string }
   | { success: false; message?: string };
 
+const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
+
 @Component({
-  selector: 'app-playwright-unlock-page',
+  selector: 'app-course-unlock-page',
   standalone: true,
   imports: [RouterLink],
   template: `
@@ -17,11 +18,11 @@ type AuthLoginResponse =
       <div
         class="absolute inset-0"
         style="
-    background:
-      radial-gradient(1100px 700px at 18% 20%, rgba(255,255,255,0.18), transparent 62%),
-      radial-gradient(900px 560px at 82% 30%, rgba(255,255,255,0.12), transparent 62%),
-      linear-gradient(180deg, #68a1fc 0%, #5891ec 100%);
-  "
+          background:
+            radial-gradient(1100px 700px at 18% 20%, rgba(255,255,255,0.18), transparent 62%),
+            radial-gradient(900px 560px at 82% 30%, rgba(255,255,255,0.12), transparent 62%),
+            linear-gradient(180deg, #2f6fd6 0%, #2f6fd6 100%);
+        "
       ></div>
 
       <!-- Subtle vignette -->
@@ -74,7 +75,9 @@ type AuthLoginResponse =
                 <div class="mt-6 rounded-lg border border-[#cfe0ff] bg-white p-4">
                   <div class="text-sm font-semibold text-gray-800">Course access</div>
                   <p class="mt-1 text-sm text-gray-600">
-                    Use your assigned username and password to access the Playwright course.
+                    Use your assigned username and password to access
+                    <span class="font-semibold text-gray-900">{{ courseLabel() }}</span
+                    >.
                   </p>
                 </div>
 
@@ -183,7 +186,7 @@ type AuthLoginResponse =
             <div
               class="border-t border-gray-200 bg-gray-50 px-5 py-2 text-xs text-gray-500 flex items-center justify-between"
             >
-              <span>Course: Playwright</span>
+              <span>Course: {{ slug() }}</span>
               <span>Lecture Page</span>
             </div>
           </div>
@@ -202,13 +205,22 @@ export class PlaywrightUnlockPageComponent {
   loading = signal(false);
   error = signal<string | null>(null);
 
+  slug = computed(() => this.route.snapshot.paramMap.get('slug') ?? 'unknown');
+
+  courseLabel = computed(() => {
+    const s = this.slug();
+    // Make it readable without a course lookup table
+    return s.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  });
+
   redirect = computed(
-    () => this.route.snapshot.queryParamMap.get('redirect') ?? '/courses/playwright',
+    () => this.route.snapshot.queryParamMap.get('redirect') ?? `/courses/${this.slug()}`,
   );
 
   async unlock() {
     this.error.set(null);
 
+    const courseSlug = this.slug();
     const username = this.username().trim();
     const password = this.password();
 
@@ -220,10 +232,10 @@ export class PlaywrightUnlockPageComponent {
     this.loading.set(true);
 
     try {
-      const resp = await fetch(`${PLAYWRIGHT_ACCESS.apiBaseUrl}/auth-login`, {
+      const resp = await fetch(`${API_BASE_URL}/auth-login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ courseSlug, username, password }),
       });
 
       if (resp.status === 401) {
@@ -243,7 +255,7 @@ export class PlaywrightUnlockPageComponent {
         return;
       }
 
-      writePlaywrightSession({
+      writeCourseSession(courseSlug, {
         sessionId: data.sessionId,
         expiresAt: data.expiresAt,
         username,
