@@ -1,8 +1,6 @@
-import { PLAYWRIGHT_ACCESS } from './playwright-access.config';
-
 export type CourseAccessSession = {
   sessionId: string;
-  expiresAt: string; // ISO string (3 months)
+  expiresAt: string; // ISO string (3 months, issued by API)
   username: string;
 
   // Updated on activity, used for auto logout
@@ -17,9 +15,16 @@ function parseIsoMs(value: string): number | null {
   return Number.isFinite(ms) ? ms : null;
 }
 
-export function readPlaywrightSession(): CourseAccessSession | null {
+function storageKeyForCourse(slug: string) {
+  // Keep it stable and human-readable
+  const safe = String(slug).trim().toLowerCase();
+  return `course_access_session_${safe}_v1`;
+}
+
+export function readCourseSession(slug: string): CourseAccessSession | null {
   try {
-    const raw = localStorage.getItem(PLAYWRIGHT_ACCESS.storageKey);
+    const key = storageKeyForCourse(slug);
+    const raw = localStorage.getItem(key);
     if (!raw) return null;
 
     const parsed = JSON.parse(raw) as Partial<CourseAccessSession> | null;
@@ -41,15 +46,17 @@ export function readPlaywrightSession(): CourseAccessSession | null {
   }
 }
 
-export function writePlaywrightSession(session: CourseAccessSession) {
-  localStorage.setItem(PLAYWRIGHT_ACCESS.storageKey, JSON.stringify(session));
+export function writeCourseSession(slug: string, session: CourseAccessSession) {
+  const key = storageKeyForCourse(slug);
+  localStorage.setItem(key, JSON.stringify(session));
 }
 
-export function clearPlaywrightSession() {
-  localStorage.removeItem(PLAYWRIGHT_ACCESS.storageKey);
+export function clearCourseSession(slug: string) {
+  const key = storageKeyForCourse(slug);
+  localStorage.removeItem(key);
 }
 
-export function isPlaywrightSessionValid(session: CourseAccessSession | null): boolean {
+export function isCourseSessionValid(session: CourseAccessSession | null): boolean {
   if (!session) return false;
 
   const expiresMs = parseIsoMs(session.expiresAt);
@@ -66,8 +73,8 @@ export function isPlaywrightSessionValid(session: CourseAccessSession | null): b
   return notExpired && notIdleTimedOut;
 }
 
-export function touchPlaywrightSession(session: CourseAccessSession) {
-  writePlaywrightSession({
+export function touchCourseSession(slug: string, session: CourseAccessSession) {
+  writeCourseSession(slug, {
     ...session,
     lastSeenAt: new Date().toISOString(),
   });
