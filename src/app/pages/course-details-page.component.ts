@@ -321,7 +321,168 @@ import { readCourseSession, clearCourseSession } from '../course-access/auth-ses
 
               <!-- Right list pane -->
               <aside class="h-full overflow-y-auto rounded-lg bg-white shadow">
-                <!-- unchanged -->
+                <div class="p-4 border-b border-gray-200">
+                  <p class="text-sm font-semibold text-gray-900">Contents</p>
+                  <p class="text-xs text-gray-500 mt-1">Click an item to display it.</p>
+                </div>
+
+                <nav class="p-2">
+                  @for (item of c.items; track item.id) {
+                    @if (item.type === 'group') {
+                      <button
+                        type="button"
+                        class="w-full text-left rounded-md px-3 py-3 m-1 border border-transparent hover:bg-gray-50
+                               focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
+                        [class.bg-blue-50]="selectedId() === item.id"
+                        [class.border-blue-200]="selectedId() === item.id"
+                        (click)="toggleGroup(item.id); setSelected(item.id)"
+                      >
+                        <div class="flex items-start justify-between gap-3">
+                          <div class="min-w-0">
+                            <p class="font-semibold text-gray-900 truncate">{{ item.title }}</p>
+                            @if (item.summary) {
+                              <p class="mt-1 text-sm text-gray-600 line-clamp-2">
+                                {{ item.summary }}
+                              </p>
+                            }
+                          </div>
+                          <div class="flex items-center gap-2 shrink-0">
+                            @if (item.badge) {
+                              <span
+                                class="text-xs font-semibold bg-gray-100 text-gray-700 px-2 py-1 rounded-full"
+                              >
+                                {{ item.badge }}
+                              </span>
+                            }
+                            <span class="text-gray-500">
+                              {{ isExpanded(item.id) ? '▾' : '▸' }}
+                            </span>
+                          </div>
+                        </div>
+                      </button>
+
+                      @if (isExpanded(item.id)) {
+                        <div class="ml-3 pl-2 border-l border-gray-200">
+                          @for (child of item.children; track child.id) {
+                            @if (child.type === 'group') {
+                              <button
+                                type="button"
+                                class="w-full text-left rounded-md px-3 py-2 m-1 border border-transparent hover:bg-gray-50
+                                       focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
+                                [class.bg-blue-50]="selectedId() === child.id"
+                                [class.border-blue-200]="selectedId() === child.id"
+                                (click)="toggleGroup(child.id); setSelected(child.id)"
+                              >
+                                <div class="flex items-center justify-between gap-3">
+                                  <p class="font-semibold text-gray-900 truncate">
+                                    {{ child.title }}
+                                  </p>
+                                  <span class="text-gray-500 shrink-0">
+                                    {{ isExpanded(child.id) ? '▾' : '▸' }}
+                                  </span>
+                                </div>
+                              </button>
+
+                              @if (isExpanded(child.id)) {
+                                <div class="ml-3 pl-2 border-l border-gray-200">
+                                  @for (leaf of child.children; track leaf.id) {
+                                    @if (leaf.type === 'external') {
+                                      <a
+                                        class="block rounded-md px-3 py-2 m-1 border border-transparent hover:bg-gray-50
+                                               focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
+                                        [class.bg-blue-50]="selectedId() === leaf.id"
+                                        [class.border-blue-200]="selectedId() === leaf.id"
+                                        [href]="leaf.externalUrl"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        (click)="setSelected(leaf.id)"
+                                      >
+                                        <span class="font-medium text-gray-900 truncate">{{
+                                          leaf.title
+                                        }}</span>
+                                        <span class="ml-1 text-xs text-gray-500">↗</span>
+                                      </a>
+                                    } @else {
+                                      <button
+                                        type="button"
+                                        class="w-full text-left rounded-md px-3 py-2 m-1 border border-transparent hover:bg-gray-50
+                                               focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
+                                        [class.bg-blue-50]="selectedId() === leaf.id"
+                                        [class.border-blue-200]="selectedId() === leaf.id"
+                                        (click)="setSelected(leaf.id)"
+                                      >
+                                        <span class="font-medium text-gray-900 truncate">{{
+                                          leaf.title
+                                        }}</span>
+                                      </button>
+                                    }
+                                  }
+                                </div>
+                              }
+                            } @else if (child.type === 'external') {
+                              <a
+                                class="block rounded-md px-3 py-2 m-1 border border-transparent hover:bg-gray-50
+                                       focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
+                                [class.bg-blue-50]="selectedId() === child.id"
+                                [class.border-blue-200]="selectedId() === child.id"
+                                [href]="child.externalUrl"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                (click)="setSelected(child.id)"
+                              >
+                                <span class="font-medium text-gray-900 truncate">{{
+                                  child.title
+                                }}</span>
+                                <span class="ml-1 text-xs text-gray-500">↗</span>
+                              </a>
+                            } @else {
+                              <button
+                                type="button"
+                                class="w-full text-left rounded-md px-3 py-2 m-1 border border-transparent hover:bg-gray-50
+                                       focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
+                                [class.bg-blue-50]="selectedId() === child.id"
+                                [class.border-blue-200]="selectedId() === child.id"
+                                (click)="setSelected(child.id)"
+                              >
+                                <span class="font-medium text-gray-900 truncate">{{
+                                  child.title
+                                }}</span>
+                              </button>
+                            }
+                          }
+                        </div>
+                      }
+                    } @else if (item.type === 'external') {
+                      <a
+                        class="block rounded-md px-3 py-3 m-1 border border-transparent hover:bg-gray-50
+                               focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
+                        [class.bg-blue-50]="selectedId() === item.id"
+                        [class.border-blue-200]="selectedId() === item.id"
+                        [href]="item.externalUrl"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        (click)="setSelected(item.id)"
+                      >
+                        <span class="font-semibold text-gray-900 truncate">{{ item.title }}</span>
+                        <span class="ml-1 text-xs text-gray-500">↗</span>
+                      </a>
+                    } @else {
+                      <button
+                        type="button"
+                        class="w-full text-left rounded-md px-3 py-3 m-1 border border-transparent hover:bg-gray-50
+                               focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
+                        [class.bg-blue-50]="selectedId() === item.id"
+                        [class.border-blue-200]="selectedId() === item.id"
+                        (click)="setSelected(item.id)"
+                      >
+                        <p class="font-semibold text-gray-900 truncate">{{ item.title }}</p>
+                        @if (item.summary) {
+                          <p class="mt-1 text-sm text-gray-600 line-clamp-2">{{ item.summary }}</p>
+                        }
+                      </button>
+                    }
+                  }
+                </nav>
               </aside>
             </div>
           } @else {

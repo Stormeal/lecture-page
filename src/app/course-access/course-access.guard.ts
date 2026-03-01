@@ -6,9 +6,11 @@ import {
   readCourseSession,
   touchCourseSession,
 } from './auth-session.storage';
+import { CourseUnlockDialogService } from './course-unlock-dialog.service';
 
-export const courseAccessGuard: CanActivateFn = (route, state) => {
+export const courseAccessGuard: CanActivateFn = async (route, state) => {
   const router = inject(Router);
+  const unlockDialog = inject(CourseUnlockDialogService);
 
   const slug = route.paramMap.get('slug');
   if (!slug) return true;
@@ -24,7 +26,19 @@ export const courseAccessGuard: CanActivateFn = (route, state) => {
 
   if (session) clearCourseSession(slug);
 
-  return router.createUrlTree([`/courses/${slug}/unlock`], {
-    queryParams: { redirect: state.url },
-  });
+  const unlocked = await unlockDialog.open(slug);
+
+  if (unlocked) {
+    const newSession = readCourseSession(slug);
+    if (newSession && isCourseSessionValid(newSession)) {
+      touchCourseSession(slug, newSession);
+      return true;
+    }
+
+    // Safety fallback: if something went wrong, send user to courses
+    return router.createUrlTree(['/courses']);
+  }
+
+  // User cancelled the dialog (or dismissed it)
+  return router.createUrlTree(['/courses']);
 };
