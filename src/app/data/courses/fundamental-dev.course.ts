@@ -7,7 +7,7 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
     'New to programming? Start here. Programming Fundamentals introduces the core ideas behind coding using Java, C#, TypeScript, and Python—no experience required. Build confidence, write real code, and learn skills that transfer to any language.',
   imageUrl: 'assets/fundamental-development-img.jpg',
   tags: ['development', 'beginner'],
-  disabled: false,
+  disabled: true,
   disabledReason: 'Under development',
   items: [
     {
@@ -17,42 +17,67 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
       type: 'content',
       blocks: [
         { type: 'divider' },
-        { type: 'h2', text: 'Let’s jump into it!' },
+        { type: 'h2', text: 'Welcome to Fundamental Development' },
         {
           type: 'p',
-          text: 'Think of this page as your personal course hub. On the right you’ll find topics. Each topic has its own content that you can open and explore.',
+          text: 'This page is your course hub. On the right you will find all topics we will work through together. You can explore them during the course and revisit them afterwards whenever you need a refresher.',
         },
         {
           type: 'callout',
           variant: 'info',
-          text: 'Tip: This site includes all the exercises, slide decks, and handouts we’ll go through during the physical course.',
+          text: 'Tip: Everything we cover during the physical course is available here, including explanations, comparison examples, and exercises.',
         },
         { type: 'divider' },
-        { type: 'h2', text: 'Expectations' },
+        { type: 'h2', text: 'What This Course Is Designed to Do' },
         {
           type: 'p',
-          text: `Before we begin, it’s important that we talk a bit about what you should expect from this course.`,
+          text: 'This is a one-day introduction to the core ideas behind programming. Instead of focusing on a single language, we will explore the shared foundations of Python, JavaScript, C#, and Java.',
         },
         {
           type: 'p',
-          text: `We’ll go through the fundamentals of Playwright using TypeScript. We’ll start with the basics: installation, configuration, and everything you need to get started.`,
+          text: 'The goal is to help you understand how programs work. Once you understand the fundamentals, learning a specific language becomes much easier.',
         },
         {
           type: 'p',
-          text: `You shouldn’t expect to become an expert in a day — but you will leave with the tools and exercises you need to continue your journey toward becoming an intermediate Technical Tester using Playwright.`,
+          text: 'You will see the same concepts expressed in different languages so you can compare structure, readability, and style. This will help you decide which direction feels right for you.',
+        },
+        { type: 'divider' },
+        { type: 'h2', text: 'What You Will Learn' },
+        {
+          type: 'p',
+          text: 'We will cover variables, data types, control flow, loops, functions, and basic object-oriented thinking. These are the building blocks used in almost every programming language.',
         },
         {
           type: 'p',
-          text: `After the basics, we’ll move into navigation and UI interactions. This is where you learn how to locate and interact with elements, work with forms, and control common UI components.`,
+          text: 'You will also learn how to reason about program behavior, how errors occur, and how to approach debugging in a structured way.',
         },
         {
           type: 'p',
-          text: `To wrap up Day 1, we’ll dive deeper into Playwright’s API tools and learn how to debug and investigate issues like a pro.`,
+          text: 'By the end of the day, you should feel more confident reading code, understanding program logic, and asking the right questions when learning something new.',
         },
+        { type: 'divider' },
+        { type: 'h2', text: 'What You Should Expect' },
+        {
+          type: 'p',
+          text: 'You are not expected to master a programming language in one day. Instead, you will gain clarity and a solid mental foundation that you can build on afterwards.',
+        },
+        {
+          type: 'p',
+          text: 'This course is interactive. You will compare examples, think through small exercises, and reflect on differences between languages.',
+        },
+        {
+          type: 'p',
+          text: 'It is completely normal if some concepts feel challenging at first. Programming is a skill that develops through practice. Today is about understanding the fundamentals so you can move forward with confidence.',
+        },
+        { type: 'divider' },
         { type: 'h2', text: 'Requirements' },
         {
           type: 'p',
-          text: `You should have a basic understanding of software development. It’s not required, but it’s highly recommended. We’ll be writing test scripts in TypeScript using Playwright — this course will not teach you TypeScript from scratch.`,
+          text: 'No prior programming experience is required. Curiosity and willingness to think logically are far more important.',
+        },
+        {
+          type: 'p',
+          text: 'If you already have some experience, this course will help strengthen your foundation and clarify concepts that may previously have felt abstract.',
         },
       ],
     },

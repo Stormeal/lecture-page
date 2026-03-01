@@ -13,3 +13,31 @@ body {
     radial-gradient(900px 560px at 82% 30%, rgba(255, 255, 255, 0.12), transparent 62%),
     linear-gradient(180deg, #e6efff 0%, #ccdefa 100%);
 }
+
+/* -----------------------------
+   CDK Dialog styles (Unlock modal)
+   ----------------------------- */
+
+/* Backdrop (dim + slight blur vibe) */
+.lp-unlock-dialog-backdrop {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+/*
+  Panel wrapper:
+  - remove default focus outline quirks
+  - allow our component to define rounded corners etc
+*/
+.lp-unlock-dialog-panel {
+  outline: none;
+}
+
+/* Optional: make dialog content center nicely and avoid edge collisions */
+.cdk-dialog-container {
+  padding: 12px;
+}
+
+/* Optional: smoother feel when opening/closing */
+.cdk-overlay-backdrop {
+  transition: opacity 120ms ease-out;
+}
