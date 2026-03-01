@@ -30,7 +30,6 @@ function normalizeRole(value: unknown): CourseRole {
 }
 
 function storageKeyForCourse(slug: string) {
-  // Keep it stable and human-readable
   const safe = String(slug).trim().toLowerCase();
   return `${COURSE_SESSION_PREFIX}${safe}${COURSE_SESSION_SUFFIX}`;
 }
@@ -40,6 +39,7 @@ function slugFromStorageKey(key: string): string | null {
   if (!key.endsWith(COURSE_SESSION_SUFFIX)) return null;
 
   const slug = key.slice(COURSE_SESSION_PREFIX.length, key.length - COURSE_SESSION_SUFFIX.length);
+
   return slug || null;
 }
 
@@ -54,10 +54,8 @@ export function readCourseSession(slug: string): CourseAccessSession | null {
 
     if (!parsed.sessionId || !parsed.expiresAt || !parsed.username) return null;
 
-    // Backward compatibility:
-    // - if lastSeenAt missing, treat as "now"
-    // - if role missing or invalid, treat as "student"
     const lastSeenAt = parsed.lastSeenAt ? String(parsed.lastSeenAt) : new Date().toISOString();
+
     const role = normalizeRole(parsed.role);
 
     return {
@@ -107,8 +105,28 @@ export function touchCourseSession(slug: string, session: CourseAccessSession) {
 }
 
 /**
+ * Finds any valid session across all stored course sessions.
+ */
+export function findAnyCourseSession(): { slug: string; session: CourseAccessSession } | null {
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (!key) continue;
+
+    const slug = slugFromStorageKey(key);
+    if (!slug) continue;
+
+    const session = readCourseSession(slug);
+
+    if (session !== null && isCourseSessionValid(session)) {
+      return { slug, session };
+    }
+  }
+
+  return null;
+}
+
+/**
  * Finds any valid admin session across all stored course sessions.
- * Useful for app-level admin pages (not tied to a single course).
  */
 export function findAnyAdminSession(): { slug: string; session: CourseAccessSession } | null {
   for (let i = 0; i < localStorage.length; i++) {
@@ -119,9 +137,8 @@ export function findAnyAdminSession(): { slug: string; session: CourseAccessSess
     if (!slug) continue;
 
     const session = readCourseSession(slug);
-    if (!isCourseSessionValid(session)) continue;
 
-    if (session?.role === 'admin') {
+    if (session !== null && isCourseSessionValid(session) && session.role === 'admin') {
       return { slug, session };
     }
   }
