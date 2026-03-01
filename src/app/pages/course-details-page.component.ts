@@ -42,12 +42,22 @@ import { readCourseSession, clearCourseSession } from '../course-access/auth-ses
             </div>
           </div>
 
-          <div class="shrink-0 w-[84px] sm:w-[104px] flex justify-end">
+          <div class="shrink-0 w-[84px] sm:w-[180px] flex justify-end gap-2">
+            @if (isAdmin()) {
+              <a
+                routerLink="/admin"
+                class="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-semibold text-gray-800
+             hover:bg-gray-50 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
+              >
+                Admin
+              </a>
+            }
+
             @if (isLoggedIn()) {
               <button
                 type="button"
                 class="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-semibold text-gray-800
-                       hover:bg-gray-50 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
+             hover:bg-gray-50 focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
                 (click)="logout()"
               >
                 Logout
@@ -848,11 +858,15 @@ export class CourseDetailsPageComponent {
   private expanded = signal<Set<string>>(new Set());
   private revealed = signal<Set<string>>(new Set());
 
-  isLoggedIn = computed(() => {
+  session = computed(() => {
     const slug = this.slug();
-    if (!slug) return false;
-    return !!readCourseSession(slug);
+    if (!slug) return null;
+    return readCourseSession(slug);
   });
+
+  isAdmin = computed(() => this.session()?.role === 'admin');
+
+  isLoggedIn = computed(() => !!this.session());
 
   logout() {
     const slug = this.slug();

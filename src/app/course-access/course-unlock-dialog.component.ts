@@ -2,8 +2,10 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { writeCourseSession } from './auth-session.storage';
 
+type CourseRole = 'student' | 'teacher' | 'admin';
+
 type AuthLoginResponse =
-  | { success: true; sessionId: string; expiresAt: string }
+  | { success: true; sessionId: string; expiresAt: string; role?: CourseRole }
   | { success: false; message?: string };
 
 type CourseUnlockDialogData = {
@@ -11,6 +13,14 @@ type CourseUnlockDialogData = {
 };
 
 const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
+
+function normalizeRole(value: unknown): CourseRole {
+  const v = String(value ?? '')
+    .trim()
+    .toLowerCase();
+  if (v === 'admin' || v === 'teacher' || v === 'student') return v;
+  return 'student';
+}
 
 @Component({
   selector: 'app-course-unlock-dialog',
@@ -239,10 +249,13 @@ export class CourseUnlockDialogComponent {
         return;
       }
 
+      const role = normalizeRole((data as any).role);
+
       writeCourseSession(courseSlug, {
         sessionId: data.sessionId,
         expiresAt: data.expiresAt,
         username,
+        role,
         lastSeenAt: new Date().toISOString(),
       });
 
