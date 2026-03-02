@@ -97,6 +97,72 @@ type AdminAnalyticsResponse =
     }
   | { success: false; message?: string };
 
+// --------- NEW: USER drill-down ----------
+type AdminAnalyticsUserLatestQuestion = {
+  course: string;
+  quizId: string;
+  questionId: string;
+  lastAnsweredAt: string; // ISO
+  selectedOption: string;
+  attempts: number;
+  isCorrect: boolean;
+};
+
+type AdminAnalyticsUserLatestQuiz = {
+  quizId: string;
+  questions: AdminAnalyticsUserLatestQuestion[];
+};
+
+type AdminAnalyticsUserLatestCourse = {
+  course: string;
+  quizzes: AdminAnalyticsUserLatestQuiz[];
+};
+
+type AdminAnalyticsUserResponse =
+  | {
+      success: true;
+      username: string;
+      course: string | null;
+      latest: AdminAnalyticsUserLatestCourse[];
+      totalLatestQuestions: number;
+    }
+  | { success: false; message?: string };
+
+// --------- NEW: COURSE drill-down ----------
+type AdminCourseTotals = {
+  totalSubmissions: number;
+  uniqueUsers: number;
+  accuracy: number; // 0..1
+};
+
+type AdminCourseUserRow = {
+  username: string;
+  totalSubmissions: number;
+  correct: number;
+  accuracy: number; // 0..1
+  lastActivityAt: string | null; // ISO
+};
+
+type AdminCourseQuestionRow = {
+  quizId: string;
+  questionId: string;
+  totalSubmissions: number;
+  correct: number;
+  accuracy: number; // 0..1
+  uniqueUsers: number;
+  lastAnsweredAt: string | null; // ISO
+};
+
+type AdminAnalyticsCourseResponse =
+  | {
+      success: true;
+      course: string;
+      totals: AdminCourseTotals;
+      users: AdminCourseUserRow[];
+      questions: AdminCourseQuestionRow[];
+    }
+  | { success: false; message?: string };
+
 const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
 
 @Component({
@@ -294,6 +360,10 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
               <p class="mt-1 text-sm text-gray-600">
                 Aggregated quiz activity (deleted users are excluded).
               </p>
+              <p class="mt-1 text-xs text-gray-500">
+                Tip: Click a user to see their latest question results. Click a course to see course
+                drill-down.
+              </p>
             </div>
 
             <button
@@ -344,8 +414,14 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
 
                       <tbody class="divide-y divide-gray-200">
                         @for (c of analyticsCourses(); track c.course) {
-                          <tr>
-                            <td class="px-4 py-3 font-medium text-gray-900">{{ c.course }}</td>
+                          <tr
+                            class="cursor-pointer hover:bg-gray-50"
+                            (click)="openCourseAnalyticsModal(c.course)"
+                            title="Open course analytics"
+                          >
+                            <td class="px-4 py-3 font-medium text-gray-900">
+                              {{ c.course }}
+                            </td>
                             <td class="px-4 py-3 text-gray-700">{{ c.totalSubmissions }}</td>
                             <td class="px-4 py-3 text-gray-700">{{ c.uniqueUsers }}</td>
                             <td class="px-4 py-3 text-gray-700 whitespace-nowrap">
@@ -384,7 +460,11 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
 
                       <tbody class="divide-y divide-gray-200">
                         @for (u of analyticsUsers(); track u.username) {
-                          <tr>
+                          <tr
+                            class="cursor-pointer hover:bg-gray-50"
+                            (click)="openUserAnalyticsModal(u.username)"
+                            title="Open user analytics"
+                          >
                             <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">
                               {{ u.username }}
                             </td>
@@ -432,6 +512,292 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
         </div>
       </div>
     </div>
+
+    <!-- USER ANALYTICS MODAL -->
+    @if (showUserAnalyticsModal()) {
+      <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+        <div class="w-full max-w-4xl rounded-lg bg-white shadow-lg p-6 max-h-[85vh] overflow-auto">
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-semibold">
+                User analytics: {{ selectedAnalyticsUsername() }}
+              </h2>
+              <p class="mt-1 text-sm text-gray-600">
+                Latest result per question (course + quiz + question).
+              </p>
+            </div>
+            <button class="text-gray-500 hover:text-gray-800" (click)="closeUserAnalyticsModal()">
+              ✕
+            </button>
+          </div>
+
+          @if (userAnalyticsLoading()) {
+            <p class="mt-4 text-gray-700">Loading user analytics…</p>
+          } @else if (userAnalyticsError()) {
+            <div
+              class="mt-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-red-800 text-sm"
+            >
+              {{ userAnalyticsError() }}
+            </div>
+          } @else if (!userAnalyticsData()) {
+            <p class="mt-4 text-gray-700">No data.</p>
+          } @else {
+            <div class="mt-4 flex items-center justify-between gap-4">
+              <div class="text-sm text-gray-700">
+                Latest questions:
+                <span class="font-semibold text-gray-900">
+                  {{ userAnalyticsData()!.totalLatestQuestions }}
+                </span>
+              </div>
+
+              <button
+                type="button"
+                class="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-2
+                       text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                (click)="reloadUserAnalytics()"
+                [disabled]="userAnalyticsLoading()"
+              >
+                Refresh
+              </button>
+            </div>
+
+            <div class="mt-4 space-y-6">
+              @for (c of userAnalyticsData()!.latest; track c.course) {
+                <div class="rounded-md border border-gray-200 overflow-hidden">
+                  <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                    <div class="font-semibold text-gray-900">{{ c.course }}</div>
+                  </div>
+
+                  <div class="p-4 space-y-4">
+                    @for (q of c.quizzes; track q.quizId) {
+                      <div class="rounded-md border border-gray-200 overflow-hidden">
+                        <div class="bg-white px-4 py-3 border-b border-gray-200">
+                          <div class="font-semibold text-gray-900">Quiz: {{ q.quizId }}</div>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                          <table class="min-w-full text-sm">
+                            <thead class="bg-gray-50 border-b border-gray-200">
+                              <tr class="text-left text-gray-700">
+                                <th class="px-4 py-3 font-semibold">Question</th>
+                                <th class="px-4 py-3 font-semibold">Correct</th>
+                                <th class="px-4 py-3 font-semibold">Attempts</th>
+                                <th class="px-4 py-3 font-semibold">Selected</th>
+                                <th class="px-4 py-3 font-semibold">Last answered</th>
+                              </tr>
+                            </thead>
+
+                            <tbody class="divide-y divide-gray-200">
+                              @for (qq of q.questions; track qq.questionId) {
+                                <tr>
+                                  <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">
+                                    {{ qq.questionId }}
+                                  </td>
+
+                                  <td class="px-4 py-3 whitespace-nowrap">
+                                    @if (qq.isCorrect) {
+                                      <span
+                                        class="inline-flex items-center rounded-full bg-green-100 text-green-800 px-2 py-0.5 text-xs font-semibold"
+                                      >
+                                        Correct
+                                      </span>
+                                    } @else {
+                                      <span
+                                        class="inline-flex items-center rounded-full bg-red-100 text-red-800 px-2 py-0.5 text-xs font-semibold"
+                                      >
+                                        Incorrect
+                                      </span>
+                                    }
+                                  </td>
+
+                                  <td class="px-4 py-3 text-gray-700">{{ qq.attempts }}</td>
+                                  <td class="px-4 py-3 text-gray-700">
+                                    {{ qq.selectedOption || '—' }}
+                                  </td>
+                                  <td class="px-4 py-3 text-gray-700 whitespace-nowrap">
+                                    {{ formatDateTime(qq.lastAnsweredAt) }}
+                                  </td>
+                                </tr>
+                              }
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- COURSE ANALYTICS MODAL -->
+    @if (showCourseAnalyticsModal()) {
+      <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+        <div class="w-full max-w-5xl rounded-lg bg-white shadow-lg p-6 max-h-[85vh] overflow-auto">
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <h2 class="text-lg font-semibold">
+                Course analytics: {{ selectedAnalyticsCourse() }}
+              </h2>
+              <p class="mt-1 text-sm text-gray-600">Users and question stats for this course.</p>
+            </div>
+            <button class="text-gray-500 hover:text-gray-800" (click)="closeCourseAnalyticsModal()">
+              ✕
+            </button>
+          </div>
+
+          @if (courseAnalyticsLoading()) {
+            <p class="mt-4 text-gray-700">Loading course analytics…</p>
+          } @else if (courseAnalyticsError()) {
+            <div
+              class="mt-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-red-800 text-sm"
+            >
+              {{ courseAnalyticsError() }}
+            </div>
+          } @else if (!courseAnalyticsData()) {
+            <p class="mt-4 text-gray-700">No data.</p>
+          } @else {
+            <div class="mt-4 flex flex-wrap items-center justify-between gap-4">
+              <div class="flex flex-wrap gap-2 text-sm">
+                <span
+                  class="inline-flex items-center rounded-full bg-gray-100 text-gray-800 px-3 py-1 text-xs font-semibold"
+                >
+                  Submissions: {{ courseAnalyticsData()!.totals.totalSubmissions }}
+                </span>
+                <span
+                  class="inline-flex items-center rounded-full bg-gray-100 text-gray-800 px-3 py-1 text-xs font-semibold"
+                >
+                  Users: {{ courseAnalyticsData()!.totals.uniqueUsers }}
+                </span>
+                <span
+                  class="inline-flex items-center rounded-full bg-gray-100 text-gray-800 px-3 py-1 text-xs font-semibold"
+                >
+                  Accuracy: {{ formatPct(courseAnalyticsData()!.totals.accuracy) }}
+                </span>
+              </div>
+
+              <button
+                type="button"
+                class="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-2
+                       text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                (click)="reloadCourseAnalytics()"
+                [disabled]="courseAnalyticsLoading()"
+              >
+                Refresh
+              </button>
+            </div>
+
+            <div class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+              <!-- Users within course -->
+              <div class="rounded-md border border-gray-200 overflow-hidden">
+                <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                  <div class="font-semibold text-gray-900">Users</div>
+                  <div class="text-xs text-gray-600">
+                    Submissions, correct, accuracy, last activity
+                  </div>
+                </div>
+
+                @if (courseAnalyticsData()!.users.length === 0) {
+                  <div class="px-4 py-4 text-sm text-gray-700">No users yet.</div>
+                } @else {
+                  <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm">
+                      <thead class="bg-white border-b border-gray-200">
+                        <tr class="text-left text-gray-700">
+                          <th class="px-4 py-3 font-semibold">User</th>
+                          <th class="px-4 py-3 font-semibold">Submissions</th>
+                          <th class="px-4 py-3 font-semibold">Correct</th>
+                          <th class="px-4 py-3 font-semibold">Accuracy</th>
+                          <th class="px-4 py-3 font-semibold">Last</th>
+                        </tr>
+                      </thead>
+
+                      <tbody class="divide-y divide-gray-200">
+                        @for (u of courseAnalyticsData()!.users; track u.username) {
+                          <tr
+                            class="cursor-pointer hover:bg-gray-50"
+                            (click)="openUserAnalyticsModal(u.username)"
+                            title="Open user analytics"
+                          >
+                            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">
+                              {{ u.username }}
+                            </td>
+                            <td class="px-4 py-3 text-gray-700">{{ u.totalSubmissions }}</td>
+                            <td class="px-4 py-3 text-gray-700">{{ u.correct }}</td>
+                            <td class="px-4 py-3 text-gray-700 whitespace-nowrap">
+                              {{ formatPct(u.accuracy) }}
+                            </td>
+                            <td class="px-4 py-3 text-gray-700 whitespace-nowrap">
+                              {{ formatDateTime(u.lastActivityAt) }}
+                            </td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                }
+              </div>
+
+              <!-- Question stats within course -->
+              <div class="rounded-md border border-gray-200 overflow-hidden">
+                <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                  <div class="font-semibold text-gray-900">Questions</div>
+                  <div class="text-xs text-gray-600">Totals across all submissions</div>
+                </div>
+
+                @if (courseAnalyticsData()!.questions.length === 0) {
+                  <div class="px-4 py-4 text-sm text-gray-700">No questions yet.</div>
+                } @else {
+                  <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm">
+                      <thead class="bg-white border-b border-gray-200">
+                        <tr class="text-left text-gray-700">
+                          <th class="px-4 py-3 font-semibold">Quiz</th>
+                          <th class="px-4 py-3 font-semibold">Question</th>
+                          <th class="px-4 py-3 font-semibold">Subm.</th>
+                          <th class="px-4 py-3 font-semibold">Correct</th>
+                          <th class="px-4 py-3 font-semibold">Users</th>
+                          <th class="px-4 py-3 font-semibold">Acc.</th>
+                        </tr>
+                      </thead>
+
+                      <tbody class="divide-y divide-gray-200">
+                        @for (
+                          q of courseAnalyticsData()!.questions;
+                          track q.quizId + ':' + q.questionId
+                        ) {
+                          <tr>
+                            <td class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap">
+                              {{ q.quizId }}
+                            </td>
+                            <td class="px-4 py-3 text-gray-700 whitespace-nowrap">
+                              {{ q.questionId }}
+                            </td>
+                            <td class="px-4 py-3 text-gray-700">{{ q.totalSubmissions }}</td>
+                            <td class="px-4 py-3 text-gray-700">{{ q.correct }}</td>
+                            <td class="px-4 py-3 text-gray-700">{{ q.uniqueUsers }}</td>
+                            <td class="px-4 py-3 text-gray-700 whitespace-nowrap">
+                              {{ formatPct(q.accuracy) }}
+                            </td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div class="px-4 py-3 border-t border-gray-200 text-xs text-gray-500">
+                    Note: This table is totals-based, not latest-only.
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
 
     <!-- CREATE MODAL -->
     @if (showCreateModal()) {
@@ -671,6 +1037,22 @@ export class AdminPageComponent {
   analyticsUsers = signal<AdminAnalyticsUser[]>([]);
   analyticsCourses = signal<AdminAnalyticsCourse[]>([]);
 
+  // NEW: user analytics modal state
+  showUserAnalyticsModal = signal(false);
+  selectedAnalyticsUsername = signal<string>('');
+  userAnalyticsLoading = signal(false);
+  userAnalyticsError = signal<string | null>(null);
+  userAnalyticsData = signal<Extract<AdminAnalyticsUserResponse, { success: true }> | null>(null);
+
+  // NEW: course analytics modal state
+  showCourseAnalyticsModal = signal(false);
+  selectedAnalyticsCourse = signal<string>('');
+  courseAnalyticsLoading = signal(false);
+  courseAnalyticsError = signal<string | null>(null);
+  courseAnalyticsData = signal<Extract<AdminAnalyticsCourseResponse, { success: true }> | null>(
+    null,
+  );
+
   // Create modal state
   showCreateModal = signal(false);
   creatingUser = signal(false);
@@ -771,6 +1153,142 @@ export class AdminPageComponent {
     const ms = Date.parse(iso);
     if (!Number.isFinite(ms)) return '—';
     return new Date(ms).toLocaleString();
+  }
+
+  // ---------- USER ANALYTICS MODAL ----------
+  openUserAnalyticsModal(username: string) {
+    const u = String(username ?? '').trim();
+    if (!u) return;
+
+    this.selectedAnalyticsUsername.set(u);
+    this.userAnalyticsError.set(null);
+    this.userAnalyticsData.set(null);
+    this.showUserAnalyticsModal.set(true);
+
+    void this.loadUserAnalytics(u);
+  }
+
+  closeUserAnalyticsModal() {
+    this.showUserAnalyticsModal.set(false);
+  }
+
+  async reloadUserAnalytics() {
+    const u = this.selectedAnalyticsUsername();
+    if (!u) return;
+    await this.loadUserAnalytics(u);
+  }
+
+  private async loadUserAnalytics(username: string) {
+    this.userAnalyticsError.set(null);
+
+    const admin = this.adminSession();
+    if (!admin) {
+      this.userAnalyticsData.set(null);
+      this.userAnalyticsError.set('Not logged in as admin.');
+      return;
+    }
+
+    this.userAnalyticsLoading.set(true);
+
+    try {
+      const url = new URL(`${API_BASE_URL}/admin-analytics-user`);
+      url.searchParams.set('username', username);
+
+      const resp = await fetch(url.toString(), {
+        headers: {
+          Authorization: `Bearer ${admin.session.sessionId}`,
+        },
+      });
+
+      const data = (await resp.json()) as AdminAnalyticsUserResponse;
+
+      if (!resp.ok) {
+        this.userAnalyticsData.set(null);
+        this.userAnalyticsError.set(`Failed to load user analytics (${resp.status}).`);
+        return;
+      }
+
+      if (data.success === false) {
+        this.userAnalyticsData.set(null);
+        this.userAnalyticsError.set(data.message ?? 'Failed to load user analytics.');
+        return;
+      }
+
+      this.userAnalyticsData.set(data);
+    } catch {
+      this.userAnalyticsData.set(null);
+      this.userAnalyticsError.set('Network error.');
+    } finally {
+      this.userAnalyticsLoading.set(false);
+    }
+  }
+
+  // ---------- COURSE ANALYTICS MODAL ----------
+  openCourseAnalyticsModal(course: string) {
+    const c = String(course ?? '').trim();
+    if (!c) return;
+
+    this.selectedAnalyticsCourse.set(c);
+    this.courseAnalyticsError.set(null);
+    this.courseAnalyticsData.set(null);
+    this.showCourseAnalyticsModal.set(true);
+
+    void this.loadCourseAnalytics(c);
+  }
+
+  closeCourseAnalyticsModal() {
+    this.showCourseAnalyticsModal.set(false);
+  }
+
+  async reloadCourseAnalytics() {
+    const c = this.selectedAnalyticsCourse();
+    if (!c) return;
+    await this.loadCourseAnalytics(c);
+  }
+
+  private async loadCourseAnalytics(course: string) {
+    this.courseAnalyticsError.set(null);
+
+    const admin = this.adminSession();
+    if (!admin) {
+      this.courseAnalyticsData.set(null);
+      this.courseAnalyticsError.set('Not logged in as admin.');
+      return;
+    }
+
+    this.courseAnalyticsLoading.set(true);
+
+    try {
+      const url = new URL(`${API_BASE_URL}/admin-analytics-course`);
+      url.searchParams.set('course', course);
+
+      const resp = await fetch(url.toString(), {
+        headers: {
+          Authorization: `Bearer ${admin.session.sessionId}`,
+        },
+      });
+
+      const data = (await resp.json()) as AdminAnalyticsCourseResponse;
+
+      if (!resp.ok) {
+        this.courseAnalyticsData.set(null);
+        this.courseAnalyticsError.set(`Failed to load course analytics (${resp.status}).`);
+        return;
+      }
+
+      if (data.success === false) {
+        this.courseAnalyticsData.set(null);
+        this.courseAnalyticsError.set(data.message ?? 'Failed to load course analytics.');
+        return;
+      }
+
+      this.courseAnalyticsData.set(data);
+    } catch {
+      this.courseAnalyticsData.set(null);
+      this.courseAnalyticsError.set('Network error.');
+    } finally {
+      this.courseAnalyticsLoading.set(false);
+    }
   }
 
   // ---------- CREATE ----------
