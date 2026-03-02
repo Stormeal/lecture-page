@@ -1,54 +1,100 @@
-lecture-page/
+LECTURE-PAGE/
+│
 ├── .angular/
 ├── .github/
-│   └── workflows/
-│       └── deploy-pages.yml
 ├── .vscode/
-├── dist/                       (build output)
-├── node_modules/               (dependencies)
+├── dist/
+├── node_modules/
 ├── public/
+│
 ├── src/
 │   ├── app/
+│   │   ├── admin/
+│   │   │   ├── admin-page.component.ts
+│   │   │   └── admin.guard.ts
+│   │   │
 │   │   ├── components/
-│   │   │   └── course-card.component.ts
+│   │   │   └── quiz/
+│   │   │       ├── quiz.component.ts
+│   │   │       └── course-card.component.ts
+│   │   │
 │   │   ├── course-access/
+│   │   │   ├── auth-session.storage.ts
 │   │   │   ├── course-access.guard.ts
-│   │   │   ├── playwright-access.config.ts
-│   │   │   └── playwright-unlock-page.component.ts
+│   │   │   ├── course-unlock-dialog.component.ts
+│   │   │   ├── course-unlock-dialog.service.ts
+│   │   │   └── playwright-access.config.ts
+│   │   │
 │   │   ├── data/
-│   │   │   ├── courses/
-│   │   │   ├── course.model.ts
-│   │   │   ├── course.service.ts
-│   │   │   └── courses.data.ts
+│   │   │   └── courses/
+│   │   │       ├── playwright/
+│   │   │       │   └── exercises/
+│   │   │       │       ├── exercise-01.ts
+│   │   │       │       ├── exercise-02.ts
+│   │   │       │       ├── exercise-03.ts
+│   │   │       │       ├── exercise-04.ts
+│   │   │       │       ├── exercise-05.ts
+│   │   │       │       ├── exercise-06.ts
+│   │   │       │       ├── exercise-07.ts
+│   │   │       │       ├── exercise-08.ts
+│   │   │       │       └── index.ts
+│   │   │       │
+│   │   │       ├── fundamental-dev.course.ts
+│   │   │       ├── playwright.course.ts
+│   │   │       ├── index.ts
+│   │   │       ├── course.model.ts
+│   │   │       ├── course.service.ts
+│   │   │       └── quiz-submission.service.ts
+│   │   │
 │   │   ├── pages/
+│   │   │   ├── automation-candidate/
+│   │   │   │   ├── automation-candidate-scorer-page.component.css
+│   │   │   │   ├── automation-candidate-scorer-page.component.html
+│   │   │   │   └── automation-candidate-scorer-page.component.ts
+│   │   │   │
 │   │   │   ├── course-details-page.component.ts
 │   │   │   ├── courses-list-page.component.ts
 │   │   │   ├── playwright-test-site-page.component.ts
-│   │   │   └── playwright-test-site-table-page.component.ts
+│   │   │   ├── playwright-test-site-table-page.component.ts
+│   │   │   └── reports-redirect-page.component.ts
+│   │   │
 │   │   ├── shared/
-│   │   │   ├── asset-url.ts
+│   │   │   ├── asset-utils.ts
 │   │   │   └── nested-list.component.ts
+│   │   │
 │   │   ├── app.config.ts
 │   │   ├── app.css
 │   │   ├── app.html
 │   │   ├── app.routes.ts
 │   │   ├── app.spec.ts
 │   │   └── app.ts
+│   │
 │   ├── assets/
-│   │   ├── day1-presentation.pdf
-│   │   ├── day2-presentation.pdf
-│   │   ├── fundamental-development-img.jpg
-│   │   ├── playwright-cheat-sheet.pdf
-│   │   └── playwright-course-img.jpg
+│   │
+│   ├── tests/
+│   │   ├── allure-report/
+│   │   ├── allure-results/
+│   │   ├── screenshots/
+│   │   ├── test-results/
+│   │   ├── exercise_1.spec.ts
+│   │   ├── exercise_2.spec.ts
+│   │   ├── exercise_3.spec.ts
+│   │   ├── exercise_4.spec.ts
+│   │   └── exercise_5.spec.ts
+│   │
 │   ├── index.html
 │   ├── main.ts
 │   └── styles.css
+│
 ├── .editorconfig
 ├── .gitignore
 ├── .postcssrc.json
 ├── angular.json
+├── content_system_template.md
 ├── package-lock.json
 ├── package.json
+├── playwright.config.ts
+├── project-structure.txt
 ├── README.md
 ├── tsconfig.app.json
 ├── tsconfig.json
