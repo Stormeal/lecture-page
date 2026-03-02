@@ -47,11 +47,6 @@ export const EXERCISE_01: CourseGroupItem = {
 
         {
           type: 'p',
-          text: `A browser context includes its own:`,
-        },
-
-        {
-          type: 'p',
           text: 'A browser context includes its own:',
         },
         {
