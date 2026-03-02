@@ -1,4 +1,5 @@
 import { Course } from '../course.model';
+import { FUNDAMENTAL_DEV_CHAPTER1 } from './fundamental-dev';
 
 export const FUNDAMENTAL_DEV_COURSE: Course = {
   slug: 'fundamental-dev',
@@ -7,7 +8,7 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
     'New to programming? Start here. Programming Fundamentals introduces the core ideas behind coding using Java, C#, TypeScript, and Python—no experience required. Build confidence, write real code, and learn skills that transfer to any language.',
   imageUrl: 'assets/fundamental-development-img.jpg',
   tags: ['development', 'beginner'],
-  disabled: true,
+  disabled: false,
   disabledReason: 'Under development',
   items: [
     {
@@ -190,6 +191,42 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
           ],
         },
       ],
+    },
+
+    {
+      id: 'ch1',
+      title: 'Chapter 1: What is Programming really?',
+      summary: 'Theory and exercises',
+      type: 'group',
+      overviewBlocks: [
+        {
+          type: 'p',
+          text: 'Before we begin writing code, we need to build a clear mental model of what programming actually is. This chapter focuses on understanding execution, precision, and structured thinking.',
+        },
+        { type: 'divider' },
+
+        {
+          type: 'labelValue',
+          label: 'By the end of this chapter, you should be able to:',
+          list: {
+            ordered: false,
+            items: [
+              'Explain what a program is in simple terms.',
+              'Describe the Input → Processing → Output model.',
+              'Understand why computers require precise instructions.',
+              'Differentiate between source code and machine execution.',
+              'Recognize that programming is structured problem solving, not memorizing syntax.',
+            ],
+          },
+          testId: 'ch1-learning-objectives-list',
+        },
+        {
+          type: 'callout',
+          variant: 'info',
+          text: 'If you can clearly explain these concepts to another person, you are ready to move on to variables and syntax later.',
+        },
+      ],
+      children: FUNDAMENTAL_DEV_CHAPTER1,
     },
   ],
 };
