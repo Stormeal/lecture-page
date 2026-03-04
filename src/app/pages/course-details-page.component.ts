@@ -877,11 +877,31 @@ export class CourseDetailsPageComponent {
   constructor() {
     effect(() => {
       const c = this.course();
+      const queryItemId = this.route.snapshot.queryParamMap.get('item');
       const first = c?.items?.[0]?.id ?? null;
-      this.selectedId.set(first);
+      const fromQuery =
+        c && queryItemId && this.findItemById(c.items, queryItemId) ? queryItemId : null;
+      const selected = fromQuery ?? first;
+      const expandedIds = c && selected ? this.groupPathToId(c.items, selected) ?? [] : [];
+
+      this.selectedId.set(selected);
       this.revealed.set(new Set());
-      this.expanded.set(new Set());
+      this.expanded.set(new Set(expandedIds));
       this.revealedHints.set(new Set());
+    });
+    effect(() => {
+      const id = this.selectedId();
+      if (!id) return;
+
+      const current = this.route.snapshot.queryParamMap.get('item');
+      if (current === id) return;
+
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { item: id },
+        queryParamsHandling: 'merge',
+        replaceUrl: true,
+      });
     });
     effect(() => {
       const id = this.selectedId();
@@ -992,6 +1012,21 @@ export class CourseDetailsPageComponent {
         if (found) return found;
       }
     }
+    return null;
+  }
+
+  private groupPathToId(items: CourseItem[], id: string, ancestors: string[] = []): string[] | null {
+    for (const item of items) {
+      if (item.id === id) {
+        return item.type === 'group' ? [...ancestors, item.id] : ancestors;
+      }
+
+      if (item.type === 'group') {
+        const found = this.groupPathToId(item.children, id, [...ancestors, item.id]);
+        if (found) return found;
+      }
+    }
+
     return null;
   }
 }
