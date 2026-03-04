@@ -678,7 +678,7 @@ import { readCourseSession, clearCourseSession } from '../course-access/auth-ses
                                focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
                         [class.bg-blue-50]="selectedId() === item.id"
                         [class.border-blue-200]="selectedId() === item.id"
-                        (click)="toggleGroup(item.id); setSelected(item.id)"
+                        (click)="toggleGroup(item.id, groupIds(c.items), true); setSelected(item.id)"
                       >
                         <div class="flex items-start justify-between gap-3">
                           <div class="min-w-0">
@@ -714,7 +714,7 @@ import { readCourseSession, clearCourseSession } from '../course-access/auth-ses
                                        focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
                                 [class.bg-blue-50]="selectedId() === child.id"
                                 [class.border-blue-200]="selectedId() === child.id"
-                                (click)="toggleGroup(child.id); setSelected(child.id)"
+                                (click)="toggleGroup(child.id, groupIds(item.children)); setSelected(child.id)"
                               >
                                 <div class="flex items-center justify-between gap-3">
                                   <p class="font-semibold text-gray-900 truncate">
@@ -921,14 +921,23 @@ export class CourseDetailsPageComponent {
     this.selectedId.set(id);
   }
 
-  toggleGroup(id: string) {
-    const next = new Set(this.expanded());
-    next.has(id) ? next.delete(id) : next.add(id);
+  toggleGroup(id: string, scopeIds: string[], resetAll = false) {
+    const current = this.expanded();
+    const isCurrentlyOpen = current.has(id);
+    const next = resetAll ? new Set<string>() : new Set(current);
+
+    for (const scopeId of scopeIds) next.delete(scopeId);
+    if (!isCurrentlyOpen) next.add(id);
+
     this.expanded.set(next);
   }
 
   isExpanded(id: string) {
     return this.expanded().has(id);
+  }
+
+  groupIds(items: CourseItem[]): string[] {
+    return items.filter((item) => item.type === 'group').map((item) => item.id);
   }
 
   reveal(id: string) {
