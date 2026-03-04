@@ -38,7 +38,7 @@ export const PLAYWRIGHT_COURSE: Course = {
         },
         {
           type: 'p',
-          text: `You shouldn’t expect to become an expert in a day — but you will leave with the tools and exercises you need to continue your journey toward becoming an intermediate Technical Tester using Playwright.`,
+          text: `You shouldn’t expect to become an expert in a day but you will leave with the tools and exercises you need to continue your journey toward becoming an intermediate Technical Tester using Playwright.`,
         },
         {
           type: 'p',
@@ -51,7 +51,7 @@ export const PLAYWRIGHT_COURSE: Course = {
         { type: 'h2', text: 'Requirements' },
         {
           type: 'p',
-          text: `You should have a basic understanding of software development. It’s not required, but it’s highly recommended. We’ll be writing test scripts in TypeScript using Playwright — this course will not teach you TypeScript from scratch.`,
+          text: `You should have a basic understanding of software development. It’s not required, but it’s highly recommended. We’ll be writing test scripts in TypeScript using Playwright this course will not teach you TypeScript from scratch.`,
         },
       ],
     },
@@ -65,13 +65,13 @@ export const PLAYWRIGHT_COURSE: Course = {
         { type: 'h2', text: 'Setup' },
         {
           type: 'p',
-          text: `There’s a lot to learn about Playwright, but one topic is absolutely essential — otherwise the rest becomes meaningless. We need to learn how to create our first Playwright project and configure it for what we need.`,
+          text: `There’s a lot to learn about Playwright, but one topic is absolutely essential otherwise the rest becomes meaningless. We need to learn how to create our first Playwright project and configure it for what we need.`,
         },
 
         { type: 'h3', text: 'Step 1: Verify that you have Node.js installed' },
         {
           type: 'p',
-          text: `Run the command below to verify that Node.js is installed. It should display the Node version. If you get an error, Node.js is not available in your terminal — try reinstalling Node.js or restarting your terminal.`,
+          text: `Run the command below to verify that Node.js is installed. It should display the Node version. If you get an error, Node.js is not available in your terminal try reinstalling Node.js or restarting your terminal.`,
         },
         { type: 'code', language: 'bash', filename: 'terminal', code: `node --version` },
         {
@@ -126,7 +126,7 @@ export const PLAYWRIGHT_COURSE: Course = {
         },
         {
           type: 'p',
-          text: `Open the folder in Visual Studio Code and make sure the terminal is pointing to the project root. Then we’re ready for the next step — let’s go!`,
+          text: `Open the folder in Visual Studio Code and make sure the terminal is pointing to the project root. Then we’re ready for the next step let’s go!`,
         },
 
         { type: 'divider' },
@@ -157,7 +157,7 @@ export const PLAYWRIGHT_COURSE: Course = {
           type: 'links',
           links: [
             {
-              label: 'Playwright — Getting Started',
+              label: 'Playwright Getting Started',
               url: 'https://playwright.dev/docs/intro',
               description: 'Official guide for installing and getting started with Playwright',
             },
@@ -180,7 +180,7 @@ export const PLAYWRIGHT_COURSE: Course = {
         {
           type: 'callout',
           variant: 'info',
-          text: `Tip: Solutions are not locked — they’re just hidden by default so you can try first.`,
+          text: `Tip: Solutions are not locked they’re just hidden by default so you can try first.`,
         },
       ],
       children: PLAYWRIGHT_EXERCISES,

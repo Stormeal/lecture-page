@@ -503,7 +503,7 @@ export class PlaywrightTestSitePageComponent {
 
     setTimeout(() => {
       this.isSubmitting.set(false);
-      this.successMessage.set('We received your message. (Not really — this is a test site.) ✅');
+      this.successMessage.set('We received your message. (Not really this is a test site.) ✅');
     }, 650);
   }
 

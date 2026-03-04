@@ -88,7 +88,7 @@ const context = await browser.newContext();`,
 
         {
           type: 'p',
-          text: `When you want to navigate to a website, click elements, fill forms, or extract data — you always do it through a page.`,
+          text: `When you want to navigate to a website, click elements, fill forms, or extract data you always do it through a page.`,
         },
 
         {
