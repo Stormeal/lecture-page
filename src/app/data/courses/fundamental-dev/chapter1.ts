@@ -1370,28 +1370,102 @@ export const SECTION_04: CourseGroupItem = {
 
         {
           type: 'p',
-          text: 'For each scenario, identify what could cause different results between runs.',
+          text: 'This exercise helps you practice diagnosing why software can appear inconsistent even when the computer is still following rules. If the result changed, something changed, even if it is not obvious at first.',
+        },
+
+        { type: 'divider' },
+
+        {
+          type: 'labelValue',
+          label: 'For each scenario:',
+          list: {
+            ordered: false,
+            items: [
+              'Name the most likely source of variability.',
+              'Explain what might be different between one run and another.',
+              'Use categories like input, state, environment, time, or external systems.',
+            ],
+          },
+          testId: 'ch1-s4-exercise-instructions',
         },
 
         {
           type: 'labelValue',
-          label: 'Scenarios:',
+          label: 'Scenario 1: A test passes locally but fails in CI',
           list: {
             ordered: false,
             items: [
-              'A test passes locally but fails in CI.',
-              'A function returns different values at different times of day.',
-              'A feature works for one user but not another.',
-              'A report shows different totals when refreshed.',
+              'What might be different about the environment, dependencies, configuration, or test data?',
             ],
           },
-          testId: 'ch1-s4-exercise-scenarios',
+          testId: 'ch1-s4-exercise-scenario-1',
+        },
+
+        { type: 'divider' },
+
+        {
+          type: 'labelValue',
+          label: 'Scenario 2: A function returns different values at different times of day',
+          list: {
+            ordered: false,
+            items: [
+              'What role could time, time zones, clocks, scheduled updates, or date boundaries play?',
+            ],
+          },
+          testId: 'ch1-s4-exercise-scenario-2',
+        },
+
+        { type: 'divider' },
+
+        {
+          type: 'labelValue',
+          label: 'Scenario 3: A feature works for one user but not another',
+          list: {
+            ordered: false,
+            items: [
+              'What user-specific input, permissions, account state, feature flags, or stored settings could differ?',
+            ],
+          },
+          testId: 'ch1-s4-exercise-scenario-3',
+        },
+
+        { type: 'divider' },
+
+        {
+          type: 'labelValue',
+          label: 'Scenario 4: A report shows different totals when refreshed',
+          list: {
+            ordered: false,
+            items: [
+              'What live data, filtering rules, caching, timing, or external system changes could explain the difference?',
+            ],
+          },
+          testId: 'ch1-s4-exercise-scenario-4',
+        },
+
+        { type: 'divider' },
+
+        {
+          type: 'p',
+          text: 'More than one answer may be valid. The goal is not to guess a single perfect cause. The goal is to build the habit of looking for hidden variables.',
+        },
+
+        {
+          type: 'labelValue',
+          label: 'Reflection:',
+          list: {
+            ordered: false,
+            items: [
+              'Which of these hidden differences would be hardest to debug in a real project, and why?',
+            ],
+          },
+          testId: 'ch1-s4-exercise-reflection',
         },
 
         {
           type: 'callout',
           variant: 'info',
-          text: 'Think in terms of input, state, environment, time, and external systems.',
+          text: 'When output changes, ask what changed: the input, the internal state, the environment, the timing, or an external dependency.',
         },
       ],
     },
@@ -1663,28 +1737,58 @@ export const SECTION_05: CourseGroupItem = {
 
         {
           type: 'p',
-          text: 'Write short answers to the following reflection prompts.',
+          text: 'This exercise is about noticing how you currently think about programming and deliberately replacing weaker assumptions with stronger ones. Keep your answers short, but make them specific.',
+        },
+
+        { type: 'divider' },
+
+        {
+          type: 'labelValue',
+          label: 'Part 1: Identify an old assumption',
+          list: {
+            ordered: false,
+            items: [
+              'Which misconception from this section felt familiar to you?',
+              'Why is that belief tempting or common for beginners?',
+              'What problems can it cause when learning or debugging?',
+            ],
+          },
+          testId: 'ch1-s5-exercise-part-1',
         },
 
         {
           type: 'labelValue',
-          label: 'Reflection questions:',
+          label: 'Part 2: Replace it with a stronger mindset',
           list: {
             ordered: false,
             items: [
-              'Which misconception did you previously believe?',
-              'What feels most challenging about structured problem solving?',
-              'How will you approach learning a new language after this chapter?',
-              'What will you focus on when stuck on a problem?',
+              'Rewrite the misconception as a better principle you want to follow.',
+              'How will you approach learning a new language or tool differently after this chapter?',
+              'What will you focus on first when something does not work?',
             ],
           },
-          testId: 'ch1-s5-exercise-reflection',
+          testId: 'ch1-s5-exercise-part-2',
+        },
+
+        { type: 'divider' },
+
+        {
+          type: 'labelValue',
+          label: 'Part 3: Choose one practical habit',
+          list: {
+            ordered: false,
+            items: [
+              'Pick one habit you will practice: breaking problems into smaller parts, defining inputs and outputs, checking assumptions, or understanding code before reusing it.',
+              'Write one sentence about how you will apply that habit the next time you get stuck.',
+            ],
+          },
+          testId: 'ch1-s5-exercise-part-3',
         },
 
         {
           type: 'callout',
           variant: 'info',
-          text: 'Clarity of thinking improves with deliberate practice. This mindset will matter more than any specific language choice.',
+          text: 'A strong programming mindset is not a personality trait. It is a set of habits you build by repeatedly slowing down, clarifying the problem, and reasoning step by step.',
         },
       ],
     },

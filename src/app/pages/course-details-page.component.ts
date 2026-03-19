@@ -663,28 +663,61 @@ import { readCourseSession, clearCourseSession } from '../course-access/auth-ses
               </section>
 
               <!-- Right list pane -->
-              <aside class="h-full overflow-y-auto rounded-lg bg-white shadow">
-                <div class="p-4 border-b border-gray-200">
-                  <p class="text-sm font-semibold text-gray-900">Contents</p>
-                  <p class="text-xs text-gray-500 mt-1">Click an item to display it.</p>
+              <aside
+                class="flex h-full flex-col overflow-hidden rounded-[28px] border border-slate-200/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(248,250,252,0.96))] shadow-[0_22px_60px_-28px_rgba(15,23,42,0.35)] backdrop-blur"
+              >
+                <div class="border-b border-slate-200/80 bg-white/88 px-4 py-4 backdrop-blur-xl">
+                  <div class="rounded-2xl border border-slate-200/80 bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.16),_transparent_42%),linear-gradient(135deg,#ffffff,#f8fafc)] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+                    <div class="flex items-start justify-between gap-3">
+                      <div class="min-w-0">
+                        <p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
+                          Course Map
+                        </p>
+                        <p class="mt-1 text-lg font-semibold text-slate-950">Contents</p>
+                        <p class="mt-1 text-sm leading-6 text-slate-600">
+                          Move through the material by section, quiz, and exercise.
+                        </p>
+                      </div>
+                      <div class="rounded-2xl bg-slate-950 px-3 py-2 text-right text-white shadow-lg">
+                        <div class="text-[10px] uppercase tracking-[0.2em] text-slate-300">
+                          Items
+                        </div>
+                        <div class="text-lg font-semibold leading-none">{{ itemCount() }}</div>
+                      </div>
+                    </div>
+
+                    <div class="mt-4 flex flex-wrap gap-2">
+                      @if (selectedItem(); as selected) {
+                        <span
+                          class="inline-flex max-w-full items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800 sm:max-w-[260px]"
+                        >
+                          <span class="shrink-0">Now viewing:</span>
+                          <span class="min-w-0 truncate">{{ selected.title }}</span>
+                        </span>
+                      }
+                    </div>
+                  </div>
                 </div>
 
-                <nav class="p-2">
+                <div class="min-h-0 flex-1 overflow-y-auto p-3 [scrollbar-gutter:stable]">
+                  <nav>
                   @for (item of c.items; track item.id) {
                     @if (item.type === 'group') {
                       <button
                         type="button"
-                        class="w-full text-left rounded-md px-3 py-3 m-1 border border-transparent hover:bg-gray-50
-                               focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
-                        [class.bg-blue-50]="selectedId() === item.id"
+                        class="w-full text-left rounded-2xl px-4 py-3.5 mb-2 border border-slate-200/80 bg-white/92
+                               transition-all duration-200 hover:bg-white hover:border-slate-300 hover:shadow-[0_12px_26px_-20px_rgba(15,23,42,0.45)]
+                               focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/30"
+                        [class.bg-[linear-gradient(135deg,rgba(239,246,255,0.95),rgba(255,255,255,0.98))]]="selectedId() === item.id"
                         [class.border-blue-200]="selectedId() === item.id"
+                        [class.shadow-[0_16px_36px_-24px_rgba(37,99,235,0.45)]]="selectedId() === item.id"
                         (click)="toggleGroup(item.id, groupIds(c.items), true); setSelected(item.id)"
                       >
                         <div class="flex items-start justify-between gap-3">
                           <div class="min-w-0">
-                            <p class="font-semibold text-gray-900 truncate">{{ item.title }}</p>
+                            <p class="font-semibold text-slate-900 truncate">{{ item.title }}</p>
                             @if (item.summary) {
-                              <p class="mt-1 text-sm text-gray-600 line-clamp-2">
+                              <p class="mt-1 text-sm text-slate-600 line-clamp-2 leading-5">
                                 {{ item.summary }}
                               </p>
                             }
@@ -692,12 +725,12 @@ import { readCourseSession, clearCourseSession } from '../course-access/auth-ses
                           <div class="flex items-center gap-2 shrink-0">
                             @if (item.badge) {
                               <span
-                                class="text-xs font-semibold bg-gray-100 text-gray-700 px-2 py-1 rounded-full"
+                                class="text-xs font-semibold bg-white text-slate-700 px-2.5 py-1 rounded-full border border-slate-200"
                               >
                                 {{ item.badge }}
                               </span>
                             }
-                            <span class="text-gray-500">
+                            <span class="text-slate-500">
                               {{ isExpanded(item.id) ? '▾' : '▸' }}
                             </span>
                           </div>
@@ -705,42 +738,44 @@ import { readCourseSession, clearCourseSession } from '../course-access/auth-ses
                       </button>
 
                       @if (isExpanded(item.id)) {
-                        <div class="ml-3 pl-2 border-l border-gray-200">
+                        <div class="ml-4 pl-3 border-l border-slate-200">
                           @for (child of item.children; track child.id) {
                             @if (child.type === 'group') {
                               <button
                                 type="button"
-                                class="w-full text-left rounded-md px-3 py-2 m-1 border border-transparent hover:bg-gray-50
-                                       focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
-                                [class.bg-blue-50]="selectedId() === child.id"
+                                class="w-full text-left rounded-xl px-3.5 py-3 mb-2 border border-slate-200/80 bg-white/90
+                                       transition-all duration-200 hover:bg-white hover:border-slate-300 hover:shadow-[0_10px_24px_-18px_rgba(15,23,42,0.4)]
+                                       focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/30"
+                                [class.bg-[linear-gradient(135deg,rgba(239,246,255,0.92),rgba(255,255,255,0.98))]]="selectedId() === child.id"
                                 [class.border-blue-200]="selectedId() === child.id"
                                 (click)="toggleGroup(child.id, groupIds(item.children)); setSelected(child.id)"
                               >
                                 <div class="flex items-center justify-between gap-3">
-                                  <p class="font-semibold text-gray-900 truncate">
+                                  <p class="font-semibold text-slate-900 truncate">
                                     {{ child.title }}
                                   </p>
-                                  <span class="text-gray-500 shrink-0">
+                                  <span class="text-slate-500 shrink-0">
                                     {{ isExpanded(child.id) ? '▾' : '▸' }}
                                   </span>
                                 </div>
                               </button>
 
                               @if (isExpanded(child.id)) {
-                                <div class="ml-3 pl-2 border-l border-gray-200">
+                                <div class="ml-4 pl-3 border-l border-slate-200">
                                   @for (leaf of child.children; track leaf.id) {
                                     @if (leaf.type === 'external') {
                                       <a
-                                        class="block rounded-md px-3 py-2 m-1 border border-transparent hover:bg-gray-50
-                                               focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
-                                        [class.bg-blue-50]="selectedId() === leaf.id"
+                                        class="block rounded-xl px-3.5 py-2.5 mb-2 border border-slate-200/80 bg-white/88
+                                               transition-all duration-200 hover:bg-white hover:border-slate-300 hover:shadow-[0_8px_22px_-18px_rgba(15,23,42,0.35)]
+                                               focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/30"
+                                        [class.bg-[linear-gradient(135deg,rgba(239,246,255,0.9),rgba(255,255,255,0.98))]]="selectedId() === leaf.id"
                                         [class.border-blue-200]="selectedId() === leaf.id"
                                         [href]="leaf.externalUrl"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         (click)="setSelected(leaf.id)"
                                       >
-                                        <span class="font-medium text-gray-900 truncate">{{
+                                        <span class="font-medium text-slate-900 truncate">{{
                                           leaf.title
                                         }}</span>
                                         <span class="ml-1 text-xs text-gray-500">↗</span>
@@ -748,13 +783,14 @@ import { readCourseSession, clearCourseSession } from '../course-access/auth-ses
                                     } @else {
                                       <button
                                         type="button"
-                                        class="w-full text-left rounded-md px-3 py-2 m-1 border border-transparent hover:bg-gray-50
-                                               focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
-                                        [class.bg-blue-50]="selectedId() === leaf.id"
+                                        class="w-full text-left rounded-xl px-3.5 py-2.5 mb-2 border border-slate-200/80 bg-white/88
+                                               transition-all duration-200 hover:bg-white hover:border-slate-300 hover:shadow-[0_8px_22px_-18px_rgba(15,23,42,0.35)]
+                                               focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/30"
+                                        [class.bg-[linear-gradient(135deg,rgba(239,246,255,0.9),rgba(255,255,255,0.98))]]="selectedId() === leaf.id"
                                         [class.border-blue-200]="selectedId() === leaf.id"
                                         (click)="setSelected(leaf.id)"
                                       >
-                                        <span class="font-medium text-gray-900 truncate">{{
+                                        <span class="font-medium text-slate-900 truncate">{{
                                           leaf.title
                                         }}</span>
                                       </button>
@@ -764,16 +800,17 @@ import { readCourseSession, clearCourseSession } from '../course-access/auth-ses
                               }
                             } @else if (child.type === 'external') {
                               <a
-                                class="block rounded-md px-3 py-2 m-1 border border-transparent hover:bg-gray-50
-                                       focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
-                                [class.bg-blue-50]="selectedId() === child.id"
+                                class="block rounded-xl px-3.5 py-3 mb-2 border border-slate-200/80 bg-white/90
+                                       transition-all duration-200 hover:bg-white hover:border-slate-300 hover:shadow-[0_8px_22px_-18px_rgba(15,23,42,0.35)]
+                                       focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/30"
+                                [class.bg-[linear-gradient(135deg,rgba(239,246,255,0.92),rgba(255,255,255,0.98))]]="selectedId() === child.id"
                                 [class.border-blue-200]="selectedId() === child.id"
                                 [href]="child.externalUrl"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 (click)="setSelected(child.id)"
                               >
-                                <span class="font-medium text-gray-900 truncate">{{
+                                <span class="font-medium text-slate-900 truncate">{{
                                   child.title
                                 }}</span>
                                 <span class="ml-1 text-xs text-gray-500">↗</span>
@@ -781,13 +818,14 @@ import { readCourseSession, clearCourseSession } from '../course-access/auth-ses
                             } @else {
                               <button
                                 type="button"
-                                class="w-full text-left rounded-md px-3 py-2 m-1 border border-transparent hover:bg-gray-50
-                                       focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
-                                [class.bg-blue-50]="selectedId() === child.id"
+                                class="w-full text-left rounded-xl px-3.5 py-3 mb-2 border border-slate-200/80 bg-white/90
+                                       transition-all duration-200 hover:bg-white hover:border-slate-300 hover:shadow-[0_8px_22px_-18px_rgba(15,23,42,0.35)]
+                                       focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/30"
+                                [class.bg-[linear-gradient(135deg,rgba(239,246,255,0.92),rgba(255,255,255,0.98))]]="selectedId() === child.id"
                                 [class.border-blue-200]="selectedId() === child.id"
                                 (click)="setSelected(child.id)"
                               >
-                                <span class="font-medium text-gray-900 truncate">{{
+                                <span class="font-medium text-slate-900 truncate">{{
                                   child.title
                                 }}</span>
                               </button>
@@ -797,35 +835,42 @@ import { readCourseSession, clearCourseSession } from '../course-access/auth-ses
                       }
                     } @else if (item.type === 'external') {
                       <a
-                        class="block rounded-md px-3 py-3 m-1 border border-transparent hover:bg-gray-50
-                               focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
-                        [class.bg-blue-50]="selectedId() === item.id"
+                        class="block rounded-2xl px-4 py-3.5 mb-2 border border-slate-200/80 bg-white/92
+                               transition-all duration-200 hover:bg-white hover:border-slate-300 hover:shadow-[0_12px_26px_-20px_rgba(15,23,42,0.45)]
+                               focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/30"
+                        [class.bg-[linear-gradient(135deg,rgba(239,246,255,0.95),rgba(255,255,255,0.98))]]="selectedId() === item.id"
                         [class.border-blue-200]="selectedId() === item.id"
+                        [class.shadow-[0_16px_36px_-24px_rgba(37,99,235,0.45)]]="selectedId() === item.id"
                         [href]="item.externalUrl"
                         target="_blank"
                         rel="noopener noreferrer"
                         (click)="setSelected(item.id)"
                       >
-                        <span class="font-semibold text-gray-900 truncate">{{ item.title }}</span>
+                        <span class="font-semibold text-slate-900 truncate">{{ item.title }}</span>
                         <span class="ml-1 text-xs text-gray-500">↗</span>
                       </a>
                     } @else {
                       <button
                         type="button"
-                        class="w-full text-left rounded-md px-3 py-3 m-1 border border-transparent hover:bg-gray-50
-                               focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/40"
-                        [class.bg-blue-50]="selectedId() === item.id"
+                        class="w-full text-left rounded-2xl px-4 py-3.5 mb-2 border border-slate-200/80 bg-white/92
+                               transition-all duration-200 hover:bg-white hover:border-slate-300 hover:shadow-[0_12px_26px_-20px_rgba(15,23,42,0.45)]
+                               focus:outline-none focus-visible:ring-4 focus-visible:ring-blue-400/30"
+                        [class.bg-[linear-gradient(135deg,rgba(239,246,255,0.95),rgba(255,255,255,0.98))]]="selectedId() === item.id"
                         [class.border-blue-200]="selectedId() === item.id"
+                        [class.shadow-[0_16px_36px_-24px_rgba(37,99,235,0.45)]]="selectedId() === item.id"
                         (click)="setSelected(item.id)"
                       >
-                        <p class="font-semibold text-gray-900 truncate">{{ item.title }}</p>
+                        <p class="font-semibold text-slate-900 truncate">{{ item.title }}</p>
                         @if (item.summary) {
-                          <p class="mt-1 text-sm text-gray-600 line-clamp-2">{{ item.summary }}</p>
+                          <p class="mt-1 text-sm text-slate-600 line-clamp-2 leading-5">
+                            {{ item.summary }}
+                          </p>
                         }
                       </button>
                     }
                   }
-                </nav>
+                  </nav>
+                </div>
               </aside>
             </div>
           } @else {
@@ -854,6 +899,10 @@ export class CourseDetailsPageComponent {
 
   course = computed(() => this.coursesService.getBySlug(this.slug()));
   selectedId = signal<string | null>(null);
+  itemCount = computed(() => {
+    const c = this.course();
+    return c ? this.countItems(c.items) : 0;
+  });
 
   private expanded = signal<Set<string>>(new Set());
   private revealed = signal<Set<string>>(new Set());
@@ -1013,6 +1062,17 @@ export class CourseDetailsPageComponent {
       }
     }
     return null;
+  }
+
+  private countItems(items: CourseItem[]): number {
+    let total = 0;
+
+    for (const item of items) {
+      total += 1;
+      if (item.type === 'group') total += this.countItems(item.children);
+    }
+
+    return total;
   }
 
   private groupPathToId(items: CourseItem[], id: string, ancestors: string[] = []): string[] | null {
