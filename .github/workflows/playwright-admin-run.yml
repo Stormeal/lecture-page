@@ -53,6 +53,12 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
+      - name: Clean previous Playwright and Allure outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf ./src/tests/allure-results ./src/tests/allure-report ./src/tests/test-results
+
       - name: Run Playwright tests
         id: tests
         continue-on-error: true
@@ -71,7 +77,11 @@ jobs:
 
       - name: Generate Allure report
         if: always()
-        run: npx allure generate ./src/tests/allure-results -o ./src/tests/allure-report --clean
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf ./src/tests/allure-report
+          npx allure generate ./src/tests/allure-results -o ./src/tests/allure-report
 
       - name: Build (Angular)
         if: always()
