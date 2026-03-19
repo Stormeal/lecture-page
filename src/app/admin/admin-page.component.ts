@@ -183,6 +183,15 @@ type AdminTestRunResponse =
     }
   | { success: false; message?: string };
 
+type AdminDeployPageResponse =
+  | {
+      success: true;
+      runId: number;
+      runUrl: string;
+      workflowName: string;
+    }
+  | { success: false; message?: string };
+
 const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
 
 @Component({
@@ -663,6 +672,61 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
               >
                 Clear result
               </button>
+            </div>
+
+            <div class="mt-10 border-t border-gray-200 pt-6">
+              <div class="max-w-2xl">
+                <h3 class="text-lg font-semibold text-gray-900">Page Deploy</h3>
+                <p class="mt-1 text-sm text-gray-600">
+                  Trigger the GitHub Pages deployment workflow manually from the admin page.
+                </p>
+              </div>
+
+              @if (deployPageError()) {
+                <div class="mt-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                  {{ deployPageError() }}
+                </div>
+              }
+
+              @if (deployPageResult()) {
+                <div
+                  class="mt-4 rounded-md border border-green-200 bg-green-50 px-4 py-4 text-sm text-green-900"
+                >
+                  <p class="font-semibold">Deploy workflow dispatched.</p>
+                  <a
+                    class="mt-3 inline-flex items-center rounded-md border border-green-300 bg-white px-3 py-2 font-semibold text-green-800 hover:bg-green-100"
+                    [href]="deployPageResult()!.runUrl"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Open GitHub Actions run #{{ deployPageResult()!.runId }}
+                  </a>
+                </div>
+              }
+
+              <div class="mt-6 flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  class="inline-flex items-center rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-green-300"
+                  (click)="executePageDeploy()"
+                  [disabled]="deployPageSubmitting()"
+                >
+                  @if (deployPageSubmitting()) {
+                    Dispatching deployâ€¦
+                  } @else {
+                    Deploy page
+                  }
+                </button>
+
+                <button
+                  type="button"
+                  class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                  (click)="resetDeployPageResult()"
+                  [disabled]="deployPageSubmitting()"
+                >
+                  Clear deploy result
+                </button>
+              </div>
             </div>
           </div>
         }
@@ -1245,6 +1309,10 @@ export class AdminPageComponent {
   testRunnerValidationError = signal<string | null>(null);
   testRunnerResult = signal<Extract<AdminTestRunResponse, { success: true }> | null>(null);
 
+  deployPageSubmitting = signal(false);
+  deployPageError = signal<string | null>(null);
+  deployPageResult = signal<Extract<AdminDeployPageResponse, { success: true }> | null>(null);
+
   private adminSession = computed(() => findAnyAdminSession());
 
   constructor() {
@@ -1334,6 +1402,55 @@ export class AdminPageComponent {
       this.testRunnerError.set('Network error.');
     } finally {
       this.testRunnerSubmitting.set(false);
+    }
+  }
+
+  resetDeployPageResult() {
+    this.deployPageError.set(null);
+    this.deployPageResult.set(null);
+  }
+
+  async executePageDeploy() {
+    this.deployPageError.set(null);
+    this.deployPageResult.set(null);
+
+    const admin = this.adminSession();
+    if (!admin) {
+      this.deployPageError.set('Not logged in as admin.');
+      return;
+    }
+
+    this.deployPageSubmitting.set(true);
+
+    try {
+      const resp = await fetch(`${API_BASE_URL}/admin-deploy-page`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${admin.session.sessionId}`,
+        },
+      });
+
+      const data = (await resp.json()) as AdminDeployPageResponse;
+
+      if (!resp.ok) {
+        this.deployPageError.set(
+          data.success === false
+            ? (data.message ?? 'Failed to start page deploy.')
+            : `Failed to start page deploy (${resp.status}).`,
+        );
+        return;
+      }
+
+      if (data.success === false) {
+        this.deployPageError.set(data.message ?? 'Failed to start page deploy.');
+        return;
+      }
+
+      this.deployPageResult.set(data);
+    } catch {
+      this.deployPageError.set('Network error.');
+    } finally {
+      this.deployPageSubmitting.set(false);
     }
   }
 
