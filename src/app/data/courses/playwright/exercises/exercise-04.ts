@@ -490,7 +490,7 @@ test('example with logging', async ({ page }) => {
         },
         {
           type: 'p',
-          text: `A new crew member must be registered, and an existing crew member — Ava — requires a clearance upgrade due to changing mission requirements.`,
+          text: `A new crew member must be registered, and an existing crew member Ava requires a clearance upgrade due to changing mission requirements.`,
         },
         {
           type: 'p',
