@@ -1,0 +1,59 @@
+name: Playwright Admin Run
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment for the test run
+        required: true
+        type: choice
+        options:
+          - dev
+          - tst
+      suite_tag:
+        description: Optional suite tag without the @ prefix
+        required: false
+        type: string
+
+jobs:
+  run-playwright:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      TEST_ENV: ${{ inputs.environment }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-ms-playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          SUITE_TAG="${{ inputs.suite_tag }}"
+          if [ -n "$SUITE_TAG" ]; then
+            echo "Running suite @$SUITE_TAG against $TEST_ENV"
+            npx playwright test --grep "@$SUITE_TAG"
+          else
+            echo "Running full suite against $TEST_ENV"
+            npx playwright test
+          fi

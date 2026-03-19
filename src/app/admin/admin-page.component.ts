@@ -163,6 +163,26 @@ type AdminAnalyticsCourseResponse =
     }
   | { success: false; message?: string };
 
+type AdminTab = 'users' | 'test-runner';
+
+type TestRunnerEnvironment = 'dev' | 'tst';
+
+type AdminTestRunRequest = {
+  environment: TestRunnerEnvironment;
+  suiteTag: string | null;
+};
+
+type AdminTestRunResponse =
+  | {
+      success: true;
+      runId: number;
+      runUrl: string;
+      workflowName: string;
+      environment: string;
+      suiteTag: string | null;
+    }
+  | { success: false; message?: string };
+
 const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
 
 @Component({
@@ -197,6 +217,42 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
             </a>
           </div>
         </header>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <button
+            type="button"
+            class="rounded-md px-4 py-2 text-sm font-semibold transition-colors"
+            [class.bg-blue-600]="activeTab() === 'users'"
+            [class.text-white]="activeTab() === 'users'"
+            [class.hover:bg-blue-700]="activeTab() === 'users'"
+            [class.bg-white]="activeTab() !== 'users'"
+            [class.text-gray-700]="activeTab() !== 'users'"
+            [class.border]="activeTab() !== 'users'"
+            [class.border-gray-300]="activeTab() !== 'users'"
+            [class.hover:bg-gray-50]="activeTab() !== 'users'"
+            (click)="setActiveTab('users')"
+          >
+            Users & analytics
+          </button>
+
+          <button
+            type="button"
+            class="rounded-md px-4 py-2 text-sm font-semibold transition-colors"
+            [class.bg-blue-600]="activeTab() === 'test-runner'"
+            [class.text-white]="activeTab() === 'test-runner'"
+            [class.hover:bg-blue-700]="activeTab() === 'test-runner'"
+            [class.bg-white]="activeTab() !== 'test-runner'"
+            [class.text-gray-700]="activeTab() !== 'test-runner'"
+            [class.border]="activeTab() !== 'test-runner'"
+            [class.border-gray-300]="activeTab() !== 'test-runner'"
+            [class.hover:bg-gray-50]="activeTab() !== 'test-runner'"
+            (click)="setActiveTab('test-runner')"
+          >
+            Test Runner
+          </button>
+        </div>
+
+        @if (activeTab() === 'users') {
 
         <!-- USERS -->
         <div class="mt-6 rounded-lg bg-white shadow p-6">
@@ -510,6 +566,106 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
             </div>
           }
         </div>
+        } @else {
+          <div class="mt-6 rounded-lg bg-white shadow p-6">
+            <div class="max-w-2xl">
+              <h2 class="text-lg font-semibold text-gray-900">Test Runner</h2>
+              <p class="mt-1 text-sm text-gray-600">
+                Dispatch a GitHub Actions workflow to run the automated Playwright suite.
+              </p>
+              <p class="mt-2 text-xs text-gray-500">
+                The suite field maps to <span class="font-mono">--grep "@suite"</span>. Leave it
+                blank to run the full workflow.
+              </p>
+            </div>
+
+            <div class="mt-6 grid gap-4 md:grid-cols-2">
+              <label class="block">
+                <span class="mb-2 block text-sm font-semibold text-gray-800">Environment</span>
+                <select
+                  class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                  [value]="testRunnerEnvironment()"
+                  (change)="onTestRunnerEnvironmentChanged($event)"
+                >
+                  <option value="dev">dev</option>
+                </select>
+              </label>
+
+              <label class="block">
+                <span class="mb-2 block text-sm font-semibold text-gray-800">Suite tag</span>
+                <input
+                  class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                  placeholder="smoke"
+                  [value]="testRunnerSuiteInput()"
+                  (input)="testRunnerSuiteInput.set(($any($event.target).value ?? '').toString())"
+                />
+              </label>
+            </div>
+
+            @if (testRunnerValidationError()) {
+              <div
+                class="mt-4 rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+              >
+                {{ testRunnerValidationError() }}
+              </div>
+            }
+
+            @if (testRunnerError()) {
+              <div class="mt-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                {{ testRunnerError() }}
+              </div>
+            }
+
+            @if (testRunnerResult()) {
+              <div
+                class="mt-4 rounded-md border border-green-200 bg-green-50 px-4 py-4 text-sm text-green-900"
+              >
+                <p class="font-semibold">Workflow dispatched.</p>
+                <p class="mt-1">
+                  {{ testRunnerResult()!.workflowName }} for
+                  <span class="font-semibold">{{ testRunnerResult()!.environment }}</span>
+                  @if (testRunnerResult()!.suiteTag) {
+                    with suite <span class="font-semibold">{{ testRunnerResult()!.suiteTag }}</span>
+                  } @else {
+                    with the full suite
+                  }.
+                </p>
+                <a
+                  class="mt-3 inline-flex items-center rounded-md border border-green-300 bg-white px-3 py-2 font-semibold text-green-800 hover:bg-green-100"
+                  [href]="testRunnerResult()!.runUrl"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Open GitHub Actions run #{{ testRunnerResult()!.runId }}
+                </a>
+              </div>
+            }
+
+            <div class="mt-6 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                class="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+                (click)="executeTestRun()"
+                [disabled]="testRunnerSubmitting()"
+              >
+                @if (testRunnerSubmitting()) {
+                  Executingâ€¦
+                } @else {
+                  Execute
+                }
+              </button>
+
+              <button
+                type="button"
+                class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                (click)="resetTestRunnerResult()"
+                [disabled]="testRunnerSubmitting()"
+              >
+                Clear result
+              </button>
+            </div>
+          </div>
+        }
       </div>
     </div>
 
@@ -1025,6 +1181,7 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
   `,
 })
 export class AdminPageComponent {
+  activeTab = signal<AdminTab>('users');
   users = signal<AdminUser[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
@@ -1081,6 +1238,13 @@ export class AdminPageComponent {
   deleteError = signal<string | null>(null);
   deleteUsername = signal('');
 
+  testRunnerEnvironment = signal<TestRunnerEnvironment>('dev');
+  testRunnerSuiteInput = signal('');
+  testRunnerSubmitting = signal(false);
+  testRunnerError = signal<string | null>(null);
+  testRunnerValidationError = signal<string | null>(null);
+  testRunnerResult = signal<Extract<AdminTestRunResponse, { success: true }> | null>(null);
+
   private adminSession = computed(() => findAnyAdminSession());
 
   constructor() {
@@ -1088,6 +1252,89 @@ export class AdminPageComponent {
       void this.loadUsers();
       void this.loadAnalytics();
     });
+  }
+
+  setActiveTab(tab: AdminTab) {
+    this.activeTab.set(tab);
+  }
+
+  onTestRunnerEnvironmentChanged(event: Event) {
+    const value = (event.target as HTMLSelectElement).value;
+    if (value === 'dev' || value === 'tst') {
+      this.testRunnerEnvironment.set(value);
+      this.testRunnerValidationError.set(null);
+    }
+  }
+
+  resetTestRunnerResult() {
+    this.testRunnerError.set(null);
+    this.testRunnerValidationError.set(null);
+    this.testRunnerResult.set(null);
+  }
+
+  private normalizeSuiteTag(value: string) {
+    const trimmed = String(value ?? '').trim();
+    if (!trimmed) return null;
+    return trimmed.replace(/^@+/, '') || null;
+  }
+
+  async executeTestRun() {
+    this.testRunnerError.set(null);
+    this.testRunnerValidationError.set(null);
+    this.testRunnerResult.set(null);
+
+    const admin = this.adminSession();
+    if (!admin) {
+      this.testRunnerError.set('Not logged in as admin.');
+      return;
+    }
+
+    const environment = this.testRunnerEnvironment();
+    if (!environment) {
+      this.testRunnerValidationError.set('Please select an environment.');
+      return;
+    }
+
+    const payload: AdminTestRunRequest = {
+      environment,
+      suiteTag: this.normalizeSuiteTag(this.testRunnerSuiteInput()),
+    };
+
+    this.testRunnerSubmitting.set(true);
+
+    try {
+      const resp = await fetch(`${API_BASE_URL}/admin-test-runs`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${admin.session.sessionId}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = (await resp.json()) as AdminTestRunResponse;
+
+      if (!resp.ok) {
+        this.testRunnerError.set(
+          data.success === false
+            ? (data.message ?? 'Failed to start test run.')
+            : `Failed to start test run (${resp.status}).`,
+        );
+        return;
+      }
+
+      if (data.success === false) {
+        this.testRunnerError.set(data.message ?? 'Failed to start test run.');
+        return;
+      }
+
+      this.testRunnerSuiteInput.set(data.suiteTag ?? '');
+      this.testRunnerResult.set(data);
+    } catch {
+      this.testRunnerError.set('Network error.');
+    } finally {
+      this.testRunnerSubmitting.set(false);
+    }
   }
 
   // ---------- ANALYTICS ----------
