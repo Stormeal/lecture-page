@@ -4,7 +4,7 @@ test.afterEach('Close browser', async ({ page }) => {
   page.close();
 });
 
-test('Exercise 2 - Filling out the forms', async ({ page }) => {
+test('Exercise 2 - Filling out the forms', { tag: ['@ex2', '@smoke'] }, async ({ page }) => {
   const cookieBotDialogHeader = page.locator('#CybotCookiebotDialogHeader');
   const header = page.locator('#site-header');
   const courseMenuBtn = header.getByRole('link', { name: 'Kursus' });

@@ -22,7 +22,7 @@ test.afterEach('Close browser', async ({ page }) => {
   page.close();
 });
 
-test('Exercise 5 - Control Elements', async ({ page }) => {
+test('Exercise 5 - Control Elements', { tag: ['@ex5', '@smoke'] }, async ({ page }) => {
   const baseUrl: string = 'https://stormeal.github.io/lecture-page/test-site';
   const nameInput = page.getByTestId('contact-name');
   const emailInput = page.getByTestId('contact-email');

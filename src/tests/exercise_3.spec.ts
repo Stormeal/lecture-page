@@ -4,7 +4,7 @@ test.afterEach('Close browser', async ({ page }) => {
   page.close();
 });
 
-test('Exercise 3 - Filling out the forms', async ({ page }) => {
+test('Exercise 3 - Filling out the forms', { tag: ['@ex3', '@regression'] }, async ({ page }) => {
   const baseUrl: string = 'https://stormeal.github.io/lecture-page/test-site';
   const nameInput = page.getByTestId('contact-name');
   const emailInput = page.getByTestId('contact-email');
