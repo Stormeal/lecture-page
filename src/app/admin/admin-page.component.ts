@@ -576,23 +576,47 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
           }
         </div>
         } @else {
-          <div class="mt-6 rounded-lg bg-white shadow p-6">
-            <div class="max-w-2xl">
-              <h2 class="text-lg font-semibold text-gray-900">Test Runner</h2>
-              <p class="mt-1 text-sm text-gray-600">
-                Dispatch a GitHub Actions workflow to run the automated Playwright suite.
-              </p>
-              <p class="mt-2 text-xs text-gray-500">
-                The suite field maps to <span class="font-mono">--grep "@suite"</span>. Leave it
-                blank to run the full workflow.
-              </p>
+          <div class="mt-6 overflow-hidden rounded-[28px] border border-neutral-200 bg-neutral-50 shadow-[0_22px_60px_-30px_rgba(15,23,42,0.35)]">
+            <div class="border-b border-neutral-200 bg-[linear-gradient(135deg,#861f1f_0%,#c62828_52%,#f2f2f2_52%,#f8f6f2_100%)] px-6 py-8 text-white md:px-8">
+              <div class="max-w-3xl">
+                <div class="inline-flex items-center rounded-full border border-white/30 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em]">
+                  DSB Operations
+                </div>
+                <h2 class="mt-4 text-2xl font-semibold tracking-tight">Test Runner</h2>
+                <p class="mt-2 max-w-2xl text-sm text-white/85">
+                  Start an automated validation run, monitor the workflow in GitHub Actions, and open the latest published report.
+                </p>
+              </div>
+            </div>
+
+            <div class="grid gap-6 p-6 md:grid-cols-[minmax(0,1.4fr)_minmax(280px,0.8fr)] md:p-8">
+              <section class="rounded-[24px] border border-neutral-200 bg-white p-6 shadow-sm">
+            <div class="flex flex-wrap items-start justify-between gap-4">
+              <div class="max-w-2xl">
+                <p class="text-xs font-semibold uppercase tracking-[0.22em] text-red-700">
+                  Run configuration
+                </p>
+                <h3 class="mt-2 text-xl font-semibold text-neutral-900">Dispatch test workflow</h3>
+                <p class="mt-2 text-sm text-neutral-600">
+                  Suite input maps to <span class="font-mono text-[13px] text-neutral-900">--grep "@suite"</span>. Leave it blank to run the full suite.
+                </p>
+              </div>
+
+              <a
+                routerLink="/reports"
+                class="inline-flex items-center rounded-full border border-neutral-300 bg-neutral-100 px-4 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-white"
+              >
+                View report
+              </a>
             </div>
 
             <div class="mt-6 grid gap-4 md:grid-cols-2">
               <label class="block">
-                <span class="mb-2 block text-sm font-semibold text-gray-800">Environment</span>
+                <span class="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-neutral-500">
+                  Environment
+                </span>
                 <select
-                  class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                  class="w-full rounded-2xl border border-neutral-300 bg-neutral-50 px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-red-500 focus:bg-white"
                   [value]="testRunnerEnvironment()"
                   (change)="onTestRunnerEnvironmentChanged($event)"
                 >
@@ -601,9 +625,11 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
               </label>
 
               <label class="block">
-                <span class="mb-2 block text-sm font-semibold text-gray-800">Suite tag</span>
+                <span class="mb-2 block text-xs font-semibold uppercase tracking-[0.18em] text-neutral-500">
+                  Suite tag
+                </span>
                 <input
-                  class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+                  class="w-full rounded-2xl border border-neutral-300 bg-neutral-50 px-4 py-3 text-sm text-neutral-900 outline-none transition focus:border-red-500 focus:bg-white"
                   placeholder="smoke"
                   [value]="testRunnerSuiteInput()"
                   (input)="testRunnerSuiteInput.set(($any($event.target).value ?? '').toString())"
@@ -613,23 +639,23 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
 
             @if (testRunnerValidationError()) {
               <div
-                class="mt-4 rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+                class="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900"
               >
                 {{ testRunnerValidationError() }}
               </div>
             }
 
             @if (testRunnerError()) {
-              <div class="mt-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+              <div class="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
                 {{ testRunnerError() }}
               </div>
             }
 
             @if (testRunnerResult()) {
               <div
-                class="mt-4 rounded-md border border-green-200 bg-green-50 px-4 py-4 text-sm text-green-900"
+                class="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm text-emerald-900"
               >
-                <p class="font-semibold">Workflow dispatched.</p>
+                <p class="font-semibold">Workflow dispatched successfully.</p>
                 <p class="mt-1">
                   {{ testRunnerResult()!.workflowName }} for
                   <span class="font-semibold">{{ testRunnerResult()!.environment }}</span>
@@ -639,34 +665,49 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
                     with the full suite
                   }.
                 </p>
-                <a
-                  class="mt-3 inline-flex items-center rounded-md border border-green-300 bg-white px-3 py-2 font-semibold text-green-800 hover:bg-green-100"
-                  [href]="testRunnerResult()!.runUrl"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Open GitHub Actions run #{{ testRunnerResult()!.runId }}
-                </a>
+                <div class="mt-3 flex flex-wrap gap-3">
+                  <a
+                    class="inline-flex items-center rounded-full border border-emerald-300 bg-white px-4 py-2 font-semibold text-emerald-800 transition hover:bg-emerald-100"
+                    [href]="testRunnerResult()!.runUrl"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Open run #{{ testRunnerResult()!.runId }}
+                  </a>
+                  <a
+                    routerLink="/reports"
+                    class="inline-flex items-center rounded-full border border-neutral-300 bg-neutral-100 px-4 py-2 font-semibold text-neutral-700 transition hover:bg-white"
+                  >
+                    Open report
+                  </a>
+                </div>
               </div>
             }
 
             <div class="mt-6 flex flex-wrap items-center gap-3">
               <button
                 type="button"
-                class="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+                class="inline-flex items-center rounded-full bg-red-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-red-800 disabled:cursor-not-allowed disabled:bg-red-300"
                 (click)="executeTestRun()"
                 [disabled]="testRunnerSubmitting()"
               >
                 @if (testRunnerSubmitting()) {
                   Executingâ€¦
                 } @else {
-                  Execute
+                  Execute tests
                 }
               </button>
 
+              <a
+                routerLink="/reports"
+                class="inline-flex items-center rounded-full border border-neutral-300 bg-white px-5 py-3 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-100"
+              >
+                View report
+              </a>
+
               <button
                 type="button"
-                class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                class="inline-flex items-center rounded-full border border-neutral-300 bg-neutral-100 px-5 py-3 text-sm font-semibold text-neutral-700 transition hover:bg-white"
                 (click)="resetTestRunnerResult()"
                 [disabled]="testRunnerSubmitting()"
               >
@@ -674,32 +715,61 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
               </button>
             </div>
 
-            <div class="mt-10 border-t border-gray-200 pt-6">
-              <div class="max-w-2xl">
-                <h3 class="text-lg font-semibold text-gray-900">Page Deploy</h3>
-                <p class="mt-1 text-sm text-gray-600">
+              </section>
+
+              <aside class="space-y-6">
+              <section class="rounded-[24px] border border-neutral-200 bg-white p-6 shadow-sm">
+                <div class="max-w-2xl">
+                  <p class="text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500">
+                    Operational notes
+                  </p>
+                  <div class="mt-4 space-y-4 text-sm text-neutral-600">
+                    <div class="rounded-2xl bg-neutral-100 p-4">
+                      <p class="font-semibold text-neutral-900">Latest report</p>
+                      <p class="mt-1">
+                        The published Allure report is updated from the latest admin-triggered test run.
+                      </p>
+                    </div>
+                    <div class="rounded-2xl bg-neutral-100 p-4">
+                      <p class="font-semibold text-neutral-900">Filtering</p>
+                      <p class="mt-1">
+                        Use tags like <span class="font-mono text-[13px] text-neutral-900">@smoke</span> and
+                        <span class="font-mono text-[13px] text-neutral-900"> @regression</span> to target subsets.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="rounded-[24px] border border-neutral-200 bg-white p-6 shadow-sm">
+                <div class="max-w-2xl">
+                  <p class="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700">
+                    Publish
+                  </p>
+                  <h3 class="mt-2 text-xl font-semibold text-neutral-900">Page Deploy</h3>
+                  <p class="mt-2 text-sm text-neutral-600">
                   Trigger the GitHub Pages deployment workflow manually from the admin page.
-                </p>
-              </div>
+                  </p>
+                </div>
 
               @if (deployPageError()) {
-                <div class="mt-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                <div class="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
                   {{ deployPageError() }}
                 </div>
               }
 
               @if (deployPageResult()) {
                 <div
-                  class="mt-4 rounded-md border border-green-200 bg-green-50 px-4 py-4 text-sm text-green-900"
+                  class="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm text-emerald-900"
                 >
                   <p class="font-semibold">Deploy workflow dispatched.</p>
                   <a
-                    class="mt-3 inline-flex items-center rounded-md border border-green-300 bg-white px-3 py-2 font-semibold text-green-800 hover:bg-green-100"
+                    class="mt-3 inline-flex items-center rounded-full border border-emerald-300 bg-white px-4 py-2 font-semibold text-emerald-800 transition hover:bg-emerald-100"
                     [href]="deployPageResult()!.runUrl"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    Open GitHub Actions run #{{ deployPageResult()!.runId }}
+                    Open run #{{ deployPageResult()!.runId }}
                   </a>
                 </div>
               }
@@ -707,7 +777,7 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
               <div class="mt-6 flex flex-wrap items-center gap-3">
                 <button
                   type="button"
-                  class="inline-flex items-center rounded-md bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-green-300"
+                  class="inline-flex items-center rounded-full bg-neutral-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-neutral-700 disabled:cursor-not-allowed disabled:bg-neutral-400"
                   (click)="executePageDeploy()"
                   [disabled]="deployPageSubmitting()"
                 >
@@ -720,15 +790,17 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
 
                 <button
                   type="button"
-                  class="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+                  class="inline-flex items-center rounded-full border border-neutral-300 bg-neutral-100 px-5 py-3 text-sm font-semibold text-neutral-700 transition hover:bg-white"
                   (click)="resetDeployPageResult()"
                   [disabled]="deployPageSubmitting()"
                 >
                   Clear deploy result
                 </button>
-              </div>
-            </div>
+                  </div>
+                </section>
+              </aside>
           </div>
+        </div>
         }
       </div>
     </div>
