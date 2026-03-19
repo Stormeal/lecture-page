@@ -63,6 +63,43 @@ jobs:
 
           echo "Resolved OUT_DIR=$OUT_DIR"
           echo "out_dir=$OUT_DIR" >> "$GITHUB_OUTPUT"
+
+      - name: Preserve current Allure report
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          OUT_DIR="${{ steps.out.outputs.out_dir }}"
+          OWNER="${{ github.repository_owner }}"
+          REPO="${{ github.event.repository.name }}"
+          ALLURE_URL="https://${OWNER}.github.io/${REPO}/allure/"
+          TMP_DIR="$(mktemp -d)"
+
+          echo "Attempting to preserve existing Allure report from $ALLURE_URL"
+
+          if wget \
+            --recursive \
+            --no-parent \
+            --page-requisites \
+            --no-host-directories \
+            --cut-dirs=1 \
+            --directory-prefix="$TMP_DIR" \
+            --reject "index.html.tmp*" \
+            "$ALLURE_URL"; then
+            if [ -d "$TMP_DIR/allure" ]; then
+              mkdir -p "$OUT_DIR/allure"
+              cp -R "$TMP_DIR/allure/." "$OUT_DIR/allure/"
+              echo "Preserved existing Allure report."
+            elif [ -d "$TMP_DIR/${REPO}/allure" ]; then
+              mkdir -p "$OUT_DIR/allure"
+              cp -R "$TMP_DIR/${REPO}/allure/." "$OUT_DIR/allure/"
+              echo "Preserved existing Allure report."
+            else
+              echo "Allure report download completed but no allure folder was found. Skipping preserve step."
+            fi
+          else
+            echo "No existing Allure report found to preserve. Continuing."
+          fi
       - name: SPA fallback for GitHub Pages (404.html)
         shell: bash
         run: |
