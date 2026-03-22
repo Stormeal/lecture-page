@@ -183,6 +183,27 @@ type AdminTestRunResponse =
     }
   | { success: false; message?: string };
 
+type AdminTestRunHistoryItem = {
+  runId: number;
+  runNumber: number;
+  runUrl: string;
+  workflowName: string;
+  title: string;
+  status: string;
+  conclusion: string | null;
+  createdAt: string | null;
+  updatedAt: string | null;
+  actor: string | null;
+  event: string | null;
+};
+
+type AdminTestRunHistoryResponse =
+  | {
+      success: true;
+      runs: AdminTestRunHistoryItem[];
+    }
+  | { success: false; message?: string };
+
 type AdminDeployPageResponse =
   | {
       success: true;
@@ -193,6 +214,7 @@ type AdminDeployPageResponse =
   | { success: false; message?: string };
 
 const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
+const ADMIN_ACTIVE_TAB_STORAGE_KEY = 'lecture-page.admin.active-tab';
 
 @Component({
   selector: 'app-admin-page',
@@ -201,13 +223,43 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
   template: `
     <div class="min-h-screen xp-background p-6">
       <div class="max-w-6xl mx-auto">
-        <header class="flex items-center justify-between gap-4">
-          <div>
+        <header class="grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(220px,1fr)_auto_minmax(220px,1fr)] lg:items-center">
+          <div class="min-w-0">
             <h1 class="text-2xl font-bold text-gray-900">Admin</h1>
             <p class="mt-1 text-sm text-gray-600">User management.</p>
           </div>
 
-          <div class="flex gap-3">
+          <div class="flex justify-start lg:justify-center">
+            <div class="inline-flex rounded-2xl border border-gray-200 bg-white p-1 shadow-sm">
+              <button
+                type="button"
+                class="rounded-xl px-4 py-2 text-sm font-semibold transition-colors"
+                [class.bg-red-700]="activeTab() === 'users'"
+                [class.text-white]="activeTab() === 'users'"
+                [class.shadow-sm]="activeTab() === 'users'"
+                [class.text-gray-700]="activeTab() !== 'users'"
+                [class.hover:bg-gray-100]="activeTab() !== 'users'"
+                (click)="setActiveTab('users')"
+              >
+                Users & analytics
+              </button>
+
+              <button
+                type="button"
+                class="rounded-xl px-4 py-2 text-sm font-semibold transition-colors"
+                [class.bg-red-700]="activeTab() === 'test-runner'"
+                [class.text-white]="activeTab() === 'test-runner'"
+                [class.shadow-sm]="activeTab() === 'test-runner'"
+                [class.text-gray-700]="activeTab() !== 'test-runner'"
+                [class.hover:bg-gray-100]="activeTab() !== 'test-runner'"
+                (click)="setActiveTab('test-runner')"
+              >
+                Test Runner
+              </button>
+            </div>
+          </div>
+
+          <div class="flex gap-3 lg:justify-end">
             <button
               type="button"
               class="inline-flex items-center rounded-md bg-blue-600 px-4 py-2
@@ -226,40 +278,6 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
             </a>
           </div>
         </header>
-
-        <div class="mt-6 flex flex-wrap gap-2">
-          <button
-            type="button"
-            class="rounded-md px-4 py-2 text-sm font-semibold transition-colors"
-            [class.bg-blue-600]="activeTab() === 'users'"
-            [class.text-white]="activeTab() === 'users'"
-            [class.hover:bg-blue-700]="activeTab() === 'users'"
-            [class.bg-white]="activeTab() !== 'users'"
-            [class.text-gray-700]="activeTab() !== 'users'"
-            [class.border]="activeTab() !== 'users'"
-            [class.border-gray-300]="activeTab() !== 'users'"
-            [class.hover:bg-gray-50]="activeTab() !== 'users'"
-            (click)="setActiveTab('users')"
-          >
-            Users & analytics
-          </button>
-
-          <button
-            type="button"
-            class="rounded-md px-4 py-2 text-sm font-semibold transition-colors"
-            [class.bg-blue-600]="activeTab() === 'test-runner'"
-            [class.text-white]="activeTab() === 'test-runner'"
-            [class.hover:bg-blue-700]="activeTab() === 'test-runner'"
-            [class.bg-white]="activeTab() !== 'test-runner'"
-            [class.text-gray-700]="activeTab() !== 'test-runner'"
-            [class.border]="activeTab() !== 'test-runner'"
-            [class.border-gray-300]="activeTab() !== 'test-runner'"
-            [class.hover:bg-gray-50]="activeTab() !== 'test-runner'"
-            (click)="setActiveTab('test-runner')"
-          >
-            Test Runner
-          </button>
-        </div>
 
         @if (activeTab() === 'users') {
 
@@ -577,7 +595,7 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
         </div>
         } @else {
           <div class="mt-6 overflow-hidden rounded-[28px] border border-neutral-200 bg-neutral-50 shadow-[0_22px_60px_-30px_rgba(15,23,42,0.35)]">
-            <div class="border-b border-neutral-200 bg-[linear-gradient(135deg,#861f1f_0%,#c62828_52%,#f2f2f2_52%,#f8f6f2_100%)] px-6 py-8 text-white md:px-8">
+            <div class="border-b border-neutral-200 bg-[linear-gradient(135deg,#861f1f_0%,#c62828_68%,#f2f2f2_68%,#f8f6f2_100%)] px-6 py-8 text-white md:px-8">
               <div class="max-w-3xl">
                 <div class="inline-flex items-center rounded-full border border-white/30 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em]">
                   DSB Operations
@@ -668,9 +686,7 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
                 <div class="mt-3 flex flex-wrap gap-3">
                   <a
                     class="inline-flex items-center rounded-full border border-emerald-300 bg-white px-4 py-2 font-semibold text-emerald-800 transition hover:bg-emerald-100"
-                    [href]="testRunnerResult()!.runUrl"
-                    target="_blank"
-                    rel="noreferrer"
+                    [routerLink]="['/admin/test-runs', testRunnerResult()!.runId]"
                   >
                     Open run #{{ testRunnerResult()!.runId }}
                   </a>
@@ -739,6 +755,78 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
                     </div>
                   </div>
                 </div>
+              </section>
+
+              <section class="rounded-[24px] border border-neutral-200 bg-white p-6 shadow-sm">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <p class="text-xs font-semibold uppercase tracking-[0.22em] text-neutral-500">
+                      Recent runs
+                    </p>
+                    <h3 class="mt-2 text-lg font-semibold text-neutral-900">Latest 10 executions</h3>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="inline-flex items-center rounded-full border border-neutral-300 bg-neutral-100 px-4 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-white"
+                    (click)="reloadTestRunHistory()"
+                    [disabled]="testRunHistoryLoading()"
+                  >
+                    @if (testRunHistoryLoading()) {
+                      Refreshing...
+                    } @else {
+                      Refresh
+                    }
+                  </button>
+                </div>
+
+                @if (testRunHistoryError()) {
+                  <div class="mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                    {{ testRunHistoryError() }}
+                  </div>
+                } @else if (testRunHistoryLoading() && testRunHistory().length === 0) {
+                  <p class="mt-4 text-sm text-neutral-600">Loading recent runs...</p>
+                } @else if (testRunHistory().length === 0) {
+                  <p class="mt-4 text-sm text-neutral-600">No recent runs found.</p>
+                } @else {
+                  <div class="mt-4 space-y-3">
+                    @for (run of testRunHistory(); track run.runId) {
+                      <a
+                        [routerLink]="['/admin/test-runs', run.runId]"
+                        class="block rounded-2xl border border-neutral-200 bg-neutral-50 p-4 transition hover:border-neutral-300 hover:bg-white"
+                      >
+                        <div class="flex items-start justify-between gap-3">
+                          <div class="min-w-0">
+                            <div class="flex flex-wrap items-center gap-2">
+                              <span class="text-sm font-semibold text-neutral-900">
+                                #{{ run.runNumber }}
+                              </span>
+                              <span
+                                class="inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold"
+                                [class]="runStateClasses(run)"
+                              >
+                                {{ formatRunState(run) }}
+                              </span>
+                            </div>
+                            <p class="mt-2 truncate text-sm font-medium text-neutral-800">
+                              {{ run.title }}
+                            </p>
+                            <p class="mt-1 text-xs text-neutral-500">
+                              {{ formatDateTime(run.createdAt) }}
+                              @if (run.actor) {
+                                · {{ run.actor }}
+                              }
+                            </p>
+                          </div>
+
+                          <span class="shrink-0 text-xs font-semibold uppercase tracking-[0.16em] text-neutral-500">
+                            Details
+                          </span>
+                        </div>
+                      </a>
+                    }
+                  </div>
+                }
               </section>
 
               <section class="rounded-[24px] border border-neutral-200 bg-white p-6 shadow-sm">
@@ -1317,7 +1405,7 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
   `,
 })
 export class AdminPageComponent {
-  activeTab = signal<AdminTab>('users');
+  activeTab = signal<AdminTab>(this.readStoredActiveTab());
   users = signal<AdminUser[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
@@ -1380,6 +1468,9 @@ export class AdminPageComponent {
   testRunnerError = signal<string | null>(null);
   testRunnerValidationError = signal<string | null>(null);
   testRunnerResult = signal<Extract<AdminTestRunResponse, { success: true }> | null>(null);
+  testRunHistoryLoading = signal(false);
+  testRunHistoryError = signal<string | null>(null);
+  testRunHistory = signal<AdminTestRunHistoryItem[]>([]);
 
   deployPageSubmitting = signal(false);
   deployPageError = signal<string | null>(null);
@@ -1396,6 +1487,10 @@ export class AdminPageComponent {
 
   setActiveTab(tab: AdminTab) {
     this.activeTab.set(tab);
+    this.storeActiveTab(tab);
+    if (tab === 'test-runner' && this.testRunHistory().length === 0 && !this.testRunHistoryLoading()) {
+      void this.loadTestRunHistory();
+    }
   }
 
   onTestRunnerEnvironmentChanged(event: Event) {
@@ -1470,11 +1565,105 @@ export class AdminPageComponent {
 
       this.testRunnerSuiteInput.set(data.suiteTag ?? '');
       this.testRunnerResult.set(data);
+      await this.loadTestRunHistory();
     } catch {
       this.testRunnerError.set('Network error.');
     } finally {
       this.testRunnerSubmitting.set(false);
     }
+  }
+
+  async reloadTestRunHistory() {
+    await this.loadTestRunHistory();
+  }
+
+  private async loadTestRunHistory() {
+    this.testRunHistoryError.set(null);
+
+    const admin = this.adminSession();
+    if (!admin) {
+      this.testRunHistory.set([]);
+      this.testRunHistoryError.set('Not logged in as admin.');
+      return;
+    }
+
+    this.testRunHistoryLoading.set(true);
+
+    try {
+      const resp = await fetch(`${API_BASE_URL}/admin-test-runs-history`, {
+        headers: {
+          Authorization: `Bearer ${admin.session.sessionId}`,
+        },
+      });
+
+      const data = (await resp.json()) as AdminTestRunHistoryResponse;
+
+      if (!resp.ok) {
+        this.testRunHistory.set([]);
+        this.testRunHistoryError.set(
+          data.success === false
+            ? (data.message ?? `Failed to load run history (${resp.status}).`)
+            : `Failed to load run history (${resp.status}).`,
+        );
+        return;
+      }
+
+      if (data.success === false) {
+        this.testRunHistory.set([]);
+        this.testRunHistoryError.set(data.message ?? 'Failed to load run history.');
+        return;
+      }
+
+      this.testRunHistory.set(data.runs);
+    } catch {
+      this.testRunHistory.set([]);
+      this.testRunHistoryError.set('Network error.');
+    } finally {
+      this.testRunHistoryLoading.set(false);
+    }
+  }
+
+  formatRunState(run: AdminTestRunHistoryItem) {
+    if (run.status !== 'completed') {
+      return this.startCase(run.status);
+    }
+
+    return this.startCase(run.conclusion ?? 'completed');
+  }
+
+  runStateClasses(run: AdminTestRunHistoryItem) {
+    if (run.status === 'completed' && run.conclusion === 'success') {
+      return 'bg-emerald-100 text-emerald-800';
+    }
+
+    if (run.status === 'completed' && (run.conclusion === 'failure' || run.conclusion === 'cancelled' || run.conclusion === 'timed_out')) {
+      return 'bg-red-100 text-red-800';
+    }
+
+    if (run.status === 'in_progress' || run.status === 'queued' || run.status === 'waiting') {
+      return 'bg-amber-100 text-amber-900';
+    }
+
+    return 'bg-neutral-200 text-neutral-700';
+  }
+
+  private startCase(value: string) {
+    return String(value ?? '')
+      .replace(/[_-]+/g, ' ')
+      .trim()
+      .replace(/\b\w/g, (char) => char.toUpperCase());
+  }
+
+  private readStoredActiveTab(): AdminTab {
+    if (typeof window === 'undefined') return 'users';
+
+    const stored = window.localStorage.getItem(ADMIN_ACTIVE_TAB_STORAGE_KEY);
+    return stored === 'test-runner' ? 'test-runner' : 'users';
+  }
+
+  private storeActiveTab(tab: AdminTab) {
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem(ADMIN_ACTIVE_TAB_STORAGE_KEY, tab);
   }
 
   resetDeployPageResult() {
