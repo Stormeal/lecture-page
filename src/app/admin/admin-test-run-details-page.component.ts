@@ -66,7 +66,7 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
 
             @if (runDetail()) {
               <a
-                [href]="reportHref(runDetail()!.runId)"
+                [href]="reportRouteHref(runDetail()!.runId)"
                 target="_blank"
                 rel="noreferrer"
                 class="inline-flex items-center rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50"
@@ -412,8 +412,8 @@ export class AdminTestRunDetailsPageComponent {
       .replace(/\b\w/g, (char) => char.toUpperCase());
   }
 
-  reportHref(runId?: number | null) {
-    const path = runId ? `/lecture-page/allure/runs/${runId}/` : '/lecture-page/allure/';
+  reportRouteHref(runId?: number | null) {
+    const path = runId ? `/lecture-page/reports/${runId}` : '/lecture-page/reports';
 
     if (typeof window === 'undefined') {
       return `https://stormeal.github.io${path}`;

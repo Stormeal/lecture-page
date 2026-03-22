@@ -621,7 +621,7 @@ const ADMIN_ACTIVE_TAB_STORAGE_KEY = 'lecture-page.admin.active-tab';
               </div>
 
               <a
-                [href]="reportHref()"
+                [href]="reportRouteHref()"
                 target="_blank"
                 rel="noreferrer"
                 class="inline-flex items-center rounded-full border border-neutral-300 bg-neutral-100 px-4 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-white"
@@ -693,7 +693,7 @@ const ADMIN_ACTIVE_TAB_STORAGE_KEY = 'lecture-page.admin.active-tab';
                     Open run #{{ testRunnerResult()!.runId }}
                   </a>
                   <a
-                    [href]="reportHref(testRunnerResult()!.runId)"
+                    [href]="reportRouteHref(testRunnerResult()!.runId)"
                     target="_blank"
                     rel="noreferrer"
                     class="inline-flex items-center rounded-full border border-neutral-300 bg-neutral-100 px-4 py-2 font-semibold text-neutral-700 transition hover:bg-white"
@@ -719,7 +719,7 @@ const ADMIN_ACTIVE_TAB_STORAGE_KEY = 'lecture-page.admin.active-tab';
               </button>
 
               <a
-                [href]="reportHref()"
+                [href]="reportRouteHref()"
                 target="_blank"
                 rel="noreferrer"
                 class="inline-flex items-center rounded-full border border-neutral-300 bg-white px-5 py-3 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-100"
@@ -833,7 +833,7 @@ const ADMIN_ACTIVE_TAB_STORAGE_KEY = 'lecture-page.admin.active-tab';
                             </a>
 
                             <a
-                              [href]="reportHref(run.runId)"
+                              [href]="reportRouteHref(run.runId)"
                               target="_blank"
                               rel="noreferrer"
                               class="rounded-full border border-neutral-300 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 transition hover:bg-neutral-100"
@@ -1673,8 +1673,8 @@ export class AdminPageComponent {
       .replace(/\b\w/g, (char) => char.toUpperCase());
   }
 
-  reportHref(runId?: number | null) {
-    const path = runId ? `/lecture-page/allure/runs/${runId}/` : '/lecture-page/allure/';
+  reportRouteHref(runId?: number | null) {
+    const path = runId ? `/lecture-page/reports/${runId}` : '/lecture-page/reports';
 
     if (typeof window === 'undefined') {
       return `https://stormeal.github.io${path}`;

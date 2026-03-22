@@ -13,20 +13,43 @@ import { ActivatedRoute } from '@angular/router';
 export class ReportsRedirectPageComponent implements OnInit {
   private route = inject(ActivatedRoute);
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     const { hostname, origin, pathname } = window.location;
     const isLocalhost =
       hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]';
     const runId = this.route.snapshot.paramMap.get('runId')?.trim();
-    const reportPath = runId ? `allure/runs/${runId}/` : 'allure/';
+    const latestReportUrl = 'https://stormeal.github.io/lecture-page/allure/';
+    const runReportUrl = runId
+      ? `https://stormeal.github.io/lecture-page/allure/runs/${runId}/`
+      : null;
 
     if (isLocalhost) {
-      window.location.assign(`https://stormeal.github.io/lecture-page/${reportPath}`);
+      window.location.assign(runReportUrl ?? latestReportUrl);
       return;
+    }
+
+    if (runReportUrl) {
+      const runReportExists = await this.checkReportExists(new URL(`./allure/runs/${runId}/index.html`, origin).toString());
+      if (runReportExists) {
+        window.location.assign(runReportUrl);
+        return;
+      }
     }
 
     const reportsSegment = runId ? `/reports/${runId}` : '/reports';
     const appRoot = pathname.endsWith(reportsSegment) ? pathname.slice(0, -reportsSegment.length) : pathname;
-    window.location.assign(new URL(`./${reportPath}`, `${origin}${appRoot}/`).toString());
+    window.location.assign(new URL('./allure/', `${origin}${appRoot}/`).toString());
+  }
+
+  private async checkReportExists(url: string) {
+    try {
+      const response = await fetch(url, {
+        method: 'HEAD',
+        cache: 'no-store',
+      });
+      return response.ok;
+    } catch {
+      return false;
+    }
   }
 }
