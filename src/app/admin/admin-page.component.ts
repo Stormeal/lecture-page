@@ -622,6 +622,8 @@ const ADMIN_ACTIVE_TAB_STORAGE_KEY = 'lecture-page.admin.active-tab';
 
               <a
                 routerLink="/reports"
+                target="_blank"
+                rel="noreferrer"
                 class="inline-flex items-center rounded-full border border-neutral-300 bg-neutral-100 px-4 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-white"
               >
                 View report
@@ -692,6 +694,8 @@ const ADMIN_ACTIVE_TAB_STORAGE_KEY = 'lecture-page.admin.active-tab';
                   </a>
                   <a
                     [routerLink]="['/reports', testRunnerResult()!.runId]"
+                    target="_blank"
+                    rel="noreferrer"
                     class="inline-flex items-center rounded-full border border-neutral-300 bg-neutral-100 px-4 py-2 font-semibold text-neutral-700 transition hover:bg-white"
                   >
                     Open this report
@@ -716,6 +720,8 @@ const ADMIN_ACTIVE_TAB_STORAGE_KEY = 'lecture-page.admin.active-tab';
 
               <a
                 routerLink="/reports"
+                target="_blank"
+                rel="noreferrer"
                 class="inline-flex items-center rounded-full border border-neutral-300 bg-white px-5 py-3 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-100"
               >
                 View report
@@ -828,6 +834,8 @@ const ADMIN_ACTIVE_TAB_STORAGE_KEY = 'lecture-page.admin.active-tab';
 
                             <a
                               [routerLink]="['/reports', run.runId]"
+                              target="_blank"
+                              rel="noreferrer"
                               class="rounded-full border border-neutral-300 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 transition hover:bg-neutral-100"
                             >
                               Report
