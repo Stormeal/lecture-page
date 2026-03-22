@@ -22,6 +22,8 @@ export class ReportsRedirectPageComponent implements OnInit {
     const runReportUrl = runId
       ? `https://stormeal.github.io/lecture-page/allure/runs/${runId}/`
       : null;
+    const reportsSegment = runId ? `/reports/${runId}` : '/reports';
+    const appRoot = pathname.endsWith(reportsSegment) ? pathname.slice(0, -reportsSegment.length) : pathname;
 
     if (isLocalhost) {
       window.location.assign(runReportUrl ?? latestReportUrl);
@@ -29,15 +31,15 @@ export class ReportsRedirectPageComponent implements OnInit {
     }
 
     if (runReportUrl) {
-      const runReportExists = await this.checkReportExists(new URL(`./allure/runs/${runId}/index.html`, origin).toString());
+      const runReportExists = await this.checkReportExists(
+        new URL(`./allure/runs/${runId}/index.html`, `${origin}${appRoot}/`).toString(),
+      );
       if (runReportExists) {
         window.location.assign(runReportUrl);
         return;
       }
     }
 
-    const reportsSegment = runId ? `/reports/${runId}` : '/reports';
-    const appRoot = pathname.endsWith(reportsSegment) ? pathname.slice(0, -reportsSegment.length) : pathname;
     window.location.assign(new URL('./allure/', `${origin}${appRoot}/`).toString());
   }
 
