@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-reports-redirect-page',
@@ -10,18 +11,22 @@ import { Component, OnInit } from '@angular/core';
   `,
 })
 export class ReportsRedirectPageComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+
   ngOnInit(): void {
     const { hostname, origin, pathname } = window.location;
     const isLocalhost =
       hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]';
+    const runId = this.route.snapshot.paramMap.get('runId')?.trim();
+    const reportPath = runId ? `allure/runs/${runId}/` : 'allure/';
 
     if (isLocalhost) {
-      window.location.assign('https://stormeal.github.io/lecture-page/allure/');
+      window.location.assign(`https://stormeal.github.io/lecture-page/${reportPath}`);
       return;
     }
 
-    // Resolve against the deployed app root so /reports works with the GitHub Pages base path.
-    const appRoot = pathname.endsWith('/reports') ? pathname.slice(0, -'/reports'.length) : pathname;
-    window.location.assign(new URL('./allure/', `${origin}${appRoot}/`).toString());
+    const reportsSegment = runId ? `/reports/${runId}` : '/reports';
+    const appRoot = pathname.endsWith(reportsSegment) ? pathname.slice(0, -reportsSegment.length) : pathname;
+    window.location.assign(new URL(`./${reportPath}`, `${origin}${appRoot}/`).toString());
   }
 }

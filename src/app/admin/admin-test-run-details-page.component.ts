@@ -66,6 +66,13 @@ const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
 
             @if (runDetail()) {
               <a
+                [routerLink]="['/reports', runDetail()!.runId]"
+                class="inline-flex items-center rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-50"
+              >
+                View report
+              </a>
+
+              <a
                 [href]="runDetail()!.runUrl"
                 target="_blank"
                 rel="noreferrer"

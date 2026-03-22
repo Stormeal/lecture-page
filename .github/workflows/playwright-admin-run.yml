@@ -117,6 +117,44 @@ jobs:
           echo "Resolved OUT_DIR=$OUT_DIR"
           echo "out_dir=$OUT_DIR" >> "$GITHUB_OUTPUT"
 
+      - name: Preserve existing published Allure history
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          OUT_DIR="${{ steps.out.outputs.out_dir }}"
+          OWNER="${{ github.repository_owner }}"
+          REPO="${{ github.event.repository.name }}"
+          ALLURE_URL="https://${OWNER}.github.io/${REPO}/allure/"
+          TMP_DIR="$(mktemp -d)"
+
+          echo "Attempting to preserve existing Allure history from $ALLURE_URL"
+
+          if wget \
+            --recursive \
+            --no-parent \
+            --page-requisites \
+            --no-host-directories \
+            --cut-dirs=1 \
+            --directory-prefix="$TMP_DIR" \
+            --reject "index.html.tmp*" \
+            "$ALLURE_URL"; then
+            if [ -d "$TMP_DIR/allure" ]; then
+              mkdir -p "$OUT_DIR/allure"
+              cp -R "$TMP_DIR/allure/." "$OUT_DIR/allure/"
+              echo "Preserved existing Allure history."
+            elif [ -d "$TMP_DIR/${REPO}/allure" ]; then
+              mkdir -p "$OUT_DIR/allure"
+              cp -R "$TMP_DIR/${REPO}/allure/." "$OUT_DIR/allure/"
+              echo "Preserved existing Allure history."
+            else
+              echo "Allure download completed but no allure folder was found. Continuing without history."
+            fi
+          else
+            echo "No existing Allure history found to preserve. Continuing."
+          fi
+
       - name: Bundle Allure report into Pages output
         if: always()
         shell: bash
@@ -131,11 +169,17 @@ jobs:
 
           REPORT_SRC="src/tests/allure-report"
           REPORT_DST="$OUT_DIR/allure"
+          LATEST_REPORT_DST="$OUT_DIR/allure/latest"
+          RUN_REPORT_DST="$OUT_DIR/allure/runs/${{ github.run_id }}"
 
           if [ -f "$REPORT_SRC/index.html" ]; then
             mkdir -p "$REPORT_DST"
+            mkdir -p "$LATEST_REPORT_DST"
+            mkdir -p "$RUN_REPORT_DST"
             cp -R "$REPORT_SRC/." "$REPORT_DST/"
-            echo "Allure report bundled at /allure/"
+            cp -R "$REPORT_SRC/." "$LATEST_REPORT_DST/"
+            cp -R "$REPORT_SRC/." "$RUN_REPORT_DST/"
+            echo "Allure report bundled at /allure/ and /allure/runs/${{ github.run_id }}/"
           else
             echo "Allure report missing at $REPORT_SRC (missing index.html)."
             exit 1

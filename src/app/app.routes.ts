@@ -32,6 +32,7 @@ export const routes: Routes = [
   { path: 'admin', component: AdminPageComponent, canActivate: [adminGuard] },
   { path: 'admin/test-runs/:runId', component: AdminTestRunDetailsPageComponent, canActivate: [adminGuard] },
   { path: 'candidate-scorer', component: AutomationCandidateScorerPageComponent },
+  { path: 'reports/:runId', component: ReportsRedirectPageComponent },
   { path: 'reports', component: ReportsRedirectPageComponent },
   { path: '**', redirectTo: 'courses' },
 ];
