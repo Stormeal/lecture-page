@@ -691,10 +691,10 @@ const ADMIN_ACTIVE_TAB_STORAGE_KEY = 'lecture-page.admin.active-tab';
                     Open run #{{ testRunnerResult()!.runId }}
                   </a>
                   <a
-                    routerLink="/reports"
+                    [routerLink]="['/reports', testRunnerResult()!.runId]"
                     class="inline-flex items-center rounded-full border border-neutral-300 bg-neutral-100 px-4 py-2 font-semibold text-neutral-700 transition hover:bg-white"
                   >
-                    Open report
+                    Open this report
                   </a>
                 </div>
               </div>
@@ -791,9 +791,8 @@ const ADMIN_ACTIVE_TAB_STORAGE_KEY = 'lecture-page.admin.active-tab';
                 } @else {
                   <div class="mt-4 space-y-3">
                     @for (run of testRunHistory(); track run.runId) {
-                      <a
-                        [routerLink]="['/admin/test-runs', run.runId]"
-                        class="block rounded-2xl border border-neutral-200 bg-neutral-50 p-4 transition hover:border-neutral-300 hover:bg-white"
+                      <div
+                        class="rounded-2xl border border-neutral-200 bg-neutral-50 p-4 transition hover:border-neutral-300 hover:bg-white"
                       >
                         <div class="flex items-start justify-between gap-3">
                           <div class="min-w-0">
@@ -819,11 +818,23 @@ const ADMIN_ACTIVE_TAB_STORAGE_KEY = 'lecture-page.admin.active-tab';
                             </p>
                           </div>
 
-                          <span class="shrink-0 text-xs font-semibold uppercase tracking-[0.16em] text-neutral-500">
-                            Details
-                          </span>
+                          <div class="shrink-0 flex items-center gap-2">
+                            <a
+                              [routerLink]="['/admin/test-runs', run.runId]"
+                              class="rounded-full border border-neutral-300 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 transition hover:bg-neutral-100"
+                            >
+                              Details
+                            </a>
+
+                            <a
+                              [routerLink]="['/reports', run.runId]"
+                              class="rounded-full border border-neutral-300 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-700 transition hover:bg-neutral-100"
+                            >
+                              Report
+                            </a>
+                          </div>
                         </div>
-                      </a>
+                      </div>
                     }
                   </div>
                 }
