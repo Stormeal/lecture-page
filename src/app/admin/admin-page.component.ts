@@ -215,6 +215,7 @@ type AdminDeployPageResponse =
 
 const API_BASE_URL = 'https://lecture-page-api.vercel.app/api';
 const ADMIN_ACTIVE_TAB_STORAGE_KEY = 'lecture-page.admin.active-tab';
+const ADMIN_TEST_RUN_HISTORY_STORAGE_KEY = 'lecture-page.admin.test-run-history';
 
 @Component({
   selector: 'app-admin-page',
@@ -1489,7 +1490,7 @@ export class AdminPageComponent {
   testRunnerResult = signal<Extract<AdminTestRunResponse, { success: true }> | null>(null);
   testRunHistoryLoading = signal(false);
   testRunHistoryError = signal<string | null>(null);
-  testRunHistory = signal<AdminTestRunHistoryItem[]>([]);
+  testRunHistory = signal<AdminTestRunHistoryItem[]>(this.readStoredTestRunHistory());
 
   deployPageSubmitting = signal(false);
   deployPageError = signal<string | null>(null);
@@ -1501,6 +1502,12 @@ export class AdminPageComponent {
     effect(() => {
       void this.loadUsers();
       void this.loadAnalytics();
+    });
+
+    effect(() => {
+      if (this.activeTab() === 'test-runner' && this.testRunHistory().length === 0 && !this.testRunHistoryLoading()) {
+        void this.loadTestRunHistory();
+      }
     });
   }
 
@@ -1630,10 +1637,12 @@ export class AdminPageComponent {
       if (data.success === false) {
         this.testRunHistory.set([]);
         this.testRunHistoryError.set(data.message ?? 'Failed to load run history.');
+        this.storeTestRunHistory([]);
         return;
       }
 
       this.testRunHistory.set(data.runs);
+      this.storeTestRunHistory(data.runs);
     } catch {
       this.testRunHistory.set([]);
       this.testRunHistoryError.set('Network error.');
@@ -1702,6 +1711,42 @@ export class AdminPageComponent {
   private storeActiveTab(tab: AdminTab) {
     if (typeof window === 'undefined') return;
     window.localStorage.setItem(ADMIN_ACTIVE_TAB_STORAGE_KEY, tab);
+  }
+
+  private readStoredTestRunHistory(): AdminTestRunHistoryItem[] {
+    if (typeof window === 'undefined') return [];
+
+    try {
+      const raw = window.sessionStorage.getItem(ADMIN_TEST_RUN_HISTORY_STORAGE_KEY);
+      if (!raw) return [];
+
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+
+      return parsed.filter((item): item is AdminTestRunHistoryItem => {
+        return (
+          item &&
+          typeof item.runId === 'number' &&
+          typeof item.runNumber === 'number' &&
+          typeof item.runUrl === 'string' &&
+          typeof item.workflowName === 'string' &&
+          typeof item.title === 'string' &&
+          typeof item.status === 'string'
+        );
+      });
+    } catch {
+      return [];
+    }
+  }
+
+  private storeTestRunHistory(runs: AdminTestRunHistoryItem[]) {
+    if (typeof window === 'undefined') return;
+
+    try {
+      window.sessionStorage.setItem(ADMIN_TEST_RUN_HISTORY_STORAGE_KEY, JSON.stringify(runs));
+    } catch {
+      // Ignore storage failures. The page still works with in-memory state.
+    }
   }
 
   resetDeployPageResult() {
