@@ -28,7 +28,7 @@ export const EXERCISE_01: CourseGroupItem = {
 
         {
           type: 'p',
-          text: `Before we start writing real tests, it’s important to understand how Playwright models the browser. Everything you do in Playwright happens inside a Browser, a Browser Context, and a Page.`,
+          text: `Before you write any real tests, you need to know how Playwright models the browser. Everything you do happens inside a Browser, a Browser Context, and a Page.`,
         },
 
         { type: 'divider' },
@@ -37,7 +37,7 @@ export const EXERCISE_01: CourseGroupItem = {
 
         {
           type: 'p',
-          text: `A Browser Context is Playwright’s way of creating isolated browser sessions. You can think of a browser context as a brand-new, temporary browser profile.`,
+          text: `A Browser Context is an isolated browser session. Think of it as a brand-new, temporary browser profile.`,
         },
 
         {
@@ -78,7 +78,7 @@ const context = await browser.newContext();`,
 
         {
           type: 'p',
-          text: `A Page is where all the actual interaction happens. A page represents a single browser tab inside a browser context.`,
+          text: `A Page is where the actual interaction happens. It represents a single browser tab inside a browser context.`,
         },
 
         {
@@ -88,7 +88,7 @@ const context = await browser.newContext();`,
 
         {
           type: 'p',
-          text: `When you want to navigate to a website, click elements, fill forms, or extract data you always do it through a page.`,
+          text: `Whenever you navigate to a site, click elements, fill forms, or extract data, you do it through a page.`,
         },
 
         {
@@ -127,14 +127,14 @@ const context = await browser.newContext();`,
 
         {
           type: 'p',
-          text: `Let’s quickly recap how the different pieces fit together. Understanding this relationship is key to writing clean and reliable Playwright tests.`,
+          text: `Here is how the three pieces fit together. Once the relationship is clear, your tests get easier to write and to keep stable.`,
         },
 
         { type: 'h3', text: 'Browser' },
 
         {
           type: 'p',
-          text: `The Browser represents the actual browser engine (Chromium, Firefox, or WebKit). It is responsible for running Playwright automation.`,
+          text: `The Browser is the actual browser engine (Chromium, Firefox, or WebKit). It runs the automation.`,
         },
 
         {
@@ -151,7 +151,7 @@ const context = await browser.newContext();`,
 
         {
           type: 'p',
-          text: `This isolation ensures that tests remain independent and reproducible.`,
+          text: `That isolation keeps tests independent and reproducible.`,
         },
 
         {
@@ -163,7 +163,7 @@ const context = await browser.newContext();`,
 
         {
           type: 'p',
-          text: `A Page represents a single browser tab within a browser context. This is where all user interactions happen.`,
+          text: `A Page is a single browser tab within a browser context. This is where user interactions happen.`,
         },
 
         {
@@ -511,11 +511,11 @@ await page.goto('https://example.com');`,
 
     {
       id: 'ex1-exercise',
-      title: 'Exercise',
+      title: 'Exercise 1.1',
       summary: 'Write your first Playwright Test and save a screenshot',
       type: 'content',
       blocks: [
-        { type: 'h2', text: 'Exercise 1: Browser contexts and pages', testId: 'ex1-exercise' },
+        { type: 'h2', text: 'Exercise 1.1: Browser contexts and pages', testId: 'ex1-exercise' },
 
         {
           type: 'p',
@@ -689,12 +689,12 @@ await expect(page).toHaveTitle(/YOUR_EXPECTED_TITLE/);`,
 
     {
       id: 'ex1-solution',
-      title: 'Solution',
+      title: 'Solution 1.1',
       summary: 'Reveal if you are stuck',
       type: 'content',
       revealable: true,
       blocks: [
-        { type: 'h2', text: 'Solution: Exercise 1' },
+        { type: 'h2', text: 'Solution: Exercise 1.1' },
 
         { type: 'divider' },
 
@@ -759,6 +759,221 @@ main().catch((err) => {
           type: 'callout',
           variant: 'info',
           text: 'Tip: If you want to watch the manual version run, set headless to false.',
+        },
+      ],
+    },
+
+    {
+      id: 'ex1-2-exercise',
+      title: 'Exercise 1.2 (DSB)',
+      summary: 'Use one browser context with multiple pages on DSB',
+      type: 'content',
+      blocks: [
+        { type: 'h2', text: 'Exercise 1.2 (DSB): One context, multiple pages', testId: 'ex1-2-exercise' },
+
+        {
+          type: 'p',
+          text: 'Now we build on exercise 1.1. Instead of working with a single page, you will create one browser context and open two different DSB pages inside it. This helps you understand how multiple tabs can live inside the same isolated session.',
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Goal' },
+        {
+          type: 'p',
+          text: 'Create one browser context manually. Open the DSB English Domestic page in one tab. Open the Danish Domestic page in a second tab. Verify that both pages exist in the same context. Save one screenshot from each page.',
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Recommended approach' },
+        {
+          type: 'p',
+          text: 'For this exercise, do not use the built-in page fixture. Create the context yourself from the browser fixture so you can clearly see the relationship between browser, context, and page.',
+        },
+
+        { type: 'h3', text: 'Steps' },
+        {
+          type: 'p',
+          text: '1. Create a new test file named exercise_1_2.spec.ts. 2. Use the browser fixture and create a fresh browser context with browser.newContext(). 3. Create the first page and navigate to https://www.dsb.dk/en/domestic/. 4. Create a second page in the same context and navigate to https://www.dsb.dk/da/domestic/. 5. Assert that the context contains exactly two pages. 6. Add simple checks that prove each page loaded, for example URL, title, or a visible heading. 7. Save screenshots to screenshots/day1_ex1_2_domestic_en.png and screenshots/day1_ex1_2_domestic_da.png. 8. Close the context when the test is done.',
+        },
+
+        {
+          type: 'callout',
+          variant: 'info',
+          text: 'Keep the assertions simple here. This exercise is about understanding context and page management, not complex locator strategy.',
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Definition of done' },
+        {
+          type: 'p',
+          text: 'The test passes without errors. Exactly one browser context is used. The context contains two pages. Both DSB pages are opened and verified. Two screenshots are saved in the screenshots folder.',
+        },
+
+        { type: 'divider' },
+
+        {
+          type: 'hint',
+          id: 'ex1-2-hint-browser-fixture',
+          title: 'Hint 1: Which fixture should I use?',
+          blocks: [
+            {
+              type: 'p',
+              text: 'Use the built-in browser fixture instead of the page fixture. That gives you access to browser.newContext(), and from there you can create as many pages as you need.',
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              code: `import { test } from '@playwright/test';
+
+test('my test', async ({ browser }) => {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+});`,
+            },
+          ],
+        },
+        {
+          type: 'hint',
+          id: 'ex1-2-hint-two-pages',
+          title: 'Hint 2: How do I open multiple pages?',
+          blocks: [
+            {
+              type: 'p',
+              text: 'A browser context can create multiple pages. Just call context.newPage() more than once and store each page in its own variable.',
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              code: `const firstPage = await context.newPage();
+const secondPage = await context.newPage();`,
+            },
+          ],
+        },
+        {
+          type: 'hint',
+          id: 'ex1-2-hint-count-pages',
+          title: 'Hint 3: How do I verify both pages belong to the same context?',
+          blocks: [
+            {
+              type: 'p',
+              text: 'Ask the context for all open pages. If both tabs were created from the same context, context.pages() should return both of them.',
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              code: `const pages = context.pages();
+expect(pages).toHaveLength(2);`,
+            },
+          ],
+        },
+        {
+          type: 'hint',
+          id: 'ex1-2-hint-simple-assertions',
+          title: 'Hint 4: What should I assert?',
+          blocks: [
+            {
+              type: 'p',
+              text: 'Use something stable and beginner-friendly such as the page URL, page title, or a clear heading on the page. Avoid overly specific selectors for this exercise.',
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              code: `await expect(firstPage).toHaveURL(/\\/en\\/domestic/);
+await expect(secondPage).toHaveURL(/\\/da\\/domestic/);`,
+            },
+            {
+              type: 'p',
+              text: 'This means: check that one page is the English domestic page and the other is the Danish domestic page. This is a clearer fit now that the old /indland URL redirects.',
+            },
+          ],
+        },
+
+        { type: 'divider' },
+        { type: 'h3', text: 'Helpful Playwright documentation' },
+        {
+          type: 'links',
+          links: [
+            {
+              label: 'BrowserContext',
+              url: 'https://playwright.dev/docs/api/class-browsercontext',
+              description: 'Create isolated sessions and manage their pages',
+            },
+            {
+              label: 'Page',
+              url: 'https://playwright.dev/docs/api/class-page',
+              description: 'Open tabs, navigate, and take screenshots',
+            },
+            {
+              label: 'Screenshots',
+              url: 'https://playwright.dev/docs/screenshots',
+              description: 'Saving screenshots with Playwright',
+            },
+          ],
+        },
+      ],
+    },
+
+    {
+      id: 'ex1-2-solution',
+      title: 'Solution 1.2 (DSB)',
+      summary: 'Reveal if you are stuck',
+      type: 'content',
+      revealable: true,
+      blocks: [
+        { type: 'h2', text: 'Solution: Exercise 1.2 (DSB)' },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Playwright Test solution' },
+        {
+          type: 'code',
+          language: 'ts',
+          filename: 'exercise_1_2.spec.ts',
+          code: `import { test, expect } from '@playwright/test';
+
+test('Day 1, Exercise 1.2 (DSB): one context with multiple pages', async ({ browser }) => {
+  const context = await browser.newContext();
+
+  try {
+    const domesticPage = await context.newPage();
+    await domesticPage.goto('https://www.dsb.dk/en/domestic/', {
+      waitUntil: 'domcontentloaded',
+    });
+
+    const danishDomesticPage = await context.newPage();
+    await danishDomesticPage.goto('https://www.dsb.dk/da/domestic/', {
+      waitUntil: 'domcontentloaded',
+    });
+
+    await expect(context.pages()).toHaveLength(2);
+
+    await expect(domesticPage).toHaveURL(/\\/en\\/domestic/);
+    await expect(danishDomesticPage).toHaveURL(/\\/da\\/domestic/);
+
+    await domesticPage.screenshot({
+      path: 'screenshots/day1_ex1_2_domestic_en.png',
+      fullPage: true,
+    });
+
+    await danishDomesticPage.screenshot({
+      path: 'screenshots/day1_ex1_2_domestic_da.png',
+      fullPage: true,
+    });
+  } finally {
+    await context.close();
+  }
+});`,
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Why this is a good next step' },
+        {
+          type: 'p',
+          text: 'Shows how to create a browser context explicitly. Demonstrates that one context can hold multiple pages. Keeps the assertions simple so the focus stays on Playwright structure. Introduces manual cleanup with context.close().',
         },
       ],
     },

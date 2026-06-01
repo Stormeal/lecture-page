@@ -459,11 +459,11 @@ test('example with logging', async ({ page }) => {
 
     {
       id: 'ex4-exercise',
-      title: 'Exercise',
+      title: 'Exercise 4.1',
       summary: `Mission Control requires an immediate crew roster update.`,
       type: 'content',
       blocks: [
-        { type: 'h2', text: 'Mission Control Crew Roster' },
+        { type: 'h2', text: 'Exercise 4.1: Mission Control Crew Roster' },
 
         { type: 'labelValue', label: 'System', text: `Mission Control Personnel Console` },
         { type: 'labelValue', label: 'Role', text: `Operations Officer` },
@@ -616,12 +616,12 @@ test('example with logging', async ({ page }) => {
 
     {
       id: 'ex4-solution',
-      title: 'Solution',
+      title: 'Solution 4.1',
       summary: 'Reveal if you are stuck',
       type: 'content',
       revealable: true,
       blocks: [
-        { type: 'h2', text: 'Solution: Exercise 4' },
+        { type: 'h2', text: 'Solution: Exercise 4.1' },
 
         { type: 'divider' },
 
@@ -694,6 +694,299 @@ test("Exercise 4 - Mission Control Crew Roster", async ({ page }) => {
             '• Groups the flow with test.step() so failures are easier to understand in reports ' +
             '• Verifies outcomes with web-first assertions (toHaveValue / toBeVisible) instead of manual reads ' +
             '• Captures an end-state screenshot for quick review in CI artifacts',
+        },
+      ],
+    },
+
+    {
+      id: 'ex4-2-exercise',
+      title: 'Exercise 4.2 (DSB)',
+      summary: `DSB station operations needs a controlled staff board update.`,
+      type: 'content',
+      blocks: [
+        { type: 'h2', text: 'DSB Station Operations Board' },
+
+        { type: 'labelValue', label: 'System', text: `DSB Staff Assignment Console` },
+        { type: 'labelValue', label: 'Role', text: `Platform Operations Coordinator` },
+        { type: 'labelValue', label: 'Mission Status', text: `Shift reassignment pending` },
+        { type: 'labelValue', label: 'Mission Duration', text: `30 minutes` },
+
+        {
+          type: 'button',
+          label: 'Open Staff Console',
+          routerLink: '/test-site/table',
+          queryParams: { from: 'playwright' },
+          variant: 'primary',
+          testId: 'open-test-site-block',
+          newTab: true,
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Mission Briefing' },
+        { type: 'p', text: `Coordinator,` },
+        {
+          type: 'p',
+          text: `DSB Station Operations is preparing the next shift rotation. Before passenger traffic increases, the internal staff board must be updated and verified.`,
+        },
+        {
+          type: 'p',
+          text: `A new station staff member must be added, a specific assignment row must be located precisely using filters, and hover-only controls must be inspected before the final board state is approved.`,
+        },
+        {
+          type: 'p',
+          text: `Because this is an operational console, your reporting should be clean. Add a few useful logs so another operator can understand what happened if the test fails.`,
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Mission Objectives' },
+        {
+          type: 'labelValue',
+          label: 'Your mission is to:',
+          list: {
+            ordered: false,
+            items: [
+              'Access the DSB staff assignment console',
+              'Register a new station staff member with role and status',
+              'Use locator.filter() to find the correct staff row precisely',
+              'Update one existing staff assignment',
+              'Use hover() to inspect row information and reveal a hover-only control',
+              'Use a few meaningful logs during the mission',
+              'Capture and store visual evidence of the verified board state',
+            ],
+          },
+          testId: 'dsb-board-objectives',
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Operational Instructions' },
+        {
+          type: 'labelValue',
+          label: 'Proceed in the following order:',
+          list: {
+            ordered: true,
+            items: [
+              {
+                text: 'Navigate to the DSB staff assignment console',
+                children: ['https://ast.testhuset.dk/test-site/table'],
+              },
+              {
+                text: 'Register a new staff member using the Add user section',
+                children: [
+                  'Enter a name',
+                  'Enter an email',
+                  'Choose a role',
+                  'Choose a status',
+                ],
+              },
+              {
+                text: 'Use filtering to locate the correct staff row',
+                children: [
+                  'Target the row by staff name',
+                  'Narrow it further by role or status badge when useful',
+                ],
+              },
+              {
+                text: 'Update an existing staff assignment',
+                children: [
+                  'Change Ada Lovelace from Member to Manager',
+                  'Change her status from Invited to Active',
+                  'Verify that only her row changed',
+                ],
+              },
+              {
+                text: 'Inspect row-only controls with hover',
+                children: [
+                  'Hover the info icon for a staff row and verify the tooltip',
+                  'Hover the full row and verify the hidden Remove button becomes visible',
+                ],
+              },
+              {
+                text: 'Add a few meaningful logs during the mission',
+                children: [
+                  'Log when navigation begins',
+                  'Log which staff member you add',
+                  'Log which row you update',
+                ],
+              },
+              {
+                text: 'Capture a screenshot of the final verified board state',
+                children: [
+                  'File name: day1_ex4_2_dsb',
+                  'Location: screenshots folder',
+                ],
+              },
+            ],
+          },
+          testId: 'dsb-board-instructions',
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Mission Completion Criteria (Definition of Done)' },
+        {
+          type: 'labelValue',
+          label: 'The mission is considered successful when:',
+          list: {
+            ordered: true,
+            items: [
+              'The DSB staff board page is accessed',
+              'A new staff member is added and visible in the board',
+              'Ada Lovelace is updated to Manager and Active',
+              'The row is located with filtering rather than broad selectors only',
+              'Tooltip information appears on hover',
+              'The hover-only Remove button becomes visible on the targeted row',
+              'A screenshot named day1_ex4_2_dsb is saved in the screenshots folder',
+            ],
+          },
+          testId: 'dsb-board-dod',
+        },
+
+        { type: 'divider' },
+
+        {
+          type: 'hint',
+          id: 'ex4-2-hint-filter-row',
+          title: 'Hint 1: How should I find the correct row?',
+          blocks: [
+            {
+              type: 'p',
+              text: 'Start with the collection of rows, then narrow it with filter(). You can filter by text or by another locator inside the row.',
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              code: `const rows = page.getByTestId('user-row');
+const adaRow = rows.filter({
+  has: page.getByTestId('user-name').filter({ hasText: 'Ada Lovelace' }),
+});`,
+            },
+          ],
+        },
+        {
+          type: 'hint',
+          id: 'ex4-2-hint-hover-controls',
+          title: 'Hint 2: What should I use hover() on?',
+          blocks: [
+            {
+              type: 'p',
+              text: 'This page has two good hover targets: the info button that reveals a tooltip, and the row itself, which reveals the hidden Remove button.',
+            },
+          ],
+        },
+        {
+          type: 'hint',
+          id: 'ex4-2-hint-logging',
+          title: 'Hint 3: What should I log?',
+          blocks: [
+            {
+              type: 'p',
+              text: 'Log only the high-signal moments. A few examples are navigation start, the staff member you add, and the row you are about to update.',
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              code: `console.log('Navigating to DSB staff board');
+console.log('Adding station staff member: Ingrid Signal');
+console.log('Updating row: Ada Lovelace');`,
+            },
+          ],
+        },
+      ],
+    },
+
+    {
+      id: 'ex4-2-solution',
+      title: 'Solution 4.2 (DSB)',
+      summary: 'Reveal if you are stuck',
+      type: 'content',
+      revealable: true,
+      blocks: [
+        { type: 'h2', text: 'Solution: Exercise 4.2 (DSB)' },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Playwright Test solution' },
+        {
+          type: 'code',
+          language: 'ts',
+          filename: 'exercise_4_2.spec.ts',
+          code: `import { test, expect } from '@playwright/test';
+
+test('Exercise 4.2 (DSB): station operations board update', async ({ page }) => {
+  const baseUrl = 'https://stormeal.github.io/lecture-page';
+  const adminSection = page.getByTestId('user-admin');
+  const addNameInput = adminSection.getByTestId('add-user-name');
+  const addEmailInput = adminSection.getByTestId('add-user-email');
+  const addRoleSelect = adminSection.getByTestId('add-user-role');
+  const addStatusSelect = adminSection.getByTestId('add-user-status');
+  const addUserSubmitBtn = page.getByTestId('add-user-submit');
+  const rows = page.getByTestId('user-row');
+
+  const rowByName = (name: string) =>
+    rows.filter({
+      has: page.getByTestId('user-name').filter({ hasText: name }),
+    });
+
+  await test.step('Navigate to the DSB staff board', async () => {
+    console.log('Navigating to DSB staff board');
+    await page.goto(\`\${baseUrl}/test-site/table\`);
+  });
+
+  await test.step('Add a new station staff member', async () => {
+    console.log('Adding station staff member: Ingrid Signal');
+    await addNameInput.fill('Ingrid Signal');
+    await addEmailInput.fill('ingrid.signal@dsb.dk');
+    await addRoleSelect.selectOption({ label: 'Guest' });
+    await addStatusSelect.selectOption({ label: 'Invited' });
+    await addUserSubmitBtn.click();
+
+    const ingridRow = rowByName('Ingrid Signal');
+    await expect(ingridRow).toBeVisible();
+  });
+
+  await test.step('Filter and update Ada assignment', async () => {
+    console.log('Updating row: Ada Lovelace');
+    const invitedAdaRow = rowByName('Ada Lovelace').filter({
+      has: page.getByTestId('badge-status-invited'),
+    });
+
+    await invitedAdaRow.getByTestId('user-role').selectOption({ label: 'Manager' });
+    await invitedAdaRow.getByTestId('user-status').selectOption({ label: 'Active' });
+
+    const adaRow = rowByName('Ada Lovelace');
+    await expect(adaRow.getByTestId('user-role')).toHaveValue('Manager');
+    await expect(adaRow.getByTestId('user-status')).toHaveValue('Active');
+  });
+
+  await test.step('Inspect hover-only information and actions', async () => {
+    const adaRow = rowByName('Ada Lovelace');
+
+    await adaRow.getByTestId('user-info').hover();
+    await expect(page.getByRole('tooltip')).toBeVisible();
+
+    await adaRow.hover();
+    await expect(adaRow.getByTestId('user-remove')).toBeVisible();
+  });
+
+  await test.step('Capture final board evidence', async () => {
+    await page.screenshot({ path: 'screenshots/day1_ex4_2_dsb.png', fullPage: true });
+  });
+});`,
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Why this is a good next step' },
+        {
+          type: 'p',
+          text:
+            'It uses filter() more intentionally than 4.1 by narrowing to a specific row and state. ' +
+            'It demonstrates two different hover outcomes: tooltip reveal and a hover-only button. ' +
+            'It adds small, high-signal logs without turning the test into noise. ' +
+            'It keeps the operational DSB theme while staying aligned with the table playground built for these APIs.',
         },
       ],
     },

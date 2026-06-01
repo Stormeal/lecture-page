@@ -427,11 +427,11 @@ export const EXERCISE_05: CourseGroupItem = {
 
     {
       id: 'ex5-exercise',
-      title: 'Exercise',
+      title: 'Exercise 5.1',
       summary: `Mission Part 2: Control Elements`,
       type: 'content',
       blocks: [
-        { type: 'h2', text: 'Mission Log Configuration – Control Elements' },
+        { type: 'h2', text: 'Exercise 5.1: Mission Log Configuration – Control Elements' },
 
         { type: 'labelValue', label: 'Program', text: `Astronaut Automation Training` },
         { type: 'labelValue', label: 'Role', text: `Flight Engineer` },
@@ -617,11 +617,12 @@ await expect(page.getByRole('listbox')).toHaveValues(['option-a', 'option-b']);`
     },
     {
       id: 'ex5-solution',
-      title: 'Solution',
+      title: 'Solution 5.1',
       summary: 'Reveal if you are stuck',
       type: 'content',
       revealable: true,
       blocks: [
+        { type: 'h2', text: 'Solution: Exercise 5.1' },
         { type: 'divider' },
 
         { type: 'h3', text: 'Playwright Test solution (recommended)' },
@@ -744,6 +745,304 @@ test("Exercise 5 - Control Elements", async ({ page }) => {
             '• Verifies outcomes through Live Preview fields (web-first assertions) instead of manual reads\n' +
             '• Uses test.step() to keep reports readable and failures easy to locate\n' +
             '• Demonstrates a realistic selector strategy by handling a control without data-testid',
+        },
+      ],
+    },
+    {
+      id: 'ex5-2-exercise',
+      title: 'Exercise 5.2 (DSB)',
+      summary: `DSB service alert configuration`,
+      type: 'content',
+      blocks: [
+        { type: 'h2', text: 'DSB Service Alert Configuration' },
+        { type: 'labelValue', label: 'System', text: `DSB Passenger Operations Console` },
+        { type: 'labelValue', label: 'Role', text: `Service Communications Coordinator` },
+        { type: 'labelValue', label: 'Mission Status', text: `Alert configuration required` },
+        { type: 'labelValue', label: 'Mission Duration', text: `35 minutes` },
+        {
+          type: 'button',
+          label: 'Open Operations Console',
+          routerLink: '/test-site/input-forms',
+          queryParams: { from: 'playwright' },
+          variant: 'primary',
+          testId: 'open-test-site-block',
+          newTab: true,
+        },
+
+        { type: 'divider' },
+        { type: 'h3', text: 'Mission Briefing' },
+        {
+          type: 'p',
+          text: `Coordinator,`,
+        },
+        {
+          type: 'p',
+          text: `DSB Passenger Operations must publish a service alert for affected travelers. The alert basics are already known, but the configuration controls that classify and distribute the message still need to be set correctly.`,
+        },
+        {
+          type: 'p',
+          text: `This is not just a text-entry mission. You must configure the alert category, set the urgency level, choose multiple operational clearances, and enable the correct passenger notifications before the alert can be released.`,
+        },
+        {
+          type: 'p',
+          text: `If the controls are wrong, the message reaches the wrong passengers. If the controls are correct, the disruption response stays coordinated.`,
+        },
+
+        { type: 'divider' },
+        { type: 'h3', text: 'Mission Objectives' },
+        {
+          type: 'labelValue',
+          label: 'Your mission is to:',
+          list: {
+            ordered: false,
+            items: [
+              'Reuse the Exercise 3 form flow as the base for the DSB alert',
+              'Configure the alert topic with a dropdown',
+              'Set the alert urgency with a radio button',
+              'Select multiple operational clearances with a multi-select',
+              'Enable passenger newsletter updates with a checkbox',
+              'Accept operational terms before transmission',
+              'Verify that the live preview reflects the full DSB alert configuration',
+              'Capture and store visual evidence of the final configured alert',
+            ],
+          },
+          testId: 'ex5-2-objectives',
+        },
+
+        { type: 'divider' },
+        { type: 'h3', text: 'Operational Instructions' },
+        {
+          type: 'labelValue',
+          label: 'Proceed in the following order:',
+          list: {
+            ordered: true,
+            items: [
+              'Copy your Exercise 3.2 style of structured test into a new Exercise 5.2 test file.',
+              {
+                text: 'Open the DSB operations form and enter alert text values',
+                children: [
+                  'Coordinator name',
+                  'Operations email',
+                  'Passenger service alert message',
+                ],
+              },
+              {
+                text: 'Configure the control elements',
+                children: [
+                  'Set Topic to "Support" using selectOption()',
+                  'Set Priority to High using check()',
+                  'Select multiple Clearances using selectOption()',
+                  'Enable Newsletter updates using check()',
+                  'Accept terms using check()',
+                ],
+              },
+              {
+                text: 'Verify the telemetry preview for the full DSB alert',
+                children: [
+                  'Name',
+                  'Email',
+                  'Topic',
+                  'Priority',
+                  'Clearances',
+                  'Newsletter',
+                  'Terms acceptance',
+                ],
+              },
+              'Submit the DSB alert and confirm the system acknowledges it.',
+              {
+                text: 'Capture final mission evidence',
+                children: [
+                  'File name: day1_ex5_2_dsb',
+                  'Location: screenshots folder',
+                ],
+              },
+            ],
+          },
+          testId: 'ex5-2-instructions',
+        },
+
+        { type: 'divider' },
+        { type: 'h3', text: 'Mission Completion Criteria (Definition of Done)' },
+        {
+          type: 'labelValue',
+          label: 'The mission is considered successful when:',
+          list: {
+            ordered: false,
+            items: [
+              'The DSB operations form is accessed',
+              'The text fields are populated with alert content',
+              'Topic is configured using selectOption()',
+              'Priority is configured using check()',
+              'Multiple Clearances are selected correctly',
+              'Newsletter checkbox is checked without relying on a data-testid',
+              'Operational terms checkbox is checked',
+              'Live Preview reflects the full DSB alert configuration',
+              'A screenshot named day1_ex5_2_dsb is saved in the screenshots folder',
+            ],
+          },
+          testId: 'ex5-2-definition-of-done',
+        },
+
+        { type: 'divider' },
+        { type: 'h3', text: 'Hints' },
+
+        {
+          type: 'hint',
+          id: 'ex5-2-hint-check',
+          title: 'Hint 1: Using check() correctly',
+          blocks: [
+            {
+              type: 'p',
+              text: `Use check() for the urgency radio button and the DSB notification checkboxes. It ensures the control ends in the checked state instead of only simulating a click.`,
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              code: `await priorityHigh.check();
+await newsletterCheckbox.check();
+await conditionsCheckbox.check();`,
+            },
+          ],
+        },
+        {
+          type: 'hint',
+          id: 'ex5-2-hint-selects',
+          title: 'Hint 2: Working with selectOption()',
+          blocks: [
+            {
+              type: 'p',
+              text: `Use selectOption() for both the single Topic dropdown and the multiple Clearances select. Value-based selection is still the most stable approach here.`,
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              code: `await topicSelect.selectOption('support');
+await clearancesSelect.selectOption(['1: \\'bravo\\'', '3: \\'delta\\'']);`,
+            },
+          ],
+        },
+        {
+          type: 'hint',
+          id: 'ex5-2-hint-preview',
+          title: 'Hint 3: What should I assert?',
+          blocks: [
+            {
+              type: 'p',
+              text: `The strongest proof is the live preview. Assert that it reflects the final configured alert values after all the controls have been set.`,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'ex5-2-solution',
+      title: 'Solution 5.2 (DSB)',
+      summary: 'Reveal if you are stuck',
+      type: 'content',
+      revealable: true,
+      blocks: [
+        { type: 'h2', text: 'Solution: Exercise 5.2 (DSB)' },
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Playwright Test solution' },
+        {
+          type: 'code',
+          language: 'ts',
+          filename: 'exercise_5_2.spec.ts',
+          code: `import { test, expect, Page } from '@playwright/test';
+
+export enum AlertTopic {
+  Support = 'support',
+  Billing = 'billing',
+  Feedback = 'feedback',
+  Other = 'other',
+}
+
+export enum Clearance {
+  Bravo = "1: 'bravo'",
+  Delta = "3: 'delta'",
+}
+
+async function selectClearances(page: Page, ...clearances: Clearance[]) {
+  await page.getByTestId('contact-clearances').selectOption(
+    clearances.map((value) => ({ value }))
+  );
+}
+
+test('Exercise 5.2 (DSB): configure a service alert', async ({ page }) => {
+  const baseUrl = 'https://stormeal.github.io/lecture-page/test-site';
+  const nameInput = page.getByTestId('contact-name');
+  const emailInput = page.getByTestId('contact-email');
+  const messageInput = page.getByTestId('contact-message');
+  const submitBtn = page.getByTestId('contact-submit');
+  const namePreview = page.getByTestId('preview-name');
+  const emailPreview = page.getByTestId('preview-email');
+  const topicPreview = page.getByTestId('preview-topic');
+  const priorityPreview = page.getByTestId('preview-priority');
+  const clearancesPreview = page.getByTestId('preview-clearances');
+  const newsletterPreview = page.getByTestId('preview-newsletter');
+  const conditionsPreview = page.getByTestId('preview-terms');
+  const successToast = page.getByTestId('submit-success');
+  const priorityHigh = page.getByTestId('contact-priority').getByTestId('priority-high');
+  const topicSelect = page.getByTestId('contact-topic');
+  const newsletterCheckbox = page.locator('#newsletter');
+  const conditionsCheckbox = page.getByTestId('contact-accept-terms');
+
+  await test.step('Navigate to the DSB operations form', async () => {
+    await page.goto(\`\${baseUrl}/input-forms\`);
+  });
+
+  await test.step('Enter service alert details', async () => {
+    await nameInput.fill('DSB Passenger Operations');
+    await emailInput.pressSequentially('operations@dsb.dk');
+    await messageInput.pressSequentially(
+      'Track change at Copenhagen Central. Passengers for Odense should monitor platform announcements.',
+      { delay: 10 }
+    );
+  });
+
+  await test.step('Configure topic and urgency', async () => {
+    await topicSelect.selectOption(AlertTopic.Support);
+    await priorityHigh.check();
+  });
+
+  await test.step('Configure clearances and notifications', async () => {
+    await selectClearances(page, Clearance.Bravo, Clearance.Delta);
+    await newsletterCheckbox.check();
+    await conditionsCheckbox.check();
+  });
+
+  await test.step('Submit the DSB alert', async () => {
+    await submitBtn.click();
+  });
+
+  await test.step('Verify the configured alert preview', async () => {
+    await expect(namePreview).toHaveText('DSB Passenger Operations');
+    await expect(emailPreview).toHaveText('operations@dsb.dk');
+    await expect(topicPreview).toHaveText('support');
+    await expect(priorityPreview).toHaveText('high');
+    await expect(clearancesPreview).toHaveText('bravo, delta');
+    await expect(newsletterPreview).toHaveText('Yes');
+    await expect(conditionsPreview).toHaveText('Accepted');
+    await expect(successToast).toBeVisible();
+  });
+
+  await test.step('Capture mission evidence', async () => {
+    await page.screenshot({ path: 'screenshots/day1_ex5_2_dsb.png', fullPage: true });
+  });
+});`,
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Why this is a good next step' },
+        {
+          type: 'p',
+          text:
+            'It keeps the control-element focus of Exercise 5 while giving the whole flow a DSB operations context. ' +
+            'It demonstrates the right intent-based actions for dropdowns, radio buttons, checkboxes, and multi-select controls. ' +
+            'It verifies the full configured state through the preview instead of relying on assumptions. ' +
+            'It stays aligned with the playground built for these APIs, which is more appropriate than the public DSB site for this chapter.',
         },
       ],
     },

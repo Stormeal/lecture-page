@@ -401,11 +401,11 @@ await page.getByRole('textbox', { name: 'Search' }).clear();`,
 
     {
       id: 'ex3-exercise',
-      title: 'Exercise',
+      title: 'Exercise 3.1',
       summary: `It's exercise time! `,
       type: 'content',
       blocks: [
-        { type: 'h2', text: 'Mission Log Transmission' },
+        { type: 'h2', text: 'Exercise 3.1: Mission Log Transmission' },
         { type: 'labelValue', label: 'Program', text: `Astronaut Automation Training` },
         { type: 'labelValue', label: 'Role', text: `Flight Engineer` },
         { type: 'labelValue', label: 'Mission Status', text: `Ready for transmission` },
@@ -664,12 +664,12 @@ await missionNotes.press('Backspace');`,
 
     {
       id: 'ex3-solution',
-      title: 'Solution',
+      title: 'Solution 3.1',
       summary: 'Reveal if you are stuck',
       type: 'content',
       revealable: true,
       blocks: [
-        { type: 'h2', text: 'Solution: Exercise 3' },
+        { type: 'h2', text: 'Solution: Exercise 3.1' },
         {
           type: 'button',
           label: 'Open Test Site',
@@ -746,6 +746,262 @@ test("Exercise 3 - Filling out the forms", async ({ page }) => {
             '• Demonstrates the difference between fill() (fast replacement) and pressSequentially() (character-by-character typing) ' +
             '• Groups the flow with test.step() so failures are easier to understand in reports ' +
             '• Verifies outcomes with web-first assertions (toHaveText / toBeVisible) instead of manual reads',
+        },
+      ],
+    },
+
+    {
+      id: 'ex3-2-exercise',
+      title: 'Exercise 3.2 (DSB)',
+      summary: 'Work with DSB route planner text fields and autocomplete',
+      type: 'content',
+      blocks: [
+        { type: 'h2', text: 'DSB Traffic Control Route Entry' },
+        { type: 'labelValue', label: 'Program', text: `DSB Operations Automation` },
+        { type: 'labelValue', label: 'Role', text: `Traffic Control Dispatcher` },
+        { type: 'labelValue', label: 'Mission Status', text: `Route planner verification pending` },
+        { type: 'labelValue', label: 'Mission Duration', text: `30 minutes` },
+
+        { type: 'divider' },
+        { type: 'h3', text: 'Mission Briefing' },
+        {
+          type: 'p',
+          text: `Dispatcher,`,
+        },
+        {
+          type: 'p',
+          text: `DSB Traffic Control is validating the route planner used by passengers. Before the system can be cleared for service, you must prove that the origin and destination fields react correctly to typing, correction, and autocomplete behavior.`,
+        },
+        {
+          type: 'p',
+          text: `The domestic planner is not a plain form. It reacts while you type and suggests stations dynamically. Your task is not only to enter route text, but also to correct draft values and verify that the suggestion list appears when expected.`,
+        },
+        {
+          type: 'p',
+          text: `If the route entry breaks down, passengers miss trains. If the route entry behaves correctly, the network keeps moving.`,
+        },
+
+        { type: 'divider' },
+        { type: 'h3', text: 'Mission Objectives' },
+        {
+          type: 'labelValue',
+          label: 'Your mission is to:',
+          list: {
+            ordered: false,
+            items: [
+              'Access the English DSB domestic planner',
+              'Enter draft values into the From and To route fields',
+              'Use pressSequentially() to trigger autocomplete suggestions',
+              'Verify that the suggestion list appears while typing',
+              'Correct at least one previously entered value using clear()',
+              'Replace the draft values with final route text',
+              'Capture and store visual evidence of the completed operation',
+            ],
+          },
+          testId: 'dsb-advisory-requirements',
+        },
+        { type: 'divider' },
+        { type: 'h3', text: 'Operational Instructions' },
+        {
+          type: 'labelValue',
+          label: 'Proceed in the following order:',
+          list: {
+            ordered: true,
+            items: [
+              {
+                text: 'Navigate to the DSB domestic planner',
+                children: ['https://www.dsb.dk/en/domestic/'],
+              },
+              {
+                text: 'If a cookie dialog blocks the planner, dismiss it before continuing',
+              },
+              {
+                text: 'Locate the route entry controls and work with',
+                children: [
+                  'From field (Choose location)',
+                  'To field (Choose destination)',
+                ],
+              },
+              {
+                text: 'Use different input actions during the mission',
+                children: [
+                  'Use pressSequentially() in the From field to type a draft value such as "Cop"',
+                  'Use clear() to remove that draft value',
+                  'Use fill() to replace it with a corrected value such as "Aar"',
+                  'Use fill() and pressSequentially() in the To field as part of the same correction workflow',
+                ],
+              },
+              {
+                text: 'Verify that the planner reacts as expected:',
+                children: [
+                  'The autocomplete dropdown appears after typing',
+                  'The input fields contain the values you entered after correction',
+                ],
+              },
+              {
+                text: 'Capture a screenshot of the final confirmed state and store it as mission evidence:',
+                children: [
+                  'File name: day1_ex3_2_dsb',
+                  'Location: screenshots folder',
+                ],
+              },
+            ],
+          },
+          testId: 'dsb-advisory-requirements',
+        },
+        { type: 'divider' },
+        { type: 'h3', text: 'Mission Completion Criteria (Definition of Done)' },
+        {
+          type: 'labelValue',
+          label: 'The mission is considered successful when:',
+          list: {
+            ordered: true,
+            items: [
+              'The DSB domestic planner is accessed',
+              'Draft values are entered into both route fields',
+              'At least one field is corrected using clear() and replaced with a final value',
+              'The autocomplete dropdown is shown after typing',
+              'The final values remain visible in the From and To fields',
+              'A screenshot named day1_ex3_2_dsb is saved in the screenshots folder',
+            ],
+          },
+          testId: 'dsb-advisory-requirements',
+        },
+
+        {
+          type: 'hint',
+          id: 'ex3-2-hint-mixed-input-actions',
+          title: 'Hint 1: Do I need to use more than one input action?',
+          blocks: [
+            {
+              type: 'p',
+              text: 'Yes. This exercise is designed to make you practice the difference between fill(), pressSequentially(), and clear(). A good pattern is: type an initial value to trigger suggestions, verify the dropdown, clear the field, and then enter the corrected final value.',
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              code: `await fromInput.pressSequentially('Cop', { delay: 20 });
+await fromInput.clear();
+await fromInput.fill('Aar');`,
+            },
+          ],
+        },
+        {
+          type: 'hint',
+          id: 'ex3-2-hint-preview-checks',
+          title: 'Hint 2: What should I verify on the page?',
+          blocks: [
+            {
+              type: 'p',
+              text: 'Focus on the form behavior that is clearly visible. Good candidates are the input values themselves and the autocomplete dropdown list that appears while typing.',
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              code: `await expect(fromInput).toHaveValue('Aar');
+await expect(page.locator('[data-testid="dropdown-list"] li').first()).toBeVisible();`,
+            },
+          ],
+        },
+        {
+          type: 'hint',
+          id: 'ex3-2-hint-message-correction',
+          title: 'Hint 3: How should I correct the route values?',
+          blocks: [
+            {
+              type: 'p',
+              text: 'Enter a short draft first, then clear the field and replace it with the final route text. This shows that you understand how to revise input rather than only entering it once.',
+            },
+          ],
+        },
+        {
+          type: 'hint',
+          id: 'ex3-2-hint-cookie-layer',
+          title: 'Hint 4: The planner is blocked by cookies',
+          blocks: [
+            {
+              type: 'p',
+              text: 'The DSB page can show a cookie layer that blocks clicks. Start by trying to accept cookies if a visible button appears. If the site still blocks interaction, you may need a small site-specific workaround in your solution.',
+            },
+          ],
+        },
+      ],
+    },
+
+    {
+      id: 'ex3-2-solution',
+      title: 'Solution 3.2 (DSB)',
+      summary: 'Reveal if you are stuck',
+      type: 'content',
+      revealable: true,
+      blocks: [
+        { type: 'h2', text: 'Solution: Exercise 3.2 (DSB)' },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Playwright Test solution' },
+        {
+          type: 'code',
+          language: 'ts',
+          filename: 'exercise_3_2.spec.ts',
+          code: `import { test, expect } from '@playwright/test';
+
+test('Exercise 3.2 (DSB): work with route planner text fields', async ({ page }) => {
+  await page.goto('https://www.dsb.dk/en/domestic/', { waitUntil: 'domcontentloaded' });
+
+  const acceptAllButton = page.locator('button:has-text("Accept all")').first();
+  if (await acceptAllButton.isVisible().catch(() => false)) {
+    await acceptAllButton.click().catch(() => {});
+  }
+
+  // Site-specific fallback: the cookie layer can still intercept clicks even
+  // when no visible accept button is exposed to Playwright.
+  await page.locator('#cookie-information-template-wrapper').evaluate((el) => el.remove()).catch(() => {});
+
+  const fromButton = page.getByRole('button', { name: 'From:' });
+  const toButton = page.getByRole('button', { name: 'To:' });
+
+  await test.step('Enter and correct the origin field', async () => {
+    await fromButton.click();
+    const fromInput = page.getByPlaceholder('Choose location');
+
+    await fromInput.pressSequentially('Cop', { delay: 20 });
+    await expect(page.locator('[data-testid="dropdown-list"] li').first()).toBeVisible();
+
+    await fromInput.clear();
+    await fromInput.fill('Aar');
+    await expect(fromInput).toHaveValue('Aar');
+  });
+
+  await test.step('Enter and correct the destination field', async () => {
+    await toButton.click();
+    const toInput = page.getByPlaceholder('Choose destination');
+
+    await toInput.fill('Ode');
+    await expect(toInput).toHaveValue('Ode');
+
+    await toInput.clear();
+    await toInput.pressSequentially('Ode', { delay: 20 });
+    await expect(page.locator('[data-testid="dropdown-list"] li').first()).toBeVisible();
+    await expect(toInput).toHaveValue('Ode');
+  });
+
+  await test.step('Capture mission evidence', async () => {
+    await page.screenshot({ path: 'screenshots/day1_ex3_2_dsb.png', fullPage: true });
+  });
+});`,
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Why this is a good next step' },
+        {
+          type: 'p',
+          text:
+            'It combines fill(), pressSequentially(), and clear() in one realistic workflow on a live transport site. ' +
+            'It forces students to correct previously entered values instead of only typing once. ' +
+            'It keeps the assertions focused on visible form behavior such as input values and autocomplete. ' +
+            'It stays within text-and-form interactions without overlapping too much with the later advanced exercises.',
         },
       ],
     },

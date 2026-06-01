@@ -27,7 +27,7 @@ export const EXERCISE_07: CourseGroupItem = {
 
         {
           type: 'p',
-          text: `Not every manual test case is a good automation target. Strong automation candidates are stable, deterministic, and provide fast feedback when something breaks. Your goal is to pick tests that are worth maintaining over time, not just tests that are possible to automate.`,
+          text: `Not every manual test case is a good automation target. Strong candidates are stable and deterministic, and they give fast feedback when something breaks. Your goal is to pick tests worth maintaining over time, not just tests that happen to be automatable.`,
         },
 
         {

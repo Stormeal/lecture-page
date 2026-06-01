@@ -27,7 +27,7 @@ export const EXERCISE_06: CourseGroupItem = {
 
         {
           type: 'p',
-          text: `Playwright allows you to test APIs directly using APIRequestContext. This means you can validate backend behavior without interacting with the UI. API testing is useful for validating server logic, preparing test data, and verifying system state independently of the browser.`,
+          text: `Playwright can test APIs directly through APIRequestContext, so you can validate backend behavior without going through the UI. That is handy when you want to check server logic, set up test data, or confirm system state on its own, without the browser.`,
         },
 
         {

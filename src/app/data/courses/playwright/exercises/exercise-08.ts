@@ -156,7 +156,7 @@ export const EXERCISE_08: CourseGroupItem = {
 
         {
           type: 'p',
-          text: `BDD is not a test automation framework. It is not a replacement for good engineering practices. It is not simply writing UI steps in a different format.`,
+          text: `BDD is not a test automation framework, and it does not replace good engineering practices. It is also not just a matter of writing UI steps in a different format.`,
         },
 
         {
@@ -217,7 +217,7 @@ export const EXERCISE_08: CourseGroupItem = {
 
         {
           type: 'p',
-          text: `BDD becomes practical when scenarios can be executed. In Playwright, you typically express the same Given/When/Then intent using clean test structure, reusable helpers, and stable selectors. The goal is not to force your tests into Gherkin. The goal is to keep behavior readable while implementation stays maintainable.`,
+          text: `BDD becomes practical when scenarios can be executed. In Playwright, you express the same Given/When/Then intent using clean test structure, reusable helpers, and stable selectors. You are not trying to force your tests into Gherkin; you are trying to keep behavior readable while the implementation stays maintainable.`,
         },
 
         {

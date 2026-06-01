@@ -27,11 +27,11 @@ export const EXERCISE_02: CourseGroupItem = {
 
         {
           type: 'p',
-          text: `Before we jump into the theory for the exercise it's important to understand that Playwright tests are supposed to be simple. Basically they perform actions and assert the state against expectations. `,
+          text: `Before we jump into the theory, know that Playwright tests are meant to be simple: they perform actions, then assert the state against expectations. `,
         },
         {
           type: 'p',
-          text: `Last exercise we used the navigation action, now we will start with some basics interactions. But first we need to talk, about Locators.`,
+          text: `Last exercise we used the navigation action. Now we'll start with some basic interactions, but first we need to talk about Locators.`,
         },
         { type: 'divider' },
 
@@ -39,7 +39,7 @@ export const EXERCISE_02: CourseGroupItem = {
 
         {
           type: 'p',
-          text: `Performing actions starts with locating certain elements. We can use Playwrights Locators API for this specific action. Locators represent a way to find element(s) on the page at the given moment. \n Playwright automatically waits for this element to be "actionable" before it performs the given action, therefore we don't actually need to wait for it to become available.`,
+          text: `Performing actions starts with locating elements. You use Playwright's Locators API for this. A locator is a way to find element(s) on the page at a given moment. \n Playwright automatically waits for the element to be "actionable" before it performs the action, so we don't need to wait for it to become available ourselves.`,
         },
         {
           type: 'code',
@@ -405,11 +405,11 @@ await expect(page).toHaveScreenshot();`,
 
     {
       id: 'ex2-exercise',
-      title: 'Exercise',
+      title: 'Exercise 2.1',
       summary: `It's exercise time! `,
       type: 'content',
       blocks: [
-        { type: 'h2', text: 'Mission Dossier - Locate and assert!' },
+        { type: 'h2', text: 'Exercise 2.1: Mission Dossier - Locate and assert!' },
         { type: 'labelValue', label: 'Classification', text: `Internal Training Operation` },
         { type: 'labelValue', label: 'Clearance Level', text: `Agent in Training` },
         { type: 'labelValue', label: 'Mission Status', text: `Active` },
@@ -551,12 +551,12 @@ await expect(this.inputLabel).toHaveText("Input: Number");`,
 
     {
       id: 'ex2-solution',
-      title: 'Solution',
+      title: 'Solution 2.1',
       summary: 'Reveal if you are stuck',
       type: 'content',
       revealable: true,
       blocks: [
-        { type: 'h2', text: 'Solution: Exercise 2' },
+        { type: 'h2', text: 'Solution: Exercise 2.1' },
 
         { type: 'divider' },
 
@@ -611,6 +611,220 @@ test("Exercise 2 - Locate and Assert!", async ({ page }) => {
         {
           type: 'p',
           text: '• Uses Playwright Test and the built-in page fixture (simple, standard, and maintainable) • Prefers semantic locators with getByRole for key actions (more resilient than CSS and aligns with accessibility) • Scopes locators via a parent container (pricingContainer.locator(...)) to reduce accidental matches • Uses test.step() to make the report and failures easier to read (great for debugging)',
+        },
+      ],
+    },
+
+    {
+      id: 'ex2-2-exercise',
+      title: 'Exercise 2.2 (DSB)',
+      summary: 'Use locators and assertions across a language change on DSB',
+      type: 'content',
+      blocks: [
+        { type: 'h2', text: 'Mission Dossier - DSB Transit Control' },
+        { type: 'labelValue', label: 'Classification', text: `Public Transit Operations` },
+        { type: 'labelValue', label: 'Clearance Level', text: `Route Inspector` },
+        { type: 'labelValue', label: 'Mission Status', text: `Active` },
+        { type: 'labelValue', label: 'Extraction Time', text: `30 minutes` },
+
+        { type: 'divider' },
+        { type: 'h3', text: 'Mission Briefing' },
+        {
+          type: 'p',
+          text: `Inspector,`,
+        },
+        {
+          type: 'p',
+          text: 'DSB headquarters has reported inconsistent passenger information across language versions of the booking interface. Your assignment is to inspect the public transit control panel and confirm that critical travel controls are shown correctly in both English and Danish.',
+        },
+        {
+          type: 'p',
+          text: 'You will begin on the English route planner, document the visible controls, switch the interface to Danish, and verify that the localized transport controls appear as expected.',
+        },
+        {
+          type: 'p',
+          text: `Precision matters. Commuters are depending on this system.`,
+        },
+
+        { type: 'divider' },
+        { type: 'h3', text: 'Mission Objectives' },
+        {
+          type: 'p',
+          text: `Your mission is to:`,
+        },
+        {
+          type: 'p',
+          text: 'Locate the English DSB travel planner. Verify that the main heading and key route controls are visible in English. Switch the interface to Danish. Verify that the same travel controls are shown in Danish. Capture visual proof of the localized interface.',
+        },
+
+        { type: 'h3', text: 'Operational Instructions' },
+        {
+          type: 'p',
+          text: `Proceed with caution and follow these steps exactly:`,
+        },
+        {
+          type: 'p',
+          text: '1. Establish a connection to the English DSB domestic site (https://www.dsb.dk/en/domestic/). 2. If a cookie dialog blocks access, clear it before continuing. 3. Identify and create locators for the English heading "Find travel", the route controls "From:" and "To:", and the language switch "Dansk". 4. Confirm that the English transport controls are visible. 5. Activate the "Dansk" language switch. 6. Identify and create locators for the Danish heading "Find rejse", the route controls "Fra:" and "Til:", and the login link "Log ind". 7. Confirm that the Danish transport controls are visible. 8. Capture photographic evidence of the Danish interface and store it securely (File name: "day1_ex2_2_dsb" | Location: "screenshots" folder).',
+        },
+
+        {
+          type: 'callout',
+          variant: 'info',
+          text: 'Operational note: this mission is more advanced than 2.1 because the page changes state after your action. You must prove the UI is correct before and after the language switch.',
+        },
+
+        { type: 'divider' },
+        { type: 'h3', text: 'Mission Completion Criteria (Definition of Done)' },
+        {
+          type: 'p',
+          text: `The mission is considered successful when:`,
+        },
+        {
+          type: 'p',
+          text: 'The English DSB page is opened successfully. The English heading and travel controls are verified. The language switch is activated. The Danish heading, travel controls, and login link are verified. Screenshot evidence is stored in the screenshots folder.',
+        },
+
+        { type: 'divider' },
+        {
+          type: 'hint',
+          id: 'ex2-2-hint-role-locators',
+          title: 'Hint 1: Which locator strategy should I start with?',
+          blocks: [
+            {
+              type: 'p',
+              text: 'Start with getByRole() for headings, buttons, and links. It is usually the clearest and most maintainable approach for beginner exercises.',
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              code: `const heading = page.getByRole('heading', { name: 'Find travel' });
+const languageLink = page.getByRole('link', { name: 'Dansk' });`,
+            },
+          ],
+        },
+        {
+          type: 'hint',
+          id: 'ex2-2-hint-cookie-dialog',
+          title: 'Hint 2: The page is blocked by a cookie dialog',
+          blocks: [
+            {
+              type: 'p',
+              text: 'If the cookie dialog appears, dismiss it before trying to click the page underneath. A simple way is to look for the "Accept all" button and click it if it is visible.',
+            },
+          ],
+        },
+        {
+          type: 'hint',
+          id: 'ex2-2-hint-assert-visible',
+          title: 'Hint 3: Which assertion should I use?',
+          blocks: [
+            {
+              type: 'p',
+              text: 'When the task is to prove that headings, buttons, and links are present on the page, toBeVisible() is a good default choice.',
+            },
+            {
+              type: 'code',
+              language: 'ts',
+              code: `await expect(heading).toBeVisible();
+await expect(languageLink).toBeVisible();`,
+            },
+          ],
+        },
+        {
+          type: 'hint',
+          id: 'ex2-2-hint-danish-elements',
+          title: 'Hint 4: What should change after clicking Dansk?',
+          blocks: [
+            {
+              type: 'p',
+              text: 'After the language switch, look for Danish UI text. Good candidates are the main heading "Find rejse", the search labels "Fra:" and "Til:", and the login link "Log ind".',
+            },
+          ],
+        },
+
+        { type: 'divider' },
+        { type: 'h3', text: 'Helpful Playwright documentation' },
+        {
+          type: 'links',
+          links: [
+            {
+              label: 'Locators',
+              url: 'https://playwright.dev/docs/locators',
+              description: 'How to locate headings, buttons, and links',
+            },
+            {
+              label: 'Assertions',
+              url: 'https://playwright.dev/docs/test-assertions',
+              description: 'Use expect() and web-first assertions',
+            },
+            {
+              label: 'page.getByRole',
+              url: 'https://playwright.dev/docs/api/class-page#page-get-by-role',
+              description: 'Role-based locator strategy',
+            },
+          ],
+        },
+      ],
+    },
+
+    {
+      id: 'ex2-2-solution',
+      title: 'Solution 2.2 (DSB)',
+      summary: 'Reveal if you are stuck',
+      type: 'content',
+      revealable: true,
+      blocks: [
+        { type: 'h2', text: 'Solution: Exercise 2.2 (DSB)' },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Playwright Test solution' },
+        {
+          type: 'code',
+          language: 'ts',
+          filename: 'exercise_2_2.spec.ts',
+          code: `import { test, expect } from '@playwright/test';
+
+test('Exercise 2.2 (DSB): locate, switch language, and assert', async ({ page }) => {
+  await page.goto('https://www.dsb.dk/en/domestic/', { waitUntil: 'domcontentloaded' });
+
+  const acceptAllButton = page.getByRole('button', { name: 'Accept all' });
+  if (await acceptAllButton.isVisible().catch(() => false)) {
+    await acceptAllButton.click();
+  }
+
+  const englishHeading = page.getByRole('heading', { name: 'Find travel' });
+  const fromButtonEnglish = page.getByRole('button', { name: 'From:' });
+  const toButtonEnglish = page.getByRole('button', { name: 'To:' });
+  const danishLink = page.getByRole('link', { name: 'Dansk' });
+
+  await expect(englishHeading).toBeVisible();
+  await expect(fromButtonEnglish).toBeVisible();
+  await expect(toButtonEnglish).toBeVisible();
+  await expect(danishLink).toBeVisible();
+
+  await danishLink.click();
+
+  const danishHeading = page.getByRole('heading', { name: 'Find rejse' });
+  const fromButtonDanish = page.getByRole('button', { name: 'Fra:' });
+  const toButtonDanish = page.getByRole('button', { name: 'Til:' });
+  const loginLinkDanish = page.getByRole('link', { name: 'Log ind' });
+
+  await expect(danishHeading).toBeVisible();
+  await expect(fromButtonDanish).toBeVisible();
+  await expect(toButtonDanish).toBeVisible();
+  await expect(loginLinkDanish).toBeVisible();
+
+  await page.screenshot({ path: 'screenshots/day1_ex2_2_dsb.png', fullPage: true });
+});`,
+        },
+
+        { type: 'divider' },
+
+        { type: 'h3', text: 'Why this is a good next step' },
+        {
+          type: 'p',
+          text: 'It uses several semantic locators on the same flow. It verifies the UI before and after a user action. It introduces a realistic case where your assertions must adapt after navigation. It stays focused on locators and assertions without adding too much extra complexity.',
         },
       ],
     },
