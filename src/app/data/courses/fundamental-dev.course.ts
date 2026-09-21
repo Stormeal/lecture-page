@@ -1,5 +1,14 @@
 import { Course } from '../course.model';
-import { FUNDAMENTAL_DEV_CHAPTER1 } from './fundamental-dev';
+import {
+  FUNDAMENTAL_DEV_CHAPTER1,
+  FUNDAMENTAL_DEV_CHAPTER2,
+  FUNDAMENTAL_DEV_CHAPTER3,
+  FUNDAMENTAL_DEV_CHAPTER4,
+  FUNDAMENTAL_DEV_CHAPTER5,
+  FUNDAMENTAL_DEV_CHAPTER6,
+  FUNDAMENTAL_DEV_CHAPTER7,
+  FUNDAMENTAL_DEV_CHAPTER8,
+} from './fundamental-dev';
 
 export const FUNDAMENTAL_DEV_COURSE: Course = {
   slug: 'fundamental-dev',
@@ -14,188 +23,143 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
     {
       id: 'welcome',
       title: 'Welcome',
-      summary: 'Overview and expectations',
+      summary: 'Course overview and expectations',
       type: 'content',
       blocks: [
-        { type: 'divider' },
         { type: 'h2', text: 'Welcome to Fundamental Development' },
         {
           type: 'p',
-          text: 'This page is your course hub. On the right you will find all topics we will work through together. You can explore them during the course and revisit them afterwards whenever you need a refresher.',
+          text: 'This course introduces the foundations of software development and programming. You will learn how software is built, how developers think through problems, and how to write your first Python programs.',
         },
         {
           type: 'callout',
           variant: 'info',
-          text: 'Tip: Everything we cover during the physical course is available here, including explanations, comparison examples, and exercises.',
+          text: 'Use this page during the course for examples and exercises, then return to it when you want to practise or refresh a topic.',
         },
         { type: 'divider' },
-        { type: 'h2', text: 'What This Course Is Designed to Do' },
+        { type: 'h2', text: 'Why This Course Matters' },
         {
           type: 'p',
-          text: 'This is a one-day introduction to the core ideas behind programming. Instead of focusing on a single language, we will explore the shared foundations of Python, JavaScript, C#, and Java.',
+          text: 'Testing teams are becoming more technical. Automation, AI, and modern development tools assume that you can read and discuss code with confidence.',
         },
         {
           type: 'p',
-          text: 'The goal is to help you understand how programs work. Once you understand the fundamentals, learning a specific language becomes much easier.',
-        },
-        {
-          type: 'p',
-          text: 'You will see the same concepts expressed in different languages so you can compare structure, readability, and style. This will help you decide which direction feels right for you.',
+          text: 'You do not need to become a developer in one day. You will build enough programming knowledge to understand how software works and contribute more effectively alongside developers.',
         },
         { type: 'divider' },
-        { type: 'h2', text: 'What You Will Learn' },
+        { type: 'h2', text: 'What You Will Cover' },
         {
           type: 'p',
-          text: 'We will cover variables, data types, control flow, loops, functions, and basic object-oriented thinking. These are the building blocks used in almost every programming language.',
+          text: 'We begin with software development: developer responsibilities, common myths, and the skills that transfer from other careers. We then cover development methodologies and the programming foundations behind every language.',
         },
         {
           type: 'p',
-          text: 'You will also learn how to reason about program behavior, how errors occur, and how to approach debugging in a structured way.',
-        },
-        {
-          type: 'p',
-          text: 'By the end of the day, you should feel more confident reading code, understanding program logic, and asking the right questions when learning something new.',
+          text: 'The practical part of the course uses Python. You will work with basic syntax, decisions, loops, and functions through short exercises and larger programming tasks.',
         },
         { type: 'divider' },
-        { type: 'h2', text: 'What You Should Expect' },
+        { type: 'h2', text: 'What to Expect' },
         {
           type: 'p',
-          text: 'You are not expected to master a programming language in one day. Instead, you will gain clarity and a solid mental foundation that you can build on afterwards.',
+          text: 'The course is hands-on. After each topic, you will write a small piece of Python yourself. Ask questions, try variations, and treat errors as useful feedback.',
         },
         {
           type: 'p',
-          text: 'This course is interactive. You will compare examples, think through small exercises, and reflect on differences between languages.',
-        },
-        {
-          type: 'p',
-          text: 'It is completely normal if some concepts feel challenging at first. Programming is a skill that develops through practice. Today is about understanding the fundamentals so you can move forward with confidence.',
+          text: 'Software development changes constantly, so learning does not end with this course. The most useful starting point is curiosity, persistence, and a willingness to practise.',
         },
         { type: 'divider' },
         { type: 'h2', text: 'Requirements' },
         {
           type: 'p',
-          text: 'No prior programming experience is required. Curiosity and willingness to think logically are far more important.',
-        },
-        {
-          type: 'p',
-          text: 'If you already have some experience, this course will help strengthen your foundation and clarify concepts that may previously have felt abstract.',
+          text: 'No previous programming experience is required. Bring a computer where you can install Python and Visual Studio Code, plus a willingness to experiment.',
         },
       ],
     },
 
     {
       id: 'setup',
-      title: 'Setup and Configuration',
-      summary: 'Learn how to set up Playwright',
+      title: 'Python and VS Code Setup',
+      summary: 'Install the tools used in this course',
       type: 'content',
       blocks: [
-        { type: 'h2', text: 'Setup' },
+        { type: 'h2', text: 'Before You Begin' },
         {
           type: 'p',
-          text: `There’s a lot to learn about Playwright, but one topic is absolutely essential otherwise the rest becomes meaningless. We need to learn how to create our first Playwright project and configure it for what we need.`,
-        },
-
-        { type: 'h3', text: 'Step 1: Verify that you have Node.js installed' },
-        {
-          type: 'p',
-          text: `Run the command below to verify that Node.js is installed. It should display the Node version. If you get an error, Node.js is not available in your terminal try reinstalling Node.js or restarting your terminal.`,
-        },
-        { type: 'code', language: 'bash', filename: 'terminal', code: `node --version` },
-        {
-          type: 'p',
-          text: `You should get a response like this (depending on your version):`,
-        },
-        { type: 'code', language: 'bash', filename: 'terminal', code: `v22.13.0` },
-        {
-          type: 'p',
-          text: `If you get an error saying Node.js is not installed, use the link below and download the LTS build.`,
-        },
-        {
-          type: 'links',
-          links: [
-            {
-              label: 'Download Node.js®',
-              url: 'https://nodejs.org/en/download',
-              description: 'Official Node.js download',
-            },
-          ],
+          text: 'This course uses Python and Visual Studio Code. Complete the steps below before the hands-on exercises so you can write and run code on your own computer.',
         },
 
         { type: 'divider' },
-
-        { type: 'h3', text: 'Step 2: Setting up our IDE' },
+        { type: 'h3', text: 'Step 1: Install Python' },
         {
           type: 'p',
-          text: `We need to install the following extensions into VS Code: “Playwright Test for VSCode” by Microsoft and “Cucumber” by Cucumber.`,
-        },
-        {
-          type: 'p',
-          text: `Now let’s download the course repository as a release (recommended). The link below always points to the latest release on GitHub.`,
+          text: 'Open the Python downloads page and install the latest Python version for Windows. In the installer, select “Add python.exe to PATH” before choosing “Install Now”.',
         },
         {
           type: 'links',
           links: [
             {
-              label: 'Download latest release (GitHub)',
-              url: 'https://github.com/Stormeal/playwright-course/releases/latest',
-              description: 'Open the latest release and download the ZIP under “Assets”.',
+              label: 'Download Python',
+              url: 'https://www.python.org/downloads/',
+              description: 'Official Python downloads',
             },
           ],
         },
+
         {
           type: 'callout',
-          variant: 'info',
-          text: `Tip: On the release page, scroll to “Assets” and download the ZIP file.`,
+          variant: 'warning',
+          text: 'Adding Python to PATH lets you run Python from any terminal. If you miss this option, rerun the installer and enable it.',
         },
+        { type: 'divider' },
+        { type: 'h3', text: 'Step 2: Check the Installation' },
         {
           type: 'p',
-          text: `It’s recommended that we extract the codebase into a “source” folder, but for this course it’s totally fine to extract it directly onto your Desktop.`,
+          text: 'Open a new Command Prompt or PowerShell window and run the command below. A version number confirms that Python is ready.',
         },
+
+        { type: 'code', language: 'bash', filename: 'terminal', code: `python --version` },
         {
           type: 'p',
-          text: `Open the folder in Visual Studio Code and make sure the terminal is pointing to the project root. Then we’re ready for the next step let’s go!`,
+          text: 'If the command reports that Python cannot be found, close and reopen the terminal. If that does not help, reinstall Python and make sure the PATH option is selected.',
         },
 
         { type: 'divider' },
-
-        { type: 'h3', text: 'Step 3: Installing dependencies and Playwright' },
+        { type: 'h3', text: 'Step 3: Try the Python Command Line' },
         {
           type: 'p',
-          text: `First we need to install our Node packages (dependencies). Luckily, this is very easy. Assuming your terminal is pointing to the root of the project folder, run the command below and wait for the packages to install.`,
+          text: 'Start the Python command line by running the command below. When you see the >>> prompt, Python is ready to run code immediately.',
         },
-        { type: 'code', language: 'bash', filename: 'terminal', code: `npm install` },
+        { type: 'code', language: 'bash', filename: 'terminal', code: `python` },
         {
           type: 'p',
-          text: `How do we know it worked? There are a couple of quick signs: the terminal didn’t throw an error, and you should now see a new folder in the root called “node_modules”. That’s where all the dependencies live.`,
+          text: 'Try a short expression such as 2 + 2, then type exit() to return to the normal terminal.',
         },
-        {
-          type: 'p',
-          text: `Now that we have dependencies installed, we need to install Playwright’s browser binaries. In the same terminal, run the command below.`,
-        },
-        { type: 'code', language: 'bash', filename: 'terminal', code: `npx playwright install` },
-        {
-          type: 'p',
-          text: `If the terminal doesn’t throw any errors, we’re good! We now have a project and the browser binaries installed. Nice work 🎉`,
-        },
-
         { type: 'divider' },
-
+        { type: 'h3', text: 'Step 4: Install Visual Studio Code' },
         {
           type: 'links',
           links: [
             {
-              label: 'Playwright Getting Started',
-              url: 'https://playwright.dev/docs/intro',
-              description: 'Official guide for installing and getting started with Playwright',
+              label: 'Download Visual Studio Code',
+              url: 'https://code.visualstudio.com/',
+              description: 'Official Visual Studio Code download',
             },
           ],
         },
+        {
+          type: 'p',
+          text: 'Open VS Code, choose Extensions from the left-hand sidebar, and install the official Python extension from Microsoft.',
+        },
+        {
+          type: 'p',
+          text: 'Create a file named hello.py, add a simple print statement, and use the Run button in the top-right corner to see its output.',
+        },
+        { type: 'code', language: 'python', filename: 'hello.py', code: `print('Hello, world!')` },
       ],
     },
 
     {
       id: 'ch1',
-      title: 'Chapter 1: What is Programming really?',
+      title: 'Chapter 1: What Is Software Development?',
       summary: 'Theory and exercises',
       type: 'group',
       overviewBlocks: [
@@ -227,6 +191,169 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
         },
       ],
       children: FUNDAMENTAL_DEV_CHAPTER1,
+    },
+    {
+      id: 'ch2',
+      title: 'Chapter 2: Software Development Methodologies',
+      summary: 'Waterfall and Agile',
+      type: 'group',
+      overviewBlocks: [
+        {
+          type: 'p',
+          text: 'Software development methodologies give teams a shared way to plan, build, test, and release software. This chapter compares Waterfall and Agile so you can recognise when each approach helps.',
+        },
+        {
+          type: 'labelValue',
+          label: 'By the end of this chapter, you should be able to:',
+          list: {
+            ordered: false,
+            items: [
+              'Describe the flow of a Waterfall project.',
+              'Describe how Agile uses iterative development and feedback.',
+              'Compare the strengths and limits of each approach.',
+              'Choose an approach that fits a project’s requirements and uncertainty.',
+            ],
+          },
+          testId: 'ch2-learning-objectives-list',
+        },
+      ],
+      children: FUNDAMENTAL_DEV_CHAPTER2,
+    },
+    {
+      id: 'ch3',
+      title: 'Chapter 3: Programming Foundations',
+      summary: 'What code is and how computers run it',
+      type: 'group',
+      overviewBlocks: [
+        {
+          type: 'p',
+          text: 'Programming gives a computer precise instructions. This chapter introduces code, variables, output, programming languages, and the translators that let human-readable code run on hardware.',
+        },
+        {
+          type: 'labelValue',
+          label: 'By the end of this chapter, you should be able to:',
+          list: {
+            ordered: false,
+            items: [
+              'Explain why computers need exact instructions.',
+              'Describe a program using variables, instructions, and output.',
+              'Explain the purpose of programming-language syntax.',
+              'Describe how a compiler or interpreter helps code run on a CPU.',
+            ],
+          },
+          testId: 'ch3-learning-objectives-list',
+        },
+      ],
+      children: FUNDAMENTAL_DEV_CHAPTER3,
+    },
+    {
+      id: 'ch4',
+      title: 'Chapter 4: Introducing Python',
+      summary: 'Why Python and how to start using it',
+      type: 'group',
+      overviewBlocks: [
+        {
+          type: 'p',
+          text: 'Python is the language used throughout the practical part of this course. It is designed to be readable, quick to start with, and useful across many fields.',
+        },
+        {
+          type: 'labelValue',
+          label: 'By the end of this chapter, you should be able to:',
+          list: {
+            ordered: false,
+            items: [
+              'Explain why Python is a good language for beginners.',
+              'Install Python and verify the installation.',
+              'Use the Python command line to try small expressions.',
+              'Set up VS Code to create and run a Python file.',
+            ],
+          },
+          testId: 'ch4-learning-objectives-list',
+        },
+      ],
+      children: FUNDAMENTAL_DEV_CHAPTER4,
+    },
+    {
+      id: 'ch5',
+      title: 'Chapter 5: Basic Python Syntax',
+      summary: 'The building blocks of a Python program',
+      type: 'group',
+      overviewBlocks: [
+        {
+          type: 'p',
+          text: 'This chapter introduces the basic parts of a Python program. You will write small pieces of code after each topic, then combine the ideas in a tip calculator.',
+        },
+        {
+          type: 'labelValue',
+          label: 'By the end of this chapter, you should be able to:',
+          list: {
+            ordered: false,
+            items: [
+              'Use print, comments, and variables.',
+              'Read input and convert text into numbers.',
+              'Use arithmetic and f-strings.',
+              'Recognise why indentation matters in Python.',
+            ],
+          },
+          testId: 'ch5-learning-objectives-list',
+        },
+      ],
+      children: FUNDAMENTAL_DEV_CHAPTER5,
+    },
+    {
+      id: 'ch6',
+      title: 'Chapter 6: Conditions',
+      summary: 'Teach a program to make decisions',
+      type: 'group',
+      overviewBlocks: [
+        {
+          type: 'p',
+          text: 'Conditions let a program ask questions and choose between different paths. You will practise each idea, then use them together in a zoo ticket system.',
+        },
+        {
+          type: 'labelValue',
+          label: 'By the end of this chapter, you should be able to:',
+          list: {
+            ordered: false,
+            items: [
+              'Use comparisons to produce True or False.',
+              'Write if, elif, and else statements.',
+              'Combine conditions with and, or, and not.',
+              'Use nested conditions when one decision depends on another.',
+            ],
+          },
+          testId: 'ch6-learning-objectives-list',
+        },
+      ],
+      children: FUNDAMENTAL_DEV_CHAPTER6,
+    },
+    {
+      id: 'ch7',
+      title: 'Chapter 7: Loops',
+      summary: 'Repeat work without repeating code',
+      type: 'group',
+      overviewBlocks: [
+        { type: 'p', text: 'Loops repeat a block of code until a condition changes or a collection runs out of items. You will use them to build a number guessing game.' },
+        {
+          type: 'labelValue', label: 'By the end of this chapter, you should be able to:',
+          list: { ordered: false, items: ['Use while and for-in loops.', 'Work with lists and range().', 'Avoid infinite loops and use break or continue.', 'Use an accumulator to build a result over several iterations.'] }, testId: 'ch7-learning-objectives-list',
+        },
+      ],
+      children: FUNDAMENTAL_DEV_CHAPTER7,
+    },
+    {
+      id: 'ch8',
+      title: 'Chapter 8: Functions',
+      summary: 'Name and reuse blocks of code',
+      type: 'group',
+      overviewBlocks: [
+        { type: 'p', text: 'Functions give code a clear structure. You define a named block once, call it when needed, and pass values in or return values out.' },
+        {
+          type: 'labelValue', label: 'By the end of this chapter, you should be able to:',
+          list: { ordered: false, items: ['Define and call functions.', 'Use parameters and arguments.', 'Choose between print and return.', 'Use multiple and default parameters.'] }, testId: 'ch8-learning-objectives-list',
+        },
+      ],
+      children: FUNDAMENTAL_DEV_CHAPTER8,
     },
   ],
 };

@@ -75,6 +75,7 @@ export type CourseContentBlock =
       downloads: { label: string; url: string; meta?: string }[];
     })
   | (CourseBlockBase & { type: 'code'; code: string; language?: string; filename?: string })
+  | (CourseBlockBase & { type: 'image'; src: string; alt: string; caption?: string })
   | (CourseBlockBase & { type: 'hint'; id: string; title: string; blocks: CourseContentBlock[] })
   | (CourseBlockBase & { type: 'divider' })
   | (CourseBlockBase & {

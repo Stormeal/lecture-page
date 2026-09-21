@@ -284,6 +284,20 @@ import { readCourseSession, clearCourseSession } from '../course-access/auth-ses
                                 ><code>{{ block.code }}</code></pre>
                               </div>
                             }
+                            @case ('image') {
+                              <figure [attr.data-testid]="block.testId ?? null">
+                                <img
+                                  class="max-h-[32rem] w-full object-contain"
+                                  [src]="block.src"
+                                  [alt]="block.alt"
+                                />
+                                @if (block.caption) {
+                                  <figcaption class="mt-2 text-sm text-gray-600">
+                                    {{ block.caption }}
+                                  </figcaption>
+                                }
+                              </figure>
+                            }
                             @case ('labelValue') {
                               <div
                                 class="text-gray-700 leading-snug"
