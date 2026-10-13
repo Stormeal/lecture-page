@@ -355,5 +355,34 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
       ],
       children: FUNDAMENTAL_DEV_CHAPTER8,
     },
+    {
+      id: 'downloads',
+      title: 'Downloads',
+      summary: 'Presentation and handouts',
+      badge: 'Files',
+      type: 'content',
+      blocks: [
+        {
+          type: 'downloads',
+          downloads: [
+            {
+              label: 'Fundamental Development - presentation',
+              url: 'assets/fundamental-development-presentation.pdf',
+              meta: 'PDF',
+            },
+            {
+              label: 'Python handout',
+              url: 'assets/python-handout.pdf',
+              meta: 'PDF',
+            },
+          ],
+        },
+        {
+          type: 'callout',
+          variant: 'warning',
+          text: 'If you are unable to download the content, please send a mail to "ast@testhuset.dk"',
+        },
+      ],
+    },
   ],
 };
