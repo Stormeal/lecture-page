@@ -1,7 +1,6 @@
 import { Course } from '../course.model';
 import {
   FUNDAMENTAL_DEV_CHAPTER1,
-  FUNDAMENTAL_DEV_CHAPTER2,
   FUNDAMENTAL_DEV_CHAPTER3,
   FUNDAMENTAL_DEV_CHAPTER4,
   FUNDAMENTAL_DEV_CHAPTER5,
@@ -50,7 +49,7 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
         { type: 'h2', text: 'What You Will Cover' },
         {
           type: 'p',
-          text: 'We begin with software development: developer responsibilities, common myths, and the skills that transfer from other careers. We then cover development methodologies and the programming foundations behind every language.',
+          text: 'We begin with software development: developer responsibilities, common myths, and the skills that transfer from other careers. We then cover the programming foundations behind every language.',
         },
         {
           type: 'p',
@@ -193,35 +192,8 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
       children: FUNDAMENTAL_DEV_CHAPTER1,
     },
     {
-      id: 'ch2',
-      title: 'Chapter 2: Software Development Methodologies',
-      summary: 'Waterfall and Agile',
-      type: 'group',
-      overviewBlocks: [
-        {
-          type: 'p',
-          text: 'Software development methodologies give teams a shared way to plan, build, test, and release software. This chapter compares Waterfall and Agile so you can recognise when each approach helps.',
-        },
-        {
-          type: 'labelValue',
-          label: 'By the end of this chapter, you should be able to:',
-          list: {
-            ordered: false,
-            items: [
-              'Describe the flow of a Waterfall project.',
-              'Describe how Agile uses iterative development and feedback.',
-              'Compare the strengths and limits of each approach.',
-              'Choose an approach that fits a project’s requirements and uncertainty.',
-            ],
-          },
-          testId: 'ch2-learning-objectives-list',
-        },
-      ],
-      children: FUNDAMENTAL_DEV_CHAPTER2,
-    },
-    {
       id: 'ch3',
-      title: 'Chapter 3: Programming Foundations',
+      title: 'Chapter 2: Programming Foundations',
       summary: 'What code is and how computers run it',
       type: 'group',
       overviewBlocks: [
@@ -248,7 +220,7 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
     },
     {
       id: 'ch4',
-      title: 'Chapter 4: Introducing Python',
+      title: 'Chapter 3: Introducing Python',
       summary: 'Why Python and how to start using it',
       type: 'group',
       overviewBlocks: [
@@ -275,7 +247,7 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
     },
     {
       id: 'ch5',
-      title: 'Chapter 5: Basic Python Syntax',
+      title: 'Chapter 4: Basic Python Syntax',
       summary: 'The building blocks of a Python program',
       type: 'group',
       overviewBlocks: [
@@ -302,7 +274,7 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
     },
     {
       id: 'ch6',
-      title: 'Chapter 6: Conditions',
+      title: 'Chapter 5: Conditions',
       summary: 'Teach a program to make decisions',
       type: 'group',
       overviewBlocks: [
@@ -329,7 +301,7 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
     },
     {
       id: 'ch7',
-      title: 'Chapter 7: Loops',
+      title: 'Chapter 6: Loops',
       summary: 'Repeat work without repeating code',
       type: 'group',
       overviewBlocks: [
@@ -343,7 +315,7 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
     },
     {
       id: 'ch8',
-      title: 'Chapter 8: Functions',
+      title: 'Chapter 7: Functions',
       summary: 'Name and reuse blocks of code',
       type: 'group',
       overviewBlocks: [

@@ -1,6 +1,5 @@
 import { CourseItem } from '../../course.model';
 import { SECTION_01, SECTION_02, SECTION_03, SECTION_04, SECTION_05 } from './chapter1';
-import { METHODOLOGY_SECTION_01, METHODOLOGY_SECTION_02, METHODOLOGY_SECTION_03 } from './chapter2';
 import { PROGRAMMING_SECTION_01, PROGRAMMING_SECTION_02, PROGRAMMING_SECTION_03 } from './chapter3';
 import { PYTHON_SECTION_01, PYTHON_SECTION_02, PYTHON_SECTION_03 } from './chapter4';
 import { SYNTAX_SECTION_01, SYNTAX_SECTION_02, SYNTAX_SECTION_03 } from './chapter5';
@@ -15,12 +14,6 @@ export const FUNDAMENTAL_DEV_CHAPTER1: CourseItem[] = [
   SECTION_04,
   SECTION_05,
   // ...
-];
-
-export const FUNDAMENTAL_DEV_CHAPTER2: CourseItem[] = [
-  METHODOLOGY_SECTION_01,
-  METHODOLOGY_SECTION_02,
-  METHODOLOGY_SECTION_03,
 ];
 
 export const FUNDAMENTAL_DEV_CHAPTER3: CourseItem[] = [

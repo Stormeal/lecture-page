@@ -38,7 +38,7 @@ export const FUNCTION_SECTION_03: CourseGroupItem = {
     { type: 'p', text: 'A default parameter provides a value when the caller leaves that argument out. A supplied argument replaces the default.' },
     { type: 'code', language: 'python', filename: 'power.py', code: `def power(base, exponent=2):\n    return base ** exponent\n\nprint(power(5))\nprint(power(2, 3))` },
     { type: 'h3', text: 'Capstone: Refactor the Guessing Game' },
-    { type: 'p', text: 'Reshape the guessing game from Chapter 7 so each function has a clear, reusable responsibility.' },
+    { type: 'p', text: 'Reshape the guessing game from Chapter 6 so each function has a clear, reusable responsibility.' },
   ],
   children: [{ id: 'refactor-guessing-game-exercise', title: 'Exercise: Refactor the Guessing Game', summary: 'Build a program from focused functions', type: 'content', blocks: [
     { type: 'h2', text: 'Refactor the Guessing Game' },
