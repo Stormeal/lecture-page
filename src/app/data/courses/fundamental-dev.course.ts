@@ -160,12 +160,12 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
     {
       id: 'ch1',
       title: 'Chapter 1: What Is Software Development?',
-      summary: 'Theory and exercises',
+      summary: 'Common myths and the activities of a developer',
       type: 'group',
       overviewBlocks: [
         {
           type: 'p',
-          text: 'Before we begin writing code, we need to build a clear mental model of what programming actually is. This chapter focuses on understanding execution, precision, and structured thinking.',
+          text: 'Before we write any code, we look at what software development actually is: what a developer does, the myths that surround the profession, the skills that matter, and the activities that take an idea all the way to a product in use.',
         },
         { type: 'divider' },
 
@@ -175,11 +175,10 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
           list: {
             ordered: false,
             items: [
-              'Explain what a program is in simple terms.',
-              'Describe the Input → Processing → Output model.',
-              'Understand why computers require precise instructions.',
-              'Differentiate between source code and machine execution.',
-              'Recognize that programming is structured problem solving, not memorizing syntax.',
+              'Describe the core responsibilities of a software developer.',
+              'Explain why common myths about software development are wrong.',
+              'Name the skills that matter alongside coding, and how skills from other careers transfer.',
+              'List the six activities in software development and explain the purpose of each.',
             ],
           },
           testId: 'ch1-learning-objectives-list',
@@ -187,7 +186,7 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
         {
           type: 'callout',
           variant: 'info',
-          text: 'If you can clearly explain these concepts to another person, you are ready to move on to variables and syntax later.',
+          text: 'The chapter ends with a recap followed by a quiz. Use it to check your understanding before moving on.',
         },
       ],
       children: FUNDAMENTAL_DEV_CHAPTER1,
@@ -200,8 +199,10 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
       overviewBlocks: [
         {
           type: 'p',
-          text: 'Software development methodologies give teams a shared way to plan, build, test, and release software. This chapter compares Waterfall and Agile so you can recognise when each approach helps.',
+          text: 'A methodology is the way a team organises the work of building software. This chapter compares the two best-known approaches, Waterfall and Agile, so you can recognise when each one helps.',
         },
+        { type: 'divider' },
+
         {
           type: 'labelValue',
           label: 'By the end of this chapter, you should be able to:',
@@ -216,6 +217,11 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
           },
           testId: 'ch2-learning-objectives-list',
         },
+        {
+          type: 'callout',
+          variant: 'info',
+          text: 'The chapter ends with a recap followed by a quiz. Use it to check your understanding before moving on.',
+        },
       ],
       children: FUNDAMENTAL_DEV_CHAPTER2,
     },
@@ -227,8 +233,10 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
       overviewBlocks: [
         {
           type: 'p',
-          text: 'Programming gives a computer precise instructions. This chapter introduces code, variables, output, programming languages, and the translators that let human-readable code run on hardware.',
+          text: 'Programming gives a computer precise instructions. This chapter covers what coding is, why the computer needs you to be exact, how a program is like a recipe, and how programming languages and translators let readable code run on hardware.',
         },
+        { type: 'divider' },
+
         {
           type: 'labelValue',
           label: 'By the end of this chapter, you should be able to:',
@@ -237,11 +245,16 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
             items: [
               'Explain why computers need exact instructions.',
               'Describe a program using variables, instructions, and output.',
-              'Explain the purpose of programming-language syntax.',
+              'Explain the purpose of programming-language keywords and syntax.',
               'Describe how a compiler or interpreter helps code run on a CPU.',
             ],
           },
           testId: 'ch3-learning-objectives-list',
+        },
+        {
+          type: 'callout',
+          variant: 'info',
+          text: 'The chapter ends with a recap followed by a quiz. Use it to check your understanding before moving on.',
         },
       ],
       children: FUNDAMENTAL_DEV_CHAPTER3,
@@ -254,8 +267,10 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
       overviewBlocks: [
         {
           type: 'p',
-          text: 'Python is the language used throughout the practical part of this course. It is designed to be readable, quick to start with, and useful across many fields.',
+          text: 'Python is the language used throughout the practical part of this course. This chapter explains why we use it, then gets your environment ready: Python installed and verified, the command line tried out, and VS Code set up.',
         },
+        { type: 'divider' },
+
         {
           type: 'labelValue',
           label: 'By the end of this chapter, you should be able to:',
@@ -270,6 +285,11 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
           },
           testId: 'ch4-learning-objectives-list',
         },
+        {
+          type: 'callout',
+          variant: 'info',
+          text: 'The chapter ends with a recap followed by a quiz. Use it to check your understanding before moving on.',
+        },
       ],
       children: FUNDAMENTAL_DEV_CHAPTER4,
     },
@@ -281,8 +301,10 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
       overviewBlocks: [
         {
           type: 'p',
-          text: 'This chapter introduces the basic parts of a Python program. You will write small pieces of code after each topic, then combine the ideas in a tip calculator.',
+          text: 'The building blocks, hands on. This chapter introduces the core pieces every Python program is made of. After each idea, you write a small piece of code yourself, then combine everything in a tip calculator.',
         },
+        { type: 'divider' },
+
         {
           type: 'labelValue',
           label: 'By the end of this chapter, you should be able to:',
@@ -297,6 +319,11 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
           },
           testId: 'ch5-learning-objectives-list',
         },
+        {
+          type: 'callout',
+          variant: 'info',
+          text: 'Have Python and VS Code open. Each section has a short quiz, then an exercise with an optional advanced alternative. Goal: by the end of this chapter, you can read and write simple Python without help.',
+        },
       ],
       children: FUNDAMENTAL_DEV_CHAPTER5,
     },
@@ -308,8 +335,10 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
       overviewBlocks: [
         {
           type: 'p',
-          text: 'Conditions let a program ask questions and choose between different paths. You will practise each idea, then use them together in a zoo ticket system.',
+          text: 'Until now, every program ran every line, top to bottom. That changes here: you teach your program to ask questions and choose between different paths. After each idea, you write a small piece of code yourself, then build a complete zoo ticket system on your own.',
         },
+        { type: 'divider' },
+
         {
           type: 'labelValue',
           label: 'By the end of this chapter, you should be able to:',
@@ -324,6 +353,11 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
           },
           testId: 'ch6-learning-objectives-list',
         },
+        {
+          type: 'callout',
+          variant: 'info',
+          text: 'Have Python and VS Code open. Each section has a short quiz, then an exercise with an optional advanced alternative.',
+        },
       ],
       children: FUNDAMENTAL_DEV_CHAPTER6,
     },
@@ -333,10 +367,30 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
       summary: 'Repeat work without repeating code',
       type: 'group',
       overviewBlocks: [
-        { type: 'p', text: 'Loops repeat a block of code until a condition changes or a collection runs out of items. You will use them to build a number guessing game.' },
         {
-          type: 'labelValue', label: 'By the end of this chapter, you should be able to:',
-          list: { ordered: false, items: ['Use while and for-in loops.', 'Work with lists and range().', 'Avoid infinite loops and use break or continue.', 'Use an accumulator to build a result over several iterations.'] }, testId: 'ch7-learning-objectives-list',
+          type: 'p',
+          text: 'So far, every line runs once. But real programs often need to repeat something many times. Loops let you run the same block of code repeatedly, without copying it. After each idea, you write a small piece of code yourself, then build a working number guessing game on your own.',
+        },
+        { type: 'divider' },
+
+        {
+          type: 'labelValue',
+          label: 'By the end of this chapter, you should be able to:',
+          list: {
+            ordered: false,
+            items: [
+              'Use while and for-in loops.',
+              'Work with lists and range().',
+              'Avoid infinite loops and use break or continue.',
+              'Use an accumulator to build a result over several iterations.',
+            ],
+          },
+          testId: 'ch7-learning-objectives-list',
+        },
+        {
+          type: 'callout',
+          variant: 'info',
+          text: 'Have Python and VS Code open. Each section has a short quiz, then an exercise with an optional advanced alternative.',
         },
       ],
       children: FUNDAMENTAL_DEV_CHAPTER7,
@@ -347,10 +401,30 @@ export const FUNDAMENTAL_DEV_COURSE: Course = {
       summary: 'Name and reuse blocks of code',
       type: 'group',
       overviewBlocks: [
-        { type: 'p', text: 'Functions give code a clear structure. You define a named block once, call it when needed, and pass values in or return values out.' },
         {
-          type: 'labelValue', label: 'By the end of this chapter, you should be able to:',
-          list: { ordered: false, items: ['Define and call functions.', 'Use parameters and arguments.', 'Choose between print and return.', 'Use multiple and default parameters.'] }, testId: 'ch8-learning-objectives-list',
+          type: 'p',
+          text: 'A function is a named block of code you can run whenever you want, as many times as you want. You write it once, then call it by name instead of repeating yourself. After each idea, you write a small piece of code yourself, then rebuild the guessing game from the Loops chapter cleanly out of functions.',
+        },
+        { type: 'divider' },
+
+        {
+          type: 'labelValue',
+          label: 'By the end of this chapter, you should be able to:',
+          list: {
+            ordered: false,
+            items: [
+              'Define and call functions.',
+              'Use parameters and arguments.',
+              'Choose between print and return.',
+              'Use multiple and default parameters.',
+            ],
+          },
+          testId: 'ch8-learning-objectives-list',
+        },
+        {
+          type: 'callout',
+          variant: 'info',
+          text: 'Have Python and VS Code open. Each section has a short quiz, then an exercise with an optional advanced alternative.',
         },
       ],
       children: FUNDAMENTAL_DEV_CHAPTER8,
